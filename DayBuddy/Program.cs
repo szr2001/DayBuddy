@@ -1,4 +1,9 @@
-namespace DayBuddy
+using AspNetCore.Identity.MongoDbCore.Infrastructure;
+using Microsoft.AspNetCore.Identity;
+using DayBuddy.Models;
+using DayBuddy.Settings;
+
+namespace ValorantTournament
 {
     public class Program
     {
@@ -9,7 +14,19 @@ namespace DayBuddy
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            var app = builder.Build();
+            var mongoDBSettings = builder.Configuration.GetSection(nameof(MongoDbConfig)).Get<MongoDbConfig>();
+
+            //Initialize the Identity authentication system using the Tournament roles
+            //then add the mongodb settings from reading the appsetings.json
+            builder.Services.AddIdentity<DayBuddyUser, DayBuddyRole>().
+                AddMongoDbStores<DayBuddyUser, DayBuddyRole, Guid>(mongoDBSettings.ConnectionString, mongoDBSettings.Name);
+
+            builder.Services.Configure<IdentityOptions>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            });
+
+            var app = builder.Build();  
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -24,6 +41,7 @@ namespace DayBuddy
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
