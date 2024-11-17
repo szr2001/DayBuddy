@@ -18,6 +18,31 @@ namespace DayBuddy.Controllers
             return View();
         }
 
+        public IActionResult GetStarted()
+        {
+            return View();
+        }
+
+        public IActionResult Events()
+        {
+            return View();
+        }
+
+        public IActionResult TermsAndConditions()
+        {
+            return View();
+        }
+
+        public IActionResult FAQ()
+        {
+            return View();
+        }
+
+        public IActionResult About()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
