@@ -16,4 +16,10 @@
     <Folder Include="Views\Account\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\Assets\Images\hug.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

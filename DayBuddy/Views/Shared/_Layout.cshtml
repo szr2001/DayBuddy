@@ -13,7 +13,14 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="font-family-sans-serif navbar-brand fs-2" style="font-family: Lapsus Pro" asp-area="" asp-controller="Home" asp-action="Index">DayBuddy</a>
+                <div class="d-flex align-items-center">
+                    <img src="/Assets/Images/hug.png" width="45" />
+                    <a class="text-grass-green navbar-brand fs-2 ms-2"
+                       style="font-family: 'Lapsus Pro', sans-serif;"
+                       asp-area="" asp-controller="Home" asp-action="Index">
+                        DayBuddy
+                    </a>
+                </div>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -43,9 +50,9 @@
     <footer class="border-top footer text-muted">
         <div class="container">
             <label>&copy; 2024 - DayBuddy - </label>
-            <a class="p-1" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-            <a class="p-1" asp-area="" asp-controller="Home" asp-action="TermsAndConditions">Terms & Conditions</a>
-            <a class="p-1" asp-area="" asp-controller="Home" asp-action="FAQ">FAQ</a>
+            <a class="p-1 text-grass-green" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <a class="p-1 text-grass-green" asp-area="" asp-controller="Home" asp-action="TermsAndConditions">Terms & Conditions</a>
+            <a class="p-1 text-grass-green" asp-area="" asp-controller="Home" asp-action="FAQ">FAQ</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
