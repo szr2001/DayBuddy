@@ -3,9 +3,10 @@
     Layout = "~/Views/Shared/_FullScreenLayout.cshtml";
 }
 
+<hr />
 <div class="container d-flex justify-content-center align-items-center">
     <div class="text-center">
-        <h2 class="display-4" style="font-family:Georgia" >Get Started with</h2>
+        <label class="display-4">Get Started with</label>
         <div class="row">
             <a class="btn disabled rounded-pill btn-primary fw-bold mb-3 px-4"
                 asp-area="" asp-controller="Home" asp-action="GetStarted">
@@ -20,7 +21,7 @@
             </a>
 
             <a class="btn btn-primary rounded-pill fw-bold mb-3 px-4" style="background:purple"
-                asp-area="" asp-controller="Account" asp-action="Login">
+                asp-area="" asp-controller="Account" asp-action="Register">
                 Email
             </a>
         </div>
