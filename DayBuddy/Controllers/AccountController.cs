@@ -32,6 +32,9 @@ namespace DayBuddy.Controllers
                 if (user != null)
                 {
                     Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(user, password, false, false);
+                    user.LastTimeOnline = DateTime.UtcNow;
+                    await userManager.UpdateAsync(user);
+
                     if (result.Succeeded)
                     {
                         return RedirectToAction("Profile", "Account");
@@ -64,6 +67,7 @@ namespace DayBuddy.Controllers
                 {
                     UserName = user.Name,
                     Email = user.Email,
+                    LastTimeOnline = DateTime.UtcNow,
                 };
                 IdentityResult result = await userManager.CreateAsync(newUser, user.Password);
                 if (result.Succeeded)
