@@ -6,6 +6,7 @@ namespace DayBuddy.Models
     {
         [Required]
         [MaxLength(20, ErrorMessage ="Name too long")]
+        [MinLength(5, ErrorMessage ="Name too short")]
         public string Name { get; set; }
 
         [Required]

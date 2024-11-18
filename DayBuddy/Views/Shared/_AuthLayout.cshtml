@@ -1,0 +1,44 @@
+﻿@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - DayBuddy</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/DayBuddy.styles.css" asp-append-version="true" />
+</head>
+<body class="d-flex modal vh-100">
+    <div class="container-fluid d-flex" style="padding-left: 0rem !important;">
+        <div class="col-md-3 col-lg-2 sidebar py-4 border-end d-flex flex-column">
+            <div class="container">
+                <div class="d-flex">
+                    <div class="rounded-pill background-grass-green">
+                        <img class="m-1" src="/Assets/Images/person.png" width="25" height="25" />
+                    </div>
+                    <label class="fw-bolder align-self-center text-dark text-truncate ms-1">@User!.Identity!.Name</label>
+                </div>
+                <hr class="w-75 container"/>
+                <ul class="nav text-center m-1 flex-column">
+                    <a class="btn text-white btn-info rounded-pill m-1 fw-bold" asp-area="" asp-controller="Account" asp-action="Register">Find A Buddy!</a>
+                    <a class="btn text-white btn-outline-success border-0 rounded-pill m-1 background-grass-green fw-bold" asp-area="" asp-controller="Account" asp-action="Register">Upgrade To Premium</a>
+                    <a class="nav-link fw-bold text-black-50 hover-dark" asp-area="" asp-controller="Account" asp-action="Profile">Edit Profile</a>
+                    <a class="nav-link fw-bold text-black-50 hover-dark" asp-area="" asp-controller="Account" asp-action="LogOut">Log Out</a>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-9 col-lg-10 p-3">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

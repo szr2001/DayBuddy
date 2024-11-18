@@ -14,11 +14,16 @@
   <ItemGroup>
     <Folder Include="Services\" />
     <Folder Include="Views\Account\" />
+    <Folder Include="Views\DayBuddy\" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Views\Shared\_AuthLayout.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Update="wwwroot\Assets\Images\hug.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

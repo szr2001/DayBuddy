@@ -20,6 +20,10 @@ namespace DayBuddy.Controllers
 
         public IActionResult GetStarted()
         {
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Profile","Account");
+            }
             return View();
         }
 

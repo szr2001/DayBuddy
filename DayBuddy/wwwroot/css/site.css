@@ -20,14 +20,14 @@ label {
     font-family: Georgia
 }
 
+.hover-dark:hover{
+    color:black !important;
+}
 
 .text-grass-green {
     color: #8bc34a !important
 }
 
-.background-gradient-white-grass-green {
-    background: linear-gradient(135deg, white, #8bc34a);
-}
 
 html {
   position: relative;

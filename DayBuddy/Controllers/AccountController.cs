@@ -34,7 +34,7 @@ namespace DayBuddy.Controllers
                     Microsoft.AspNetCore.Identity.SignInResult result = await signInManager.PasswordSignInAsync(user, password, false, false);
                     if (result.Succeeded)
                     {
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Profile", "Account");
                     }
                 }
             }
@@ -59,6 +59,7 @@ namespace DayBuddy.Controllers
         {
             if (ModelState.IsValid)
             {
+                //check for passwords be the same
                 DayBuddyUser newUser = new()
                 {
                     UserName = user.Name,
