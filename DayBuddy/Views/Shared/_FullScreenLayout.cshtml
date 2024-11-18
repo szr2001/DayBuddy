@@ -10,25 +10,29 @@
     <link rel="stylesheet" href="~/DayBuddy.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <div class="text-center position-fixed top-0 w-100 p-3" style="z-index: 1000;">
-        <div class="d-flex justify-content-center align-items-center">
-            <img src="/Assets/Images/hug.png" class="p-1" width="75" />
-            <a class="text-grass-green navbar-brand"
-               style="font-family: Lapsus Pro; font-size:55px"
-               asp-area="" asp-controller="Home" asp-action="Index">
-                DayBuddy
-            </a>
-        </div>
-    </div>
 
+    <header class="p-2">
+        <nav class="text-center">
+            <div class="d-flex justify-content-center">
+                <img src="/Assets/Images/hug.png" class="p-1" width="75" />
+                <a class="text-grass-green navbar-brand"
+                    style="font-family: Lapsus Pro; font-size:55px"
+                    asp-area="" asp-controller="Home" asp-action="Index">
+                    DayBuddy
+                </a>
+            </div>
+        </nav>
+    </header>
 
-    <div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="container p-5">
         <main role="main" class="pb-3 w-100">
             @RenderBody()
         </main>
     </div>
 
-
+    <footer class=" text-center text-muted">
+        <label>By signing up you agree to the <a class="text-grass-green" asp-area="" asp-action="TermsAndConditions">terms of service</a></label>
+    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

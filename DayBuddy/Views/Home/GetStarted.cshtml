@@ -3,6 +3,26 @@
     Layout = "~/Views/Shared/_FullScreenLayout.cshtml";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Get Started</h1>
+<div class="container d-flex justify-content-center align-items-center">
+    <div class="text-center">
+        <h2 class="display-4" style="font-family:Georgia" >Get Started with</h2>
+        <div class="row">
+            <a class="btn disabled rounded-pill btn-primary fw-bold mb-3 px-4"
+                asp-area="" asp-controller="Home" asp-action="GetStarted">
+                Facebook
+            </a>
+            <a class="btn disabled btn-primary rounded-pill fw-bold mb-3 px-4"
+                style="background:  linear-gradient(90deg, red 43%, orange 47%, green 52%, blue 60%);
+                -webkit-background-clip: text;
+                color: transparent;"
+                asp-area="" asp-controller="Home" asp-action="GetStarted">
+                Google
+            </a>
+
+            <a class="btn btn-primary rounded-pill fw-bold mb-3 px-4" style="background:purple"
+                asp-area="" asp-controller="Account" asp-action="Login">
+                Email
+            </a>
+        </div>
+    </div>
 </div>
