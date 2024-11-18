@@ -68,7 +68,7 @@ namespace DayBuddy.Controllers
                 IdentityResult result = await userManager.CreateAsync(newUser, user.Password);
                 if (result.Succeeded)
                 {
-                    //await userManager.AddToRoleAsync(newUser, "Guest");
+                    await userManager.AddToRoleAsync(newUser, "User");
                     return RedirectToAction(nameof(Login));
                 }
                 else

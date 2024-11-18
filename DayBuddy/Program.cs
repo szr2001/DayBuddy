@@ -28,6 +28,8 @@ namespace ValorantTournament
 
             var app = builder.Build();  
 
+            _ = AddRolesInDb(app, builder.Configuration);
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -49,6 +51,29 @@ namespace ValorantTournament
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
+        }
+
+        private static async Task AddRolesInDb(WebApplication app, ConfigurationManager config)
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var roleManager = services.GetRequiredService<RoleManager<DayBuddyRole>>();
+                string[] roles = config.GetSection("DefaultRoles").Get<string[]>()!;
+
+                foreach (string role in roles)
+                {
+                    //if it doesn't exist, add it
+                    if (!await roleManager.RoleExistsAsync(role))
+                    {
+                        IdentityResult result = await roleManager.CreateAsync(new DayBuddyRole() { Name = role });
+                        if (!result.Succeeded)
+                        {
+                            Console.WriteLine("ERROR WHEN CREATING ROLE, Program.cs");
+                        }
+                    };
+                }
+            }
         }
     }
 }
