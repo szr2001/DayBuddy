@@ -10,6 +10,7 @@ namespace DayBuddy.Models
         public DateTime? LastTimeOnline { get; set; }
         public DateTime? PurchasedPremium { get; set; }
         public DateTime? MatchedWithBuddy { get; set; }
+        public bool IsAvailable { get; set; }
         public Guid? Buddy { get; set; }
     }
 }

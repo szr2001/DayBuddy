@@ -21,6 +21,11 @@ namespace DayBuddy.Controllers
             return View();
         }
 
+        public IActionResult Premium()
+        {
+            return View();
+        }
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]

@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewData["Title"] = "SearchBuddy";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<nav class="text-center">
+    <div class="d-flex justify-content-center">
+        <img src="/Assets/Images/hug.png" class="p-1" width="45" />
+        <a class="text-grass-green navbar-brand"
+           style="font-family: Lapsus Pro; font-size:25px"
+           asp-area="" asp-controller="Home" asp-action="Index">
+            DayBuddy
+        </a>
+    </div>
+</nav>
+
+<div class="text-center container-fluid p-md-5 h-100">
+    <div class="border row container align-content-center h-75 rounded-6 align-self-center">
+        @{
+            if(ViewBag.IsAvailable)
+            {
+                <label class="fw-bold fs-3 text-warp p-3">Searching for a buddy...</label>
+                <label class="text-warp p-1">Check in after a while and see your new best friend.</label>
+                <form method="post" class="flex-column row">
+                    <input name="available" type="hidden" value="false" />
+                    <button class="btn align-self-center text-white border-0 fw-bold rounded-pill btn-danger" type="submit">Cancel</button>
+                </form>
+            }
+            else
+            {
+                <label class="fw-bold fs-3 text-warp p-3">Ready to find a buddy?</label>
+                <label class="text-warp p-1">We will randomly assign you a buddy for 24 hours, you can talk and become best friends.</label>
+                <form method="post" class="flex-column row">
+                    <input name="available" type="hidden" value="true" />
+                    <button class="btn align-self-center text-white btn-outline-success border-0 fw-bold rounded-pill background-grass-green" type="submit">Start Searching</button>
+                </form>
+            }
+        }
+    </div>
+</div>

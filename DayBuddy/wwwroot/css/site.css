@@ -24,6 +24,10 @@ label {
     color:black !important;
 }
 
+.rounded-6{
+    border-radius:25px;
+}
+
 .text-grass-green {
     color: #8bc34a !important
 }
