@@ -11,7 +11,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
             <div class="container-fluid">
                 <div class="d-flex align-items-center">
                     <img src="/Assets/Images/hug.png" width="45" />
@@ -41,20 +41,11 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+    <div class="vh-100">
+        <main role="main">
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            <label>&copy; 2024 - DayBuddy - </label>
-            <a class="p-1 text-grass-green" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-            <a class="p-1 text-grass-green" asp-area="" asp-controller="Home" asp-action="TermsAndConditions">Terms & Conditions</a>
-            <a class="p-1 text-grass-green" asp-area="" asp-controller="Home" asp-action="FAQ">FAQ</a>
-        </div>
-    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

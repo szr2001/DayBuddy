@@ -17,9 +17,10 @@ namespace DayBuddy.Controllers
 
         public async Task<IActionResult> SearchBuddy()
         {
+                //return RedirectToAction(nameof(BuddyChat));
             DayBuddyUser? user = await userManager.GetUserAsync(User);
-            
-            if(user?.Buddy != null)
+
+            if (user?.Buddy != null)
             {
                 return RedirectToAction(nameof(BuddyChat));
             }

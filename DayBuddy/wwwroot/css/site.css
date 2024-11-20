@@ -24,6 +24,17 @@ label {
     color:black !important;
 }
 
+.hide-scrollbar {
+    overflow: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+    width: 0px !important;
+    background: transparent !important;
+}
+
 .rounded-6{
     border-radius:25px;
 }
