@@ -20,6 +20,12 @@ label {
     font-family: Georgia
 }
 
+.custom-input:focus {
+    border-color: #8bc34a !important; /* Change border color */
+    outline: none !important; /* Remove default outline */
+    box-shadow: 0 0 0 0.2rem rgba(139, 195, 74, 0.25)
+}
+
 .hover-dark:hover{
     color:black !important;
 }

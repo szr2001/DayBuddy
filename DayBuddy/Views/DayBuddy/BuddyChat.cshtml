@@ -4,32 +4,33 @@
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
-<div class="d-flex">
+<div class="d-flex h-100">
     <div class="container-fluid d-flex" style="padding-left: 0rem !important;">
 
-        <div class="container-fluid p-3">
-            <ul class="nav text-center m-1 flex-column">
-                <a class="btn text-white border-0 btn-outline-success background-grass-green  rounded-pill m-1 fw-bold" asp-area="" asp-controller="DayBuddy" asp-action="SearchBuddy">Find A Buddy!</a>
-            </ul>
-        </div>
-
-        <div class="col-md-3 col-lg-2 sidebar py-4 border-end d-flex flex-column">
-            <div class="container">
-                <div class="d-flex">
-                    <div class="rounded-pill background-grass-green">
-                        <img class="m-1" src="/Assets/Images/person.png" width="25" height="25" />
+        <div class="container-fluid d-flex flex-column">
+            <div class="top-0 m-2 border-bottom text-center">
+                <label class="fw-bolder text-black-50 fs-1">23:35:12</label>
+            </div>
+            <div class="h-100 flex-grow-1 d-flex flex-column justify-content-end">
+                <form method="post" asp-action="SendMessage" asp-controller="DayBuddy" class="container-fluid">
+                    <div class="d-flex align-items-center">
+                        <!-- Message Input Field -->
+                        <input type="text" name="Message"
+                               class="form-control custom-input me-2"
+                               placeholder="Enter your message"/>
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn background-grass-green border-0 btn-outline-success text-white fw-bold">Send</button>
                     </div>
-                    <label class="fw-bolder align-self-center text-dark text-truncate ms-1">@User!.Identity!.Name</label>
-                </div>
-                <hr class="w-75 container" />
-                <ul class="nav text-center m-1 flex-column">
-                    <a class="btn text-white border-0 btn-outline-success background-grass-green  rounded-pill m-1 fw-bold" asp-area="" asp-controller="DayBuddy" asp-action="SearchBuddy">Find A Buddy!</a>
-                    <a class="btn text-white border-0 rounded-pill m-1 btn-info fw-bold" asp-area="" asp-controller="Account" asp-action="Premium">Upgrade To Premium</a>
-                    <a class="nav-link fw-bold text-black-50 hover-dark" asp-area="" asp-controller="Account" asp-action="Profile">Edit Profile</a>
-                    <a class="nav-link fw-bold text-black-50 hover-dark" asp-area="" asp-controller="Account" asp-action="LogOut">Log Out</a>
-                </ul>
+                </form>
             </div>
         </div>
 
-    </div>
+        <div class="border-start w-25 d-flex flex-column">
+            <div class="container m-3 text-center">
+                <label class="fw-bolder text-dark text-truncate ms-1">George</label>
+                <hr class="w-100 "/>
+            </div>
+        </div>
+
+    </div>            
 </div>
