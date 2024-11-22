@@ -2,6 +2,7 @@ using AspNetCore.Identity.MongoDbCore.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using DayBuddy.Models;
 using DayBuddy.Settings;
+using DayBuddy.Services;
 
 namespace ValorantTournament
 {
@@ -13,6 +14,7 @@ namespace ValorantTournament
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddSignalR();
 
             var mongoDBSettings = builder.Configuration.GetSection(nameof(MongoDbConfig)).Get<MongoDbConfig>();
 
@@ -46,6 +48,7 @@ namespace ValorantTournament
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.MapHub<ChatHubService>("/chatHub");
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");

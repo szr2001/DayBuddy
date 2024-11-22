@@ -6,22 +6,25 @@
 
 <div class="d-flex h-100">
     <div class="container-fluid d-flex" style="padding-left: 0rem !important;">
-
+        
         <div class="container-fluid d-flex flex-column">
             <div class="top-0 m-2 border-bottom text-center">
                 <label class="fw-bolder text-black-50 fs-1">23:35:12</label>
             </div>
-            <div class="h-100 flex-grow-1 d-flex flex-column justify-content-end">
-                <form method="post" asp-action="SendMessage" asp-controller="DayBuddy" class="container-fluid">
-                    <div class="d-flex align-items-center">
-                        <!-- Message Input Field -->
-                        <input type="text" name="Message"
-                               class="form-control custom-input me-2"
-                               placeholder="Enter your message"/>
-                        <!-- Submit Button -->
-                        <button type="submit" class="btn background-grass-green border-0 btn-outline-success text-white fw-bold">Send</button>
-                    </div>
-                </form>
+
+            <div class="row container">
+                <div class="col-6">
+                    <ul id="messagesList"></ul>
+                </div>
+            </div>
+            
+            <div class="flex-grow-1 d-flex flex-column justify-content-end">
+                <div class="d-flex align-items-center">
+                    <input type="text" name="Message" id="messageInput"
+                            class="form-control custom-input me-2"
+                            placeholder="Enter your message"/>
+                    <button type="submit" id="sendButton" class="btn background-grass-green border-0 btn-outline-success text-white fw-bold">Send</button>
+                </div>
             </div>
         </div>
 
@@ -31,6 +34,7 @@
                 <hr class="w-100 "/>
             </div>
         </div>
-
     </div>            
 </div>
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/js/BuddyChat.js"></script>
