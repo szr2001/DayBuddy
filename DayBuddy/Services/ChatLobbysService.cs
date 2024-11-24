@@ -1,6 +1,6 @@
 ﻿namespace DayBuddy.Services
 {
-    public class BuddyChatLobbysService
+    public class ChatLobbysService
     {
     }
 }

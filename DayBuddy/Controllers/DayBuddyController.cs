@@ -1,4 +1,5 @@
 ﻿using DayBuddy.Models;
+using DayBuddy.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +10,13 @@ namespace DayBuddy.Controllers
     public class DayBuddyController : Controller
     {
         private readonly UserManager<DayBuddyUser> userManager;
-
-        public DayBuddyController(UserManager<DayBuddyUser> userManager)
+        private readonly ChatLobbysService chatLobbysService;
+        private readonly UserCacheService userCacheService;
+        public DayBuddyController(UserManager<DayBuddyUser> userManager, ChatLobbysService chatLobbysService, UserCacheService userCacheService)
         {
             this.userManager = userManager;
+            this.chatLobbysService = chatLobbysService;
+            this.userCacheService = userCacheService;
         }
 
         public async Task<IActionResult> SearchBuddy()
@@ -20,7 +24,7 @@ namespace DayBuddy.Controllers
                 return RedirectToAction(nameof(BuddyChat));
             DayBuddyUser? user = await userManager.GetUserAsync(User);
 
-            if (user?.Buddy != null)
+            if (user?.BuddyChatLobbyID != null)
             {
                 return RedirectToAction(nameof(BuddyChat));
             }

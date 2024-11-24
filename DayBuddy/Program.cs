@@ -1,11 +1,11 @@
-using AspNetCore.Identity.MongoDbCore.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using DayBuddy.Models;
 using DayBuddy.Settings;
 using DayBuddy.Hubs;
 using DayBuddy.Services;
+using MongoDB.Driver;
 
-namespace ValorantTournament
+namespace DayBuddy
 {
     public class Program
     {
@@ -13,18 +13,32 @@ namespace ValorantTournament
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddSignalR();
-            builder.Services.AddSingleton<BuddyMessagesService>();
-            builder.Services.AddSingleton<BuddyChatLobbysService>();
+            builder.Services.AddSingleton<MessagesService>();
+            builder.Services.AddSingleton<ChatLobbysService>();
+            builder.Services.AddSingleton<UserCacheService>();
 
-            var mongoDBSettings = builder.Configuration.GetSection(nameof(MongoDbConfig)).Get<MongoDbConfig>();
+            MongoDbConfig? mongoDBSettings = builder.Configuration.GetSection(nameof(MongoDbConfig)).Get<MongoDbConfig>();
+            
+            if(mongoDBSettings == null)
+            {
+                Console.WriteLine("ERROR, DB CONFIG MISSING");
+                return;
+            }
+
+            builder.Services.AddSingleton(mongoDBSettings);
 
             //Initialize the Identity authentication system using the Tournament roles
             //then add the mongodb settings from reading the appsetings.json
             builder.Services.AddIdentity<DayBuddyUser, DayBuddyRole>().
                 AddMongoDbStores<DayBuddyUser, DayBuddyRole, Guid>(mongoDBSettings.ConnectionString, mongoDBSettings.Name);
+
+            builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
+            {
+                return new MongoClient(mongoDBSettings.ConnectionString);
+            });
+
 
             builder.Services.Configure<IdentityOptions>(options =>
             {
@@ -59,6 +73,7 @@ namespace ValorantTournament
             app.Run();
         }
 
+        //Add the default roles from appsettings if there are not present in the db
         private static async Task AddRolesInDb(WebApplication app, ConfigurationManager config)
         {
             using (var scope = app.Services.CreateScope())
