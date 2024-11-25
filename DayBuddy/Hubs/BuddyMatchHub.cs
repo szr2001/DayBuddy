@@ -1,6 +1,9 @@
-﻿using DayBuddy.Services;
+﻿using DayBuddy.Models;
+using DayBuddy.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Build.Framework;
 
 namespace DayBuddy.Hubs
 {
@@ -11,23 +14,37 @@ namespace DayBuddy.Hubs
         //Maybe also add a Dictionary for chaching
         //Maybe also in the MessagesService cach messages and add them in bulk
         private readonly UserCacheService userCacheService;
+        private readonly UserManager<DayBuddyUser> userManager;
         private readonly ChatLobbysService chatLobbysService;
         private readonly MessagesService messagesService;
-        public BuddyMatchHub(UserCacheService userCacheService, ChatLobbysService chatLobbysService, MessagesService messagesService)
+        public BuddyMatchHub(UserCacheService userCacheService, ChatLobbysService chatLobbysService, MessagesService messagesService, UserManager<DayBuddyUser> userManager)
         {
             //Context.User get the current user similar to controllers
             this.userCacheService = userCacheService;
             this.chatLobbysService = chatLobbysService;
             this.messagesService = messagesService;
+            this.userManager = userManager;
         }
 
         public override Task OnConnectedAsync()
         {
+            string? userId = userManager.GetUserId(Context.User!);
+            if(userId != null)
+            {
+                userCacheService.AddUser(userId);
+            }
+            Console.WriteLine(userCacheService.ActiveUsers);
             return base.OnConnectedAsync();
         }
 
         public override Task OnDisconnectedAsync(Exception? exception)
         {
+            string? userId = userManager.GetUserId(Context.User!);
+            if (userId != null)
+            {
+                userCacheService.RemoveUser(userId);
+            }
+            Console.WriteLine(userCacheService.ActiveUsers);
             return base.OnDisconnectedAsync(exception);
         }
 

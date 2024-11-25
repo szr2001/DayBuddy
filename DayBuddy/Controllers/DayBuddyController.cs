@@ -23,7 +23,6 @@ namespace DayBuddy.Controllers
         {
                 return RedirectToAction(nameof(BuddyChat));
             DayBuddyUser? user = await userManager.GetUserAsync(User);
-
             if (user?.BuddyChatLobbyID != null)
             {
                 return RedirectToAction(nameof(BuddyChat));
