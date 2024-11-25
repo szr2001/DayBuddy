@@ -13,11 +13,11 @@ namespace DayBuddy.Hubs
         //when users join, check if he is in a room in the db, if yes, connect it to that room, if not, then add it to a list of active users
         //Maybe also add a Dictionary for chaching
         //Maybe also in the MessagesService cach messages and add them in bulk
-        private readonly UserCacheService userCacheService;
+        private readonly LobbyCacheService userCacheService;
         private readonly UserManager<DayBuddyUser> userManager;
         private readonly ChatLobbysService chatLobbysService;
         private readonly MessagesService messagesService;
-        public BuddyMatchHub(UserCacheService userCacheService, ChatLobbysService chatLobbysService, MessagesService messagesService, UserManager<DayBuddyUser> userManager)
+        public BuddyMatchHub(LobbyCacheService userCacheService, ChatLobbysService chatLobbysService, MessagesService messagesService, UserManager<DayBuddyUser> userManager)
         {
             //Context.User get the current user similar to controllers
             this.userCacheService = userCacheService;

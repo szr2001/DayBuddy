@@ -1,6 +1,11 @@
 ﻿using DayBuddy.Models;
 using DayBuddy.Settings;
+using Humanizer;
 using MongoDB.Driver;
+using MongoDbGenericRepository.Attributes;
+using System.Runtime.Intrinsics.X86;
+using System.Xml.Linq;
+using System;
 
 namespace DayBuddy.Services
 {
@@ -11,7 +16,9 @@ namespace DayBuddy.Services
         public MessagesService(IMongoClient mongoClient, MongoDbConfig config)
         {
             var database = mongoClient.GetDatabase(config.Name);
-            _messagesCollection = database.GetCollection<BuddyMessage>("Messages");
+           var collectionNameAttribute = Attribute.GetCustomAttribute(typeof(BuddyMessage), typeof(CollectionNameAttribute)) as CollectionNameAttribute;
+            string collectionName = collectionNameAttribute?.Name ?? "Messages";
+            _messagesCollection = database.GetCollection<BuddyMessage>(collectionName);
         }
 
         public async Task CreateMessageAsync(BuddyMessage message)

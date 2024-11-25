@@ -2,7 +2,7 @@
 
 namespace DayBuddy.Services
 {
-    public class UserCacheService
+    public class LobbyCacheService
     {
         public int ActiveUsers { get; set; }
 

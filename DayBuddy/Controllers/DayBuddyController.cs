@@ -11,17 +11,16 @@ namespace DayBuddy.Controllers
     {
         private readonly UserManager<DayBuddyUser> userManager;
         private readonly ChatLobbysService chatLobbysService;
-        private readonly UserCacheService userCacheService;
-        public DayBuddyController(UserManager<DayBuddyUser> userManager, ChatLobbysService chatLobbysService, UserCacheService userCacheService)
+        private readonly UserService userService;
+        public DayBuddyController(UserManager<DayBuddyUser> userManager, ChatLobbysService chatLobbysService, UserService userService)
         {
             this.userManager = userManager;
             this.chatLobbysService = chatLobbysService;
-            this.userCacheService = userCacheService;
+            this.userService = userService;
         }
 
         public async Task<IActionResult> SearchBuddy()
         {
-                return RedirectToAction(nameof(BuddyChat));
             DayBuddyUser? user = await userManager.GetUserAsync(User);
             if (user?.BuddyChatLobbyID != null)
             {
@@ -37,8 +36,22 @@ namespace DayBuddy.Controllers
         public async Task<IActionResult> SearchBuddy(bool available)
         {
             DayBuddyUser? user = await userManager.GetUserAsync(User);
+            //get a random user which is available
+            //if none found, then continue
+            
+            //if one found then move them to the Chat
+            //get his info and update the chat view
+            //Create a lobby with those two and assign them
+            //save it in the database
+            //set the users LobbyId to the new saved one
+
             if (user != null)
             {
+                DayBuddyUser? buddyUser = await userService.GetRndAvailableUserAsync();
+                if(buddyUser != null)
+                {
+
+                }
                 if(user.IsAvailable != available)
                 {
                     user.IsAvailable = available;
