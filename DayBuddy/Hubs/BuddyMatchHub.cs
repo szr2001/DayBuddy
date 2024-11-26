@@ -4,20 +4,24 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Build.Framework;
+using System.Security.Claims;
 
 namespace DayBuddy.Hubs
 {
+    //use the js chat class inside the searchBody view and
+    //use a OnMatched event to refresh the page
+    //use the same hub
     [Authorize]
     public class BuddyMatchHub : Hub
     {
         //when users join, check if he is in a room in the db, if yes, connect it to that room, if not, then add it to a list of active users
         //Maybe also add a Dictionary for chaching
         //Maybe also in the MessagesService cach messages and add them in bulk
-        private readonly LobbyCacheService userCacheService;
+        private readonly BuddyGroupCacheService userCacheService;
         private readonly UserManager<DayBuddyUser> userManager;
-        private readonly ChatLobbysService chatLobbysService;
+        private readonly ChatGroupsService chatLobbysService;
         private readonly MessagesService messagesService;
-        public BuddyMatchHub(LobbyCacheService userCacheService, ChatLobbysService chatLobbysService, MessagesService messagesService, UserManager<DayBuddyUser> userManager)
+        public BuddyMatchHub(BuddyGroupCacheService userCacheService, ChatGroupsService chatLobbysService, MessagesService messagesService, UserManager<DayBuddyUser> userManager)
         {
             //Context.User get the current user similar to controllers
             this.userCacheService = userCacheService;
@@ -26,32 +30,26 @@ namespace DayBuddy.Hubs
             this.userManager = userManager;
         }
 
-        public override Task OnConnectedAsync()
+        public override async Task OnConnectedAsync()
         {
-            string? userId = userManager.GetUserId(Context.User!);
-            if(userId != null)
-            {
-                userCacheService.AddUser(userId);
-            }
-            Console.WriteLine(userCacheService.ActiveUsers);
-            return base.OnConnectedAsync();
+            DayBuddyUser? user = await userManager.GetUserAsync(Context.User!);
+            if (user == null || user.BuddyChatLobbyID == null) return;
+            await Groups.AddToGroupAsync(Context.ConnectionId, user.BuddyChatLobbyID);
         }
 
-        public override Task OnDisconnectedAsync(Exception? exception)
+        public override async Task OnDisconnectedAsync(Exception? exception)
         {
-            string? userId = userManager.GetUserId(Context.User!);
-            if (userId != null)
-            {
-                userCacheService.RemoveUser(userId);
-            }
-            Console.WriteLine(userCacheService.ActiveUsers);
-            return base.OnDisconnectedAsync(exception);
+            DayBuddyUser? user = await userManager.GetUserAsync(Context.User!);
+            if (user == null || user.BuddyChatLobbyID == null) return;
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, user.BuddyChatLobbyID);
         }
 
         public async Task SendMessage(string user, string message)
         {
-            //we can trigger other events and do other things, like for match
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
+            string? localUserId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (localUserId == null) return;
+
+            await Clients.Group(userCacheService.GetUserGroup(localUserId)).SendAsync("ReceiveMessage", user, message);
         }
     }
 }

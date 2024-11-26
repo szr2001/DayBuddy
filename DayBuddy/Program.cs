@@ -15,10 +15,10 @@ namespace DayBuddy
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddSignalR();
-            builder.Services.AddSingleton<MessagesService>();
-            builder.Services.AddSingleton<ChatLobbysService>();
-            builder.Services.AddSingleton<LobbyCacheService>();
-            builder.Services.AddSingleton<UserService>();
+            builder.Services.AddScoped<MessagesService>();
+            builder.Services.AddScoped<ChatGroupsService>();
+            builder.Services.AddSingleton<BuddyGroupCacheService>();
+            builder.Services.AddScoped<UserService>();
 
             MongoDbConfig? mongoDBSettings = builder.Configuration.GetSection(nameof(MongoDbConfig)).Get<MongoDbConfig>();
             
