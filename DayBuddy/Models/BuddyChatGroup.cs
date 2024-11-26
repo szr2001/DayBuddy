@@ -3,13 +3,13 @@ using System.Configuration;
 
 namespace DayBuddy.Models
 {
-    [CollectionName("ActiveBuddyLobbies")]
-    public class BuddyChatLobby
+    [CollectionName("ActiveBuddyGroups")]
+    public class BuddyChatGroup
     {
         public string Id { get; set; }
         public string[] Users { get; set; }
         public DateTime CreatedDate { get; set; }   
-        public BuddyChatLobby(string[] users)
+        public BuddyChatGroup(string[] users)
         {
             CreatedDate = DateTime.UtcNow;
             Id = Guid.NewGuid().ToString();

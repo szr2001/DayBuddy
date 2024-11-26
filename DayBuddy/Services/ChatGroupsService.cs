@@ -10,22 +10,22 @@ namespace DayBuddy.Services
     //this needs to be scouped not singleton
     public class ChatGroupsService
     {
-        private readonly IMongoCollection<BuddyChatLobby> groupsCollection;
+        private readonly IMongoCollection<BuddyChatGroup> groupsCollection;
         private readonly BuddyGroupCacheService cacheService;
         private readonly UserManager<DayBuddyUser> userManager;
         public ChatGroupsService(IMongoClient mongoClient, MongoDbConfig config, BuddyGroupCacheService cacheService, UserManager<DayBuddyUser> userManager)
         {
             var database = mongoClient.GetDatabase(config.Name);
-            var collectionNameAttribute = Attribute.GetCustomAttribute(typeof(BuddyChatLobby), typeof(CollectionNameAttribute)) as CollectionNameAttribute;
+            var collectionNameAttribute = Attribute.GetCustomAttribute(typeof(BuddyChatGroup), typeof(CollectionNameAttribute)) as CollectionNameAttribute;
             string collectionName = collectionNameAttribute?.Name ?? "ActiveChats";
-            groupsCollection = database.GetCollection<BuddyChatLobby>(collectionName);
+            groupsCollection = database.GetCollection<BuddyChatGroup>(collectionName);
             this.cacheService = cacheService;
             this.userManager = userManager;
         }
 
         public async Task ConnectUsers(DayBuddyUser user1, DayBuddyUser user2)
         {
-            BuddyChatLobby chatLobby = new([user1.Id.ToString(), user2.Id.ToString()]);
+            BuddyChatGroup chatLobby = new([user1.Id.ToString(), user2.Id.ToString()]);
             await InsertLobbyAsync(chatLobby);
             user1.BuddyChatLobbyID = chatLobby.Id; 
             user1.IsAvailable = false;
@@ -43,7 +43,7 @@ namespace DayBuddy.Services
             //set users to not available
         }
 
-        public async Task InsertLobbyAsync(BuddyChatLobby lobby)
+        public async Task InsertLobbyAsync(BuddyChatGroup lobby)
         {
             await groupsCollection.InsertOneAsync(lobby);
         }
