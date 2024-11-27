@@ -6,13 +6,13 @@ namespace DayBuddy.Models
     [CollectionName("ActiveBuddyGroups")]
     public class BuddyChatGroup
     {
-        public string Id { get; set; }
-        public string[] Users { get; set; }
+        public Guid Id { get; set; }
+        public Guid[] Users { get; set; }
         public DateTime CreatedDate { get; set; }   
-        public BuddyChatGroup(string[] users)
+        public BuddyChatGroup(Guid[] users)
         {
             CreatedDate = DateTime.UtcNow;
-            Id = Guid.NewGuid().ToString();
+            Id = Guid.NewGuid();
             Users = users;
         }
     }

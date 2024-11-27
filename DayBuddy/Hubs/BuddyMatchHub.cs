@@ -32,15 +32,15 @@ namespace DayBuddy.Hubs
         public override async Task OnConnectedAsync()
         {
             DayBuddyUser? user = await userManager.GetUserAsync(Context.User!);
-            if (user == null || user.BuddyChatLobbyID == null) return;
-            await Groups.AddToGroupAsync(Context.ConnectionId, user.BuddyChatLobbyID);
+            if (user == null || user.BuddyChatLobbyID == Guid.Empty) return;
+            await Groups.AddToGroupAsync(Context.ConnectionId, user.BuddyChatLobbyID.ToString());
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             DayBuddyUser? user = await userManager.GetUserAsync(Context.User!);
-            if (user == null || user.BuddyChatLobbyID == null) return;
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, user.BuddyChatLobbyID);
+            if (user == null || user.BuddyChatLobbyID == Guid.Empty) return;
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, user.BuddyChatLobbyID.ToString());
         }
 
         //when restarting, stuff breaks, add a way to repopulate the cache

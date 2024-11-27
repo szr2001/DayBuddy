@@ -51,7 +51,7 @@ namespace DayBuddy.Services
 
         public async Task<DayBuddyUser?> GetUserByChatLobbyIdAsync(string lobbyId)
         {
-            var filter = Builders<DayBuddyUser>.Filter.Eq(u => u.BuddyChatLobbyID, lobbyId);
+            var filter = Builders<DayBuddyUser>.Filter.Eq(u => u.BuddyChatLobbyID, Guid.Parse(lobbyId));
             var user = await usersCollection.Find(filter).FirstOrDefaultAsync();
             return user;
         }

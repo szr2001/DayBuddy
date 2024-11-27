@@ -23,7 +23,7 @@ namespace DayBuddy.Controllers
         public async Task<IActionResult> SearchBuddy()
         {
             DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if (user?.BuddyChatLobbyID != null)
+            if (user?.BuddyChatLobbyID != Guid.Empty)
             {
                 return RedirectToAction(nameof(BuddyChat));
             }
@@ -45,7 +45,7 @@ namespace DayBuddy.Controllers
             //Create a lobby with those two and assign them
             //save it in the database
             //set the users LobbyId to the new saved one
-            if (user == null || user.BuddyChatLobbyID != null) return RedirectToAction(nameof(SearchBuddy));
+            if (user == null || user.BuddyChatLobbyID != Guid.Empty) return RedirectToAction(nameof(SearchBuddy));
 
             if (user.IsAvailable != available)
             {

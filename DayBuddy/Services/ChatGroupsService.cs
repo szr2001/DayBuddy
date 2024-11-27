@@ -25,8 +25,8 @@ namespace DayBuddy.Services
 
         public async Task ConnectUsers(DayBuddyUser user1, DayBuddyUser user2)
         {
-            BuddyChatGroup chatLobby = new([user1.Id.ToString(), user2.Id.ToString()]);
-            await InsertLobbyAsync(chatLobby);
+            BuddyChatGroup chatLobby = new([user1.Id, user2.Id]);
+            await AddGroupAsync(chatLobby);
             user1.BuddyChatLobbyID = chatLobby.Id; 
             user1.IsAvailable = false;
             user2.BuddyChatLobbyID = chatLobby.Id;
@@ -34,18 +34,34 @@ namespace DayBuddy.Services
             await userManager.UpdateAsync(user1);
             await userManager.UpdateAsync(user2);
 
-            cacheService.AddUser(user1.Id.ToString(),user1.BuddyChatLobbyID);
-            cacheService.AddUser(user2.Id.ToString(),user2.BuddyChatLobbyID);
+            cacheService.AddUser(user1.Id.ToString(),user1.BuddyChatLobbyID.ToString());
+            cacheService.AddUser(user2.Id.ToString(), user2.BuddyChatLobbyID.ToString());
             //create group
             //asign users to group
             //save group in db and memory
             //save grou to users
             //set users to not available
         }
-
-        public async Task InsertLobbyAsync(BuddyChatGroup lobby)
+        public async Task<List<BuddyChatGroup>> GetActiveGroupsAsync()
         {
-            await groupsCollection.InsertOneAsync(lobby);
+            var filter = Builders<BuddyChatGroup>.Filter.Empty;
+            return await groupsCollection.Find(filter).ToListAsync();
+        }
+
+        public async Task UpdateUsersInGroup(Guid groupId, Guid[] users)
+        {
+
+        }
+
+        public async Task RemoveGroupAsync(Guid groupId)
+        {
+            var filter = Builders<BuddyChatGroup>.Filter.Eq(g => g.Id, groupId);
+            await groupsCollection.DeleteOneAsync(filter);
+        }
+
+        public async Task AddGroupAsync(BuddyChatGroup group)
+        {
+            await groupsCollection.InsertOneAsync(group);
         }
     }
 }
