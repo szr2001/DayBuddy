@@ -1,4 +1,7 @@
 ﻿
+using DayBuddy.Models;
+using DayBuddy.Services;
+
 namespace DayBuddy.BackgroundServices
 {
     /// <summary>
@@ -6,9 +9,25 @@ namespace DayBuddy.BackgroundServices
     /// </summary>
     public class GroupCachePopulationService : IHostedService
     {
-        public Task StartAsync(CancellationToken cancellationToken)
+        private readonly BuddyGroupCacheService buddyGroupCacheService;
+        private readonly ChatGroupsService chatGroupsService;
+        public GroupCachePopulationService(BuddyGroupCacheService buddyGroupCacheService, ChatGroupsService chatGroupsService)
         {
-            return Task.CompletedTask;
+            this.buddyGroupCacheService = buddyGroupCacheService;
+            this.chatGroupsService = chatGroupsService;
+        }
+
+        public async Task StartAsync(CancellationToken cancellationToken)
+        {
+            List<BuddyChatGroup> groups = await chatGroupsService.GetActiveGroupsAsync();
+
+            foreach(BuddyChatGroup group in groups)
+            {
+                foreach(var user in group.Users)
+                {
+                    buddyGroupCacheService.AddUser(user.ToString(), group.Id.ToString());
+                }
+            }
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

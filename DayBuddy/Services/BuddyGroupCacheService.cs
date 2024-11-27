@@ -1,94 +1,85 @@
-﻿using DayBuddy.Models;
-using System.Text.RegularExpressions;
+﻿using System.Collections.Concurrent;
 
 namespace DayBuddy.Services
 {
-    //load data from db
+    /// <summary>
+    /// An In memory cache of users and their groups used by BuddyMatchHub for transporting messages to and from users
+    /// </summary>
     public class BuddyGroupCacheService
     {
-        public int ActiveLobbiesCount { get { return users.Count; } }    
-        
-        private readonly Dictionary<string, string> users = [];
-        private readonly Dictionary<string, List<string>> groups = [];
+        public int ActiveLobbiesCount => groups.Count;
+
+        private readonly ConcurrentDictionary<string, string> users = [];
+        private readonly ConcurrentDictionary<string, ConcurrentBag<string>> groups = [];
 
         public void AddUser(string userId, string groupId)
         {
-            if (users.ContainsKey(userId))
+            if (!users.TryAdd(userId, groupId))
             {
-                throw new Exception($"userId already exist '{nameof(AddUser)}' inside {ToString}");
+                throw new InvalidOperationException($"User '{userId}' already exists.");
             }
 
-            users.Add(userId, groupId);
-            if (!groups.ContainsKey(groupId))
-            {
-                groups.Add(groupId, []);
-            }
-            groups[groupId].Add(userId);
+            groups.AddOrUpdate
+            (
+                groupId,
+                _ => new ConcurrentBag<string> { userId },
+                (_, bag) => { bag.Add(userId); return bag; }
+            );
         }
 
         public void RemoveGroup(string groupId)
         {
-            if (!groups.ContainsKey(groupId))
+            if (!groups.TryRemove(groupId, out var members))
             {
-                throw new Exception($"groupId does not exist when calling '{nameof(RemoveGroup)}' inside {ToString}");
+                throw new KeyNotFoundException($"Group '{groupId}' does not exist.");
             }
-            
-            foreach(string userId in groups[groupId])
+
+            foreach (var userId in members)
             {
-                users.Remove(userId);
+                users.TryRemove(userId, out _);
             }
-            groups.Remove(groupId);
         }
-        
+
         public int GetGroupMemberCount(string groupId)
         {
-            if (!groups.ContainsKey(groupId))
-            {
-                throw new Exception($"groupId does not exist when calling '{nameof(GetGroupMemberCount)}' inside {ToString}");
-            }
-            
-            return groups[groupId].Count;
+            return groups.TryGetValue(groupId, out var members) ? members.Count : 0;
         }
 
-        public string[] GetUsersInGroup(string groupId) 
+        public string[] GetUsersInGroup(string groupId)
         {
-            if (!groups.ContainsKey(groupId))
+            if (!groups.TryGetValue(groupId, out var members))
             {
-                throw new Exception($"groupId does not exist when calling '{nameof(GetUsersInGroup)}' inside {ToString}");
+                return Array.Empty<string>();
             }
-
-            return groups[groupId].ToArray();
+            return members.ToArray();
         }
 
         public void RemoveUser(string userId)
         {
-            if (!users.ContainsKey(userId))
+            if (!users.TryRemove(userId, out var groupId))
             {
-                throw new Exception($"userId does not exist '{nameof(RemoveUser)}' inside {ToString}");
+                throw new KeyNotFoundException($"User '{userId}' does not exist.");
             }
-            
-            string userGroup = users[userId];
-            groups[userGroup].Remove(userId);
-            if(groups.Count == 0)
+
+            if (groups.TryGetValue(groupId, out var members))
             {
-                groups.Remove(userGroup);
+                members = new ConcurrentBag<string>(members.Where(u => u != userId));
+                if (members.IsEmpty)
+                {
+                    groups.TryRemove(groupId, out _);
+                }
             }
-            users.Remove(userId);
         }
 
-        public bool IsUserInGroup(string userId)
-        {
-            return users.ContainsKey(userId) && users[userId] != null;
-        }
+        public bool IsUserInGroup(string userId) => users.ContainsKey(userId);
 
         public string GetUserGroup(string userId)
         {
-            if (!IsUserInGroup(userId))
+            if (!users.TryGetValue(userId, out var groupId))
             {
-                throw new Exception($"User lobby is null inside '{ToString}' for specified user when calling '{nameof(GetUserGroup)}'");
+                throw new KeyNotFoundException($"User '{userId}' is not part of any group.");
             }
-
-            return users[userId]!;
+            return groupId;
         }
     }
 }

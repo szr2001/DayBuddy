@@ -13,6 +13,7 @@ namespace DayBuddy.Services
         private readonly IMongoCollection<BuddyChatGroup> groupsCollection;
         private readonly BuddyGroupCacheService cacheService;
         private readonly UserManager<DayBuddyUser> userManager;
+        //BuddyGroupCacheService is scooped, this class is singleton so they can't work together
         public ChatGroupsService(IMongoClient mongoClient, MongoDbConfig config, BuddyGroupCacheService cacheService, UserManager<DayBuddyUser> userManager)
         {
             var database = mongoClient.GetDatabase(config.Name);
