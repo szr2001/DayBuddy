@@ -4,6 +4,7 @@ using DayBuddy.Settings;
 using DayBuddy.Hubs;
 using DayBuddy.Services;
 using MongoDB.Driver;
+using DayBuddy.BackgroundServices;
 
 namespace DayBuddy
 {
@@ -19,6 +20,10 @@ namespace DayBuddy
             builder.Services.AddScoped<ChatGroupsService>();
             builder.Services.AddSingleton<BuddyGroupCacheService>();
             builder.Services.AddScoped<UserService>();
+
+            //hosted service run as part of the starting process before everything else runs.
+            builder.Services.AddHostedService<GroupCachePopulationService>();
+            builder.Services.AddHostedService<DbRolesPopulationService>();
 
             MongoDbConfig? mongoDBSettings = builder.Configuration.GetSection(nameof(MongoDbConfig)).Get<MongoDbConfig>();
             
@@ -48,8 +53,6 @@ namespace DayBuddy
 
             var app = builder.Build();  
 
-            _ = AddRolesInDb(app, builder.Configuration);
-
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -72,30 +75,6 @@ namespace DayBuddy
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
-        }
-
-        //Add the default roles from appsettings if there are not present in the db
-        private static async Task AddRolesInDb(WebApplication app, ConfigurationManager config)
-        {
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                var roleManager = services.GetRequiredService<RoleManager<DayBuddyRole>>();
-                string[] roles = config.GetSection("DefaultRoles").Get<string[]>()!;
-
-                foreach (string role in roles)
-                {
-                    //if it doesn't exist, add it
-                    if (!await roleManager.RoleExistsAsync(role))
-                    {
-                        IdentityResult result = await roleManager.CreateAsync(new DayBuddyRole() { Name = role });
-                        if (!result.Succeeded)
-                        {
-                            Console.WriteLine("ERROR WHEN CREATING ROLE, Program.cs");
-                        }
-                    };
-                }
-            }
         }
     }
 }

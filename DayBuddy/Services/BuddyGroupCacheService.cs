@@ -10,6 +10,7 @@ namespace DayBuddy.Services
         
         private readonly Dictionary<string, string> users = [];
         private readonly Dictionary<string, List<string>> groups = [];
+
         public void AddUser(string userId, string groupId)
         {
             if (users.ContainsKey(userId))
