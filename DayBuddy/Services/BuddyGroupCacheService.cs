@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace DayBuddy.Services
 {
+    //load data from db
     public class BuddyGroupCacheService
     {
         public int ActiveLobbiesCount { get { return users.Count; } }    

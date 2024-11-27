@@ -29,7 +29,6 @@ namespace DayBuddy.Hubs
             this.messagesService = messagesService;
             this.userManager = userManager;
         }
-
         public override async Task OnConnectedAsync()
         {
             DayBuddyUser? user = await userManager.GetUserAsync(Context.User!);
@@ -44,6 +43,7 @@ namespace DayBuddy.Hubs
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, user.BuddyChatLobbyID);
         }
 
+        //when restarting, stuff breaks, add a way to repopulate the cache
         public async Task SendMessage(string user, string message)
         {
             string? localUserId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
