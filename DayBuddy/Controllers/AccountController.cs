@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DayBuddy.Controllers
 {
@@ -24,6 +25,7 @@ namespace DayBuddy.Controllers
             return View();
         }
 
+        [Authorize]
         public IActionResult Premium()
         {
             return View();
@@ -54,27 +56,32 @@ namespace DayBuddy.Controllers
         }
 
         [Authorize]
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile()
         {
-            UserProfile profileData;
-            return View();
-        }
+            DayBuddyUser? user = await userManager.GetUserAsync(User);
+            if(user == null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
 
-        [Authorize]
-        public IActionResult EditProfile()
-        {
-            return View();
+            UserProfile profileData = new()
+            {
+                Name = user.UserName,
+                Sexuality = user.Sexuality,
+                Age = user.Age,
+                Interests = user.Interests,
+                Gender = user.Gender,
+                Premium = false
+            };
+            return View(profileData);
         }
 
         [Authorize]
         [HttpPost]
-        public IActionResult EditProfile(UserProfile profile)
+        public IActionResult Profile(UserProfile profile)
         {
-            if (userProfileValidatorService.IsProfileValid(profile))
-            {
-
-            }
-            return View();
+            profile = userProfileValidatorService.ValidateUserProfile(profile);
+            return View(profile);
         }
 
         public IActionResult Register()

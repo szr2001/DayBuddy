@@ -17,9 +17,18 @@ namespace DayBuddy.Services
             Sexualities = _config.GetSection("Sexualities").Get<string[]>()!;
         }
 
-        public bool IsProfileValid(UserProfile profile)
+        public UserProfile ValidateUserProfile(UserProfile profile)
         {
-            return true;
+            if (profile.Gender != null && !Genders.Contains(profile.Gender))
+            {
+                profile.Gender = Genders[0];
+            }
+            if (profile.Sexuality != null && !Sexualities.Contains(profile.Sexuality))
+            {
+                profile.Sexuality = Sexualities[0];
+            }
+
+            return profile;
         }
     }
 }
