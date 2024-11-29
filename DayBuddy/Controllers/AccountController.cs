@@ -59,7 +59,7 @@ namespace DayBuddy.Controllers
         public async Task<IActionResult> Profile()
         {
             DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if(user == null)
+            if (user == null)
             {
                 return RedirectToAction(nameof(Login));
             }
@@ -73,14 +73,44 @@ namespace DayBuddy.Controllers
                 Gender = user.Gender,
                 Premium = false
             };
+
+            ViewBag.Genders = userProfileValidatorService.Genders;
+            ViewBag.Sexualities = userProfileValidatorService.Sexualities;
+            ViewBag.Interests = userProfileValidatorService.Interests.ToList();
+
             return View(profileData);
         }
 
         [Authorize]
         [HttpPost]
-        public IActionResult Profile(UserProfile profile)
+        public async Task<IActionResult> Profile(UserProfile profile)
         {
-            profile = userProfileValidatorService.ValidateUserProfile(profile);
+            if (ModelState.IsValid)
+            {
+                profile = userProfileValidatorService.ValidateUserProfile(profile);
+                DayBuddyUser? user = await userManager.GetUserAsync(User);
+                if (user == null)
+                {
+                    return RedirectToAction(nameof(Login));
+                }
+
+                user.Sexuality = profile.Sexuality;
+                user.Age = profile.Age;
+                user.Interests = profile.Interests;
+                user.Gender = profile.Gender;
+
+                IdentityResult result = await userManager.UpdateAsync(user);
+                if (!result.Succeeded)
+                {
+                    foreach (IdentityError error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+                ViewBag.Genders = userProfileValidatorService.Genders;
+                ViewBag.Sexualities = userProfileValidatorService.Sexualities;
+                ViewBag.Interests = userProfileValidatorService.Interests.ToList();
+            }
             return View(profile);
         }
 
