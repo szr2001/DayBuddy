@@ -104,6 +104,7 @@ namespace DayBuddy.Controllers
             return View(profileData);
         }
 
+        //get rid of EditProfile page and leave the Profile and use Modal popups for editing values
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> EditProfile(UserProfile profile)

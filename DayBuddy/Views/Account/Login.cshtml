@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Login";
     Layout = "~/Views/Shared/_FullScreenLayout.cshtml";
 }
@@ -9,18 +8,18 @@
 <div class="container d-flex justify-content-center align-items-center">
     <div class="text-center">
         <label class="display-6">Sign In with Email</label>
-        <form method="post" class="flex-column row">
+        <form asp-action="Login">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="m-2 row">
-                <label>Email</label>
-                <input name="email" type="email" class="form-contol" />
-            </div>
-            <div class="m-2 row">
-                <label>Password</label>
-                <input name="password" type="password" class="form-contol" />
+            <div class="form-group m-2">
+                <label class="control-label">Email</label>
+                <input name="email" type="email" class="form-control" />
             </div>
             <div class="form-group m-2">
-                <button class="btn align-self-center btn-primary fw-bold rounded-pill" style="background:purple" type="submit">Log In</button>
+                <label class="control-label">Password</label>
+                <input name="Password" type="password" class="form-control" />
+            </div>
+            <div class="form-group m-2">
+                <button class="btn align-self-center btn-primary border-0 fw-bold rounded-pill" style="background:purple" type="submit">Log In</button>
                 <a asp-controller="Account" asp-action="Register" class="rounded-pill btn btn-secondary">Create an account</a>
             </div>
         </form>
