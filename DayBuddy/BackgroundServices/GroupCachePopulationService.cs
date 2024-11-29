@@ -9,23 +9,28 @@ namespace DayBuddy.BackgroundServices
     /// </summary>
     public class GroupCachePopulationService : IHostedService
     {
-        private readonly BuddyGroupCacheService buddyGroupCacheService;
-        private readonly ChatGroupsService chatGroupsService;
-        public GroupCachePopulationService(BuddyGroupCacheService buddyGroupCacheService, ChatGroupsService chatGroupsService)
+        //dependency injection gives us the scopeFactory which is used to retrieve scooped services inside this singleton instance
+        private readonly IServiceScopeFactory _scopeFactory;
+        public GroupCachePopulationService(IServiceScopeFactory scopeFactory)
         {
-            this.buddyGroupCacheService = buddyGroupCacheService;
-            this.chatGroupsService = chatGroupsService;
+            _scopeFactory = scopeFactory;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            List<BuddyChatGroup> groups = await chatGroupsService.GetActiveGroupsAsync();
-
-            foreach(BuddyChatGroup group in groups)
+            using (var scope = _scopeFactory.CreateScope())
             {
-                foreach(var user in group.Users)
+                ChatGroupsService chatGroupsService = scope.ServiceProvider.GetRequiredService<ChatGroupsService>();
+                BuddyGroupCacheService buddyGroupCacheService = scope.ServiceProvider.GetRequiredService<BuddyGroupCacheService>();
+
+                List<BuddyChatGroup> groups = await chatGroupsService.GetActiveGroupsAsync();
+
+                foreach (BuddyChatGroup group in groups)
                 {
-                    buddyGroupCacheService.AddUser(user.ToString(), group.Id.ToString());
+                    foreach (var user in group.Users)
+                    {
+                        buddyGroupCacheService.AddUser(user.ToString(), group.Id.ToString());
+                    }
                 }
             }
         }

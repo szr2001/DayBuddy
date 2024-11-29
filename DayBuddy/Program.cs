@@ -22,7 +22,7 @@ namespace DayBuddy
             builder.Services.AddScoped<UserService>();
 
             //hosted service run as part of the starting process before everything else runs.
-            //builder.Services.AddHostedService<GroupCachePopulationService>();
+            builder.Services.AddHostedService<GroupCachePopulationService>();
             builder.Services.AddHostedService<DbRolesPopulationService>();
 
             MongoDbConfig? mongoDBSettings = builder.Configuration.GetSection(nameof(MongoDbConfig)).Get<MongoDbConfig>();
