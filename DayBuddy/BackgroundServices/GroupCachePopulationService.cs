@@ -9,7 +9,6 @@ namespace DayBuddy.BackgroundServices
     /// </summary>
     public class GroupCachePopulationService : IHostedService
     {
-        //dependency injection gives us the scopeFactory which is used to retrieve scooped services inside this singleton instance
         private readonly IServiceScopeFactory _scopeFactory;
         public GroupCachePopulationService(IServiceScopeFactory scopeFactory)
         {

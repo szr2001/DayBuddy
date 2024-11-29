@@ -13,7 +13,6 @@ namespace DayBuddy.Services
         private readonly IMongoCollection<BuddyChatGroup> groupsCollection;
         private readonly BuddyGroupCacheService cacheService;
         private readonly UserManager<DayBuddyUser> userManager;
-        //BuddyGroupCacheService is scooped, this class is singleton so they can't work together
         public ChatGroupsService(IMongoClient mongoClient, MongoDbConfig config, BuddyGroupCacheService cacheService, UserManager<DayBuddyUser> userManager)
         {
             var database = mongoClient.GetDatabase(config.Name);
@@ -37,12 +36,8 @@ namespace DayBuddy.Services
 
             cacheService.AddUser(user1.Id.ToString(),user1.BuddyChatLobbyID.ToString());
             cacheService.AddUser(user2.Id.ToString(), user2.BuddyChatLobbyID.ToString());
-            //create group
-            //asign users to group
-            //save group in db and memory
-            //save grou to users
-            //set users to not available
         }
+
         public async Task<List<BuddyChatGroup>> GetActiveGroupsAsync()
         {
             var filter = Builders<BuddyChatGroup>.Filter.Empty;

@@ -43,13 +43,12 @@ namespace DayBuddy.Hubs
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, user.BuddyChatLobbyID.ToString());
         }
 
-        //when restarting, stuff breaks, add a way to repopulate the cache
-        public async Task SendMessage(string user, string message)
+        public async Task SendMessage(string message)
         {
             string? localUserId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (localUserId == null) return;
 
-            await Clients.Group(groupsCacheService.GetUserGroup(localUserId)).SendAsync("ReceiveMessage", user, message);
+            await Clients.Group(groupsCacheService.GetUserGroup(localUserId)).SendAsync("ReceiveMessage", Context?.User?.Identity?.Name, message);
         }
     }
 }

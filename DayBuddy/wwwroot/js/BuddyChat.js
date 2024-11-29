@@ -21,10 +21,9 @@ connection.start().then(function () {
 });
 
 document.getElementById("sendButton").addEventListener("click", function (event) {
-    var user = "RoberBot";
     var message = document.getElementById("messageInput");
     if (message.value == "") return;
-    connection.invoke("SendMessage", user, message.value).catch(function (err) {
+    connection.invoke("SendMessage", message.value).catch(function (err) {
         return console.error(err.toString());
     });
     message.value = "";
