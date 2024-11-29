@@ -3,6 +3,7 @@ using DayBuddy.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.ComponentModel.DataAnnotations;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -74,8 +75,30 @@ namespace DayBuddy.Controllers
                 Premium = false
             };
 
-            ViewBag.Genders = userProfileValidatorService.Genders;
-            ViewBag.Sexualities = userProfileValidatorService.Sexualities;
+            return View(profileData);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> EditProfile()
+        {
+            DayBuddyUser? user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
+            UserProfile profileData = new()
+            {
+                Name = user.UserName,
+                Sexuality = user.Sexuality,
+                Age = user.Age,
+                Interests = user.Interests,
+                Gender = user.Gender,
+                Premium = false
+            };
+
+            ViewBag.Genders = userProfileValidatorService.Genders.ToList();
+            ViewBag.Sexualities = userProfileValidatorService.Sexualities.ToList();
             ViewBag.Interests = userProfileValidatorService.Interests.ToList();
 
             return View(profileData);
@@ -83,7 +106,7 @@ namespace DayBuddy.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Profile(UserProfile profile)
+        public async Task<IActionResult> EditProfile(UserProfile profile)
         {
             if (ModelState.IsValid)
             {
@@ -107,8 +130,8 @@ namespace DayBuddy.Controllers
                         ModelState.AddModelError("", error.Description);
                     }
                 }
-                ViewBag.Genders = userProfileValidatorService.Genders;
-                ViewBag.Sexualities = userProfileValidatorService.Sexualities;
+                ViewBag.Genders = userProfileValidatorService.Genders.ToList();
+                ViewBag.Sexualities = userProfileValidatorService.Sexualities.ToList();
                 ViewBag.Interests = userProfileValidatorService.Interests.ToList();
             }
             return View(profile);

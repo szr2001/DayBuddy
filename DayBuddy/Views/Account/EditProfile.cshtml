@@ -1,0 +1,74 @@
+﻿@model DayBuddy.Models.UserProfile
+
+@{
+    ViewData["Title"] = "Edit Profile";
+    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+}
+
+<h1>Edit Profile</h1>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" asp-action="Profile">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Age" class="control-label"></label>
+                <input asp-for="Age" class="form-control" />
+                <span asp-validation-for="Age" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Gender" class="control-label"></label>
+                <select asp-for="Gender" class="form-control">
+                    @foreach (var gender in (ViewBag.Genders as List<string> ?? new List<string>()))
+                    {
+                        <option value="@gender" selected="@(Model.Gender == gender ? "selected" : "")">@gender</option>
+                    }
+                </select>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Sexuality" class="control-label"></label>
+                <select asp-for="Sexuality" class="form-control">
+                    @foreach (var sexuality in (ViewBag.Sexualities as List<string> ?? new List<string>()))
+                    {
+                        <option value="@sexuality" selected="@(Model.Sexuality == sexuality ? "selected" : "")">@sexuality</option>
+                    }
+                </select>
+                <span asp-validation-for="Sexuality" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Interests" class="control-label">Interests</label>
+                <select asp-for="Interests" multiple="multiple" class="form-control">
+                    @foreach (var interest in (ViewBag.Interests as List<string> ?? new List<string>()))
+                    {
+                        <option value="@interest" selected="@(Model.Interests.Contains(interest) ? "selected" : "")">@interest</option>
+                    }
+                </select>
+                <span asp-validation-for="Interests" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Premium Status</label>
+                <p class="form-control-plaintext">@Model.Premium.ToString()</p>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save Changes" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
