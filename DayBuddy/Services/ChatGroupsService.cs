@@ -27,10 +27,15 @@ namespace DayBuddy.Services
         {
             BuddyChatGroup chatLobby = new([user1.Id, user2.Id]);
             await AddGroupAsync(chatLobby);
-            user1.BuddyChatLobbyID = chatLobby.Id; 
+            
+            user1.MatchedWithBuddy = DateTime.UtcNow;
+            user1.BuddyChatLobbyID = chatLobby.Id;
             user1.IsAvailable = false;
+
+            user2.MatchedWithBuddy = DateTime.UtcNow;
             user2.BuddyChatLobbyID = chatLobby.Id;
             user2.IsAvailable = false;
+
             await userManager.UpdateAsync(user1);
             await userManager.UpdateAsync(user2);
 

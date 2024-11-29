@@ -18,8 +18,9 @@ namespace DayBuddy
             builder.Services.AddSignalR();
             builder.Services.AddScoped<MessagesService>();
             builder.Services.AddScoped<ChatGroupsService>();
-            builder.Services.AddSingleton<BuddyGroupCacheService>();
             builder.Services.AddScoped<UserService>();
+            builder.Services.AddSingleton<BuddyGroupCacheService>();
+            builder.Services.AddSingleton<UserProfileValidatorService>();
 
             //hosted service run as part of the starting process before everything else runs.
             builder.Services.AddHostedService<GroupCachePopulationService>();

@@ -1,4 +1,5 @@
 ﻿using DayBuddy.Models;
+using DayBuddy.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,12 @@ namespace DayBuddy.Controllers
     {
         private readonly UserManager<DayBuddyUser> userManager;
         private readonly SignInManager<DayBuddyUser> signInManager;
-        public AccountController(UserManager<DayBuddyUser> userManager, SignInManager<DayBuddyUser> signInManager)
+        private readonly UserProfileValidatorService userProfileValidatorService;
+        public AccountController(UserManager<DayBuddyUser> userManager, SignInManager<DayBuddyUser> signInManager, UserProfileValidatorService userProfileValidatorService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.userProfileValidatorService = userProfileValidatorService;
         }
 
         public IActionResult Login()
@@ -53,6 +56,24 @@ namespace DayBuddy.Controllers
         [Authorize]
         public IActionResult Profile()
         {
+            UserProfile profileData;
+            return View();
+        }
+
+        [Authorize]
+        public IActionResult EditProfile()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult EditProfile(UserProfile profile)
+        {
+            if (userProfileValidatorService.IsProfileValid(profile))
+            {
+
+            }
             return View();
         }
 
