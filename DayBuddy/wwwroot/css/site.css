@@ -20,10 +20,20 @@ label {
     font-family: Georgia
 }
 
-.custom-input:focus {
+.green-outline-focus:focus {
     border-color: #8bc34a !important; /* Change border color */
     outline: none !important; /* Remove default outline */
-    box-shadow: 0 0 0 0.2rem rgba(139, 195, 74, 0.25)
+    box-shadow: 0 0 0 0.2rem rgba(139, 195, 74, 0.25) !important
+}
+
+.outline-none-focus:focus {
+    outline: none !important; /* Remove default outline */
+    box-shadow: 0 0 0 0rem rgba(0, 0, 0, 0) !important
+}
+
+.zoom-in-hover:hover {
+    transform: scale(1.02); /* Slight zoom effect */
+    transition: transform 0.1s ease-in-out; /* Smooth transition */
 }
 
 .hover-dark:hover{

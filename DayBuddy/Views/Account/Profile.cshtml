@@ -5,44 +5,57 @@
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
-<h1>EditProfile</h1>
 
-<div>
-    <h4>UserProfile</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Age)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Age)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Premium)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Premium)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Gender)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Gender)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Sexuality)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Sexuality)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="EditProfile">Edit</a>
+<nav class="text-center">
+    <div class="d-flex justify-content-center">
+        <h2 class="fw-bold">Profile</h2>
+    </div>
+</nav>
+<hr />
+
+<div class="text-center container-fluid justify-content-center d-flex p-md-5 h-100">
+    <div class="row container align-content-between h-100 w-75 rounded-6">
+        <div class="container row p-2">
+            <button class="green-outline-focus zoom-in-hover outline m-1 btn border container rounded-6 d-flex justify-content-between">
+                <div class="align-content-end d-flex fw-bold">
+                    @Html.DisplayNameFor(model => model.Name)
+                </div>
+                <div class="align-self-start">
+                    @Html.DisplayFor(model => model.Name)
+                </div>
+            </button>
+            <button class="green-outline-focus zoom-in-hover btn m-1 border container rounded-6 d-flex justify-content-between">
+                <div class="align-content-end d-flex fw-bold">
+                    @Html.DisplayNameFor(model => model.Age)
+                </div>
+                <div class="align-self-start">
+                    @Html.DisplayFor(model => model.Age)
+                </div>
+            </button>
+            <button class="green-outline-focus zoom-in-hover btn m-1 border container rounded-6 d-flex justify-content-between">
+                <div class="align-content-end d-flex fw-bold">
+                    @Html.DisplayNameFor(model => model.Premium)
+                </div>
+                <div class="align-self-start">
+                    @Html.DisplayFor(model => model.Premium)
+                </div>
+            </button>
+            <button class="green-outline-focus zoom-in-hover btn m-1 border container rounded-6 d-flex justify-content-between">
+                <div class="align-content-end d-flex fw-bold">
+                    @Html.DisplayNameFor(model => model.Gender)
+                </div>
+                <div class="align-self-start">
+                    @Html.DisplayFor(model => model.Gender)
+                </div>
+            </button>
+            <button class="green-outline-focus zoom-in-hover btn m-1 border container rounded-6 d-flex justify-content-between">
+                <div class="align-content-end d-flex fw-bold">
+                    @Html.DisplayNameFor(model => model.Sexuality)
+                </div>
+                <div class="align-self-start">
+                    @Html.DisplayFor(model => model.Sexuality)
+                </div>
+            </button>
+        </div>
+    </div>
 </div>

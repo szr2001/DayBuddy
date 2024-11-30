@@ -12,15 +12,15 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group m-2">
                 <label class="control-label">Email</label>
-                <input name="email" type="email" class="form-control" />
+                <input name="email" type="email" class="green-outline-focus form-control" />
             </div>
             <div class="form-group m-2">
                 <label class="control-label">Password</label>
-                <input name="Password" type="password" class="form-control" />
+                <input name="Password" type="password" class="green-outline-focus form-control" />
             </div>
             <div class="form-group m-2">
-                <button class="btn align-self-center btn-primary border-0 fw-bold rounded-pill" style="background:purple" type="submit">Log In</button>
-                <a asp-controller="Account" asp-action="Register" class="rounded-pill btn btn-secondary">Create an account</a>
+                <button class="btn align-self-center btn-primary outline-none-focus border-0 fw-bold rounded-pill" style="background:purple" type="submit">Log In</button>
+                <a asp-controller="Account" asp-action="Register" class="rounded-pill btn outline-none-focus btn-secondary">Create an account</a>
             </div>
         </form>
     </div>

@@ -78,32 +78,6 @@ namespace DayBuddy.Controllers
             return View(profileData);
         }
 
-        [Authorize]
-        public async Task<IActionResult> EditProfile()
-        {
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return RedirectToAction(nameof(Login));
-            }
-
-            UserProfile profileData = new()
-            {
-                Name = user.UserName,
-                Sexuality = user.Sexuality,
-                Age = user.Age,
-                Interests = user.Interests,
-                Gender = user.Gender,
-                Premium = false
-            };
-
-            ViewBag.Genders = userProfileValidatorService.Genders.ToList();
-            ViewBag.Sexualities = userProfileValidatorService.Sexualities.ToList();
-            ViewBag.Interests = userProfileValidatorService.Interests.ToList();
-
-            return View(profileData);
-        }
-
         //get rid of EditProfile page and leave the Profile and use Modal popups for editing values
         [Authorize]
         [HttpPost]

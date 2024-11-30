@@ -43,7 +43,6 @@ namespace DayBuddy.Services
             var filter = Builders<DayBuddyUser>.Filter.Eq(u => u.IsAvailable, true) &
                              Builders<DayBuddyUser>.Filter.Ne(u => u.Id, ignoreUser.Id);
             var users = await usersCollection.Find(filter).ToListAsync();
-            Console.WriteLine(users.Count);
             if (users.Count == 0) return null;
 
             return users[random.Next(users.Count)];
