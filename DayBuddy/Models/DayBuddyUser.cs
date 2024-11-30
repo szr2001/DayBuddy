@@ -11,9 +11,9 @@ namespace DayBuddy.Models
         public int Age { get; set; }
         public int[] AgeRange { get; set; } = { 18, 100 }; 
         public string[] Interests { get; set; } = [];
-        public string? Gender { get; set; }
+        public string? Gender { get; set; } = "Male";
         public float Score { get; set; } = 8;
-        public string? Sexuality { get; set; }
+        public string? Sexuality { get; set; } = "Straight";
         public DateTime? LastTimeOnline { get; set; }
         public DateTime? PurchasedPremium { get; set; }
         public DateTime? MatchedWithBuddy { get; set; }

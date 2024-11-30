@@ -9,9 +9,11 @@ namespace DayBuddy.Models
         public string Message { get; set; }
         public Guid SenderId { get; set; }
         public Guid ChatLobbyId { get; set; }
-        
+        public DateTime CreatedDate { get; set; }
+
         public BuddyMessage(string message, Guid userId, Guid chatLobbyId)
         {
+            CreatedDate = DateTime.UtcNow;
             Id = Guid.NewGuid();
             Message = message;
             SenderId = userId;
