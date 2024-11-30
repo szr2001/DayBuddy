@@ -72,7 +72,7 @@ namespace DayBuddy.Controllers
                 Age = user.Age,
                 Interests = user.Interests,
                 Gender = user.Gender,
-                Premium = false
+                Premium = true
             };
 
             return View(profileData);

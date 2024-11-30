@@ -16,7 +16,7 @@
 <div class="text-center container-fluid justify-content-center d-flex p-md-5 h-100">
     <div class="row container align-content-between h-100 w-75 rounded-6">
         <div class="container row p-2">
-            <button class="green-outline-focus zoom-in-hover outline m-1 btn border container rounded-6 d-flex justify-content-between">
+            <button id="BtnName" class="green-outline-focus zoom-in-hover outline m-1 btn border container rounded-6 d-flex justify-content-between">
                 <div class="align-content-end d-flex fw-bold">
                     @Html.DisplayNameFor(model => model.Name)
                 </div>
@@ -32,12 +32,6 @@
                     @Html.DisplayFor(model => model.Age)
                 </div>
             </button>
-            @if (Model.Premium)
-            {
-                <div class="green-outline-focus zoom-in-hover btn m-1 border container rounded-6 d-flex justify-content-between">
-                    <label class="fw-bold text-center" >Premium Enabled</label>
-                </div>
-            }
             <button class="green-outline-focus zoom-in-hover btn m-1 border container rounded-6 d-flex justify-content-between">
                 <div class="align-content-end d-flex fw-bold">
                     @Html.DisplayNameFor(model => model.Gender)
@@ -65,6 +59,32 @@
                     }
                 </div>
             </button>
+            @if (Model.Premium)
+            {
+                <div class="btn text-white rounded-pill btn-info border row rounded-6 d-flex justify-content-center">
+                    <label class="fw-bold fs-5 text-center" >Premium Enabled</label>
+                    <label id="PremiumTimer" class="fw-bold fs-6 text-center" >32:12:45</label>
+                </div>
+            }
         </div>
     </div>
 </div>
+<div class="modal" id="ChangeNameModal">
+     <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+
+            </div>
+            <div class="modal-body">
+                <button class="btn btn-primary">
+
+                </button>
+            </div>
+            <div class="modal-header">
+
+            </div>
+         </div>
+     </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/ProfileEdit.js"></script>

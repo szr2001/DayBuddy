@@ -8,14 +8,17 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\js\BuddyChat.js" />
+    <Content Remove="wwwroot\js\ProfileEdit.js" />
   </ItemGroup>
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\js\BuddyChat.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\js\ProfileEdit.js" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="wwwroot\js\BuddyChat.js" />
+    <None Include="wwwroot\js\ProfileEdit.js" />
   </ItemGroup>
 
   <ItemGroup>
