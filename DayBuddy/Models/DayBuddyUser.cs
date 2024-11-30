@@ -1,6 +1,7 @@
 ﻿using AspNetCore.Identity.MongoDbCore;
 using AspNetCore.Identity.MongoDbCore.Models;
 using MongoDbGenericRepository.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace DayBuddy.Models
 {
@@ -11,6 +12,7 @@ namespace DayBuddy.Models
         public int[] AgeRange { get; set; } = { 18, 100 }; 
         public string[] Interests { get; set; } = [];
         public string? Gender { get; set; }
+        public float Score { get; set; } = 8;
         public string? Sexuality { get; set; }
         public DateTime? LastTimeOnline { get; set; }
         public DateTime? PurchasedPremium { get; set; }

@@ -11,6 +11,7 @@ namespace DayBuddy.Models
         public string[] Interests { get; set; } = [];
         [Range(18,150, ErrorMessage = "Age must be between 18 and 150")]
         public int Age { get; set; }
+        public float Score { get; set; }
         public bool Premium { get; set; }
         public string? Gender {  get; set; }
         public string? Sexuality {  get; set; }

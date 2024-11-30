@@ -18,6 +18,7 @@ namespace DayBuddy
             builder.Services.AddSignalR();
             builder.Services.AddScoped<MessagesService>();
             builder.Services.AddScoped<ChatGroupsService>();
+            builder.Services.AddScoped<UserReportService>();
             builder.Services.AddScoped<UserService>();
             builder.Services.AddSingleton<BuddyGroupCacheService>();
             builder.Services.AddSingleton<UserProfileValidatorService>();
