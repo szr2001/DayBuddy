@@ -32,14 +32,12 @@
                     @Html.DisplayFor(model => model.Age)
                 </div>
             </button>
-            <button class="green-outline-focus zoom-in-hover btn m-1 border container rounded-6 d-flex justify-content-between">
-                <div class="align-content-end d-flex fw-bold">
-                    @Html.DisplayNameFor(model => model.Premium)
+            @if (Model.Premium)
+            {
+                <div class="green-outline-focus zoom-in-hover btn m-1 border container rounded-6 d-flex justify-content-between">
+                    <label class="fw-bold text-center" >Premium Enabled</label>
                 </div>
-                <div class="align-self-start">
-                    @Html.DisplayFor(model => model.Premium)
-                </div>
-            </button>
+            }
             <button class="green-outline-focus zoom-in-hover btn m-1 border container rounded-6 d-flex justify-content-between">
                 <div class="align-content-end d-flex fw-bold">
                     @Html.DisplayNameFor(model => model.Gender)
@@ -54,6 +52,17 @@
                 </div>
                 <div class="align-self-start">
                     @Html.DisplayFor(model => model.Sexuality)
+                </div>
+            </button>
+            <button class="green-outline-focus row d-flex zoom-in-hover btn m-1 border container rounded-6 d-flex justify-content-between">
+                <div class="align-content-end d-flex fw-bold">
+                    @Html.DisplayNameFor(model => model.Interests)
+                </div>
+                <div class="d-flex flex-wrap">
+                    @foreach (string interest in Model.Interests)
+                    {
+                        <h6 class="p-1 m-1 background-grass-green fw-bold text-white text-truncate rounded-3 border">@interest</h6>
+                    }
                 </div>
             </button>
         </div>

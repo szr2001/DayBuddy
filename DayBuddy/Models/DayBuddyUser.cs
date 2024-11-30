@@ -8,9 +8,9 @@ namespace DayBuddy.Models
     [CollectionName("Users")]
     public class DayBuddyUser : MongoIdentityUser<Guid>
     {
-        public int Age { get; set; }
+        public int Age { get; set; } = 18;
         public int[] AgeRange { get; set; } = { 18, 100 }; 
-        public string[] Interests { get; set; } = [];
+        public string[] Interests { get; set; } = ["Programming", "Test", "Sleeping", "Cocaine", "Drugs"];
         public string? Gender { get; set; } = "Male";
         public float Score { get; set; } = 8;
         public string? Sexuality { get; set; } = "Straight";
