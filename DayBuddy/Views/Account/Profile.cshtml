@@ -79,21 +79,16 @@
 
             <div class="modal-body">
                 <div class="text-center">
-                    <form asp-action="EditName">
-                        <div class="form-group m-2">
-                            <label class="control-label">New Name</label>
-                            <input name="newName" type="text" class="green-outline-focus form-control" />
-                        </div>
-                        <div class="form-group m-2">
-                            <button class="btn align-self-center btn-primary outline-none-focus border-0 fw-bold rounded-pill" style="background:purple" type="submit">Edit</button>
-                        </div>
-                    </form>
+                    <div class="form-group m-2">
+                        <label class="control-label">New Name</label>
+                        <input name="newName" id="NewNameInput" type="text" class="green-outline-focus form-control" />
+                    </div>
                 </div>
             </div>
 
             <div class="modal-header">
                 <button class="btn rounded-6 outline-none-focus border-0 text-white background-grass-green btn-outline-success"
-                        onclick="SaveName();">Save</button>
+                        onclick="EditName();">Save</button>
                 <button class="btn rounded-6 outline-none-focus border-0 btn-secondary" data-bs-dismiss="modal"
                 onclick="HideNameModal();">Close</button>
             </div>

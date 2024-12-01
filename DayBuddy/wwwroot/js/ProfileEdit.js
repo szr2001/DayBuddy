@@ -8,7 +8,24 @@ jQuery(`#BtnName`).click(function () {
 })
 
 function EditName() {
+    //get the data from html
+    var formData = new Object();
+    formData.newName = $("#NewNameInput").val();
 
+    //send the data
+    $.ajax({
+        //set up the target
+        url:'/Account/EditName',
+        data:formData,
+        type: 'post',
+        //handle scenarious
+        success: function (response) {
+            alert(response);
+        },
+        error: function (response) {
+            alert(response);
+        },
+    })
 }
 
 function HideNameModal() {
