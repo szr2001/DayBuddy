@@ -1,5 +1,7 @@
 ﻿"use strict";
 
+const loggedInUsername = document.getElementById("loggedInUsername").value;
+const MessageList = document.getElementById("messagesList");
 var connection = new signalR.HubConnectionBuilder().withUrl("/BuddyHub").build();
 
 //Disable the send button until connection is established.
@@ -7,11 +9,18 @@ document.getElementById("sendButton").disabled = true;
 
 connection.on("ReceiveMessage", function (user, message) {
     var li = document.createElement("li");
-    document.getElementById("messagesList").appendChild(li);
-    // We can assign user-supplied strings to an element's textContent because it
-    // is not interpreted as markup. If you're assigning in any other way, you 
-    // should be aware of possible script injection concerns.
-    li.textContent = `${user}: ${message}`;
+    li.classList.add("p-2", "mb-2", "rounded-6", "text-white");
+    
+    if (user === loggedInUsername) {
+        li.classList.add("bg-secondary");
+        li.style.alignSelf = "flex-start";
+    } else {
+        li.classList.add("background-grass-green");
+        li.style.alignSelf = "flex-end";
+    }
+
+    li.textContent = `${message}`;
+    MessageList.appendChild(li);
 });
 
 connection.start().then(function () {

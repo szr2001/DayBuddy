@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
+<input type="hidden" id="loggedInUsername" value="@User?.Identity?.Name" />
 <div class="d-flex h-100">
     <div class="container-fluid d-flex" style="padding-left: 0rem !important;">
         
@@ -11,10 +12,11 @@
             <div class="top-0 m-2 border-bottom text-center">
                 <label class="fw-bolder text-black-50 fs-1">23:35:12</label>
             </div>
-
             <div class="row container">
-                <div class="col-6">
-                    <ul id="messagesList"></ul>
+                <div class="container d-flex flex-column" id="messagesList" style="gap: 10px;">
+                    
+
+
                 </div>
             </div>
             
