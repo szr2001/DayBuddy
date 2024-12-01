@@ -58,6 +58,22 @@ namespace DayBuddy.Controllers
         }
 
         [Authorize]
+        public JsonResult GetGenders()
+        {
+            return Json(new { genders = userProfileValidatorService.Genders });
+        }
+        [Authorize]
+        public JsonResult GetSexualities()
+        {
+            return Json(new { sexualities = userProfileValidatorService.Sexualities });
+        }
+        [Authorize]
+        public JsonResult GetInterests()
+        {
+            return Json(new { interests = userProfileValidatorService.Interests });
+        }
+
+        [Authorize]
         [HttpPost]
         public async Task<JsonResult> EditName([MaxLength(20, ErrorMessage = "Name too long")]
         [MinLength(5, ErrorMessage = "Name too short")] [Required]string newName)
@@ -131,6 +147,12 @@ namespace DayBuddy.Controllers
                 return Json(new { success = false, errors = new[] { "User doesn't exist" } });
             }
 
+            if (!userProfileValidatorService.Genders.Contains(selectedGender))
+            {
+                return Json(new { success = false, errors = new[] { "Gender not available" } });
+            }
+
+            user.Gender = selectedGender;
             await userManager.UpdateAsync(user);
 
             return Json(new { success = true, errors = Array.Empty<string>() });

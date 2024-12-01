@@ -4,6 +4,43 @@
 // here we make use of Jquery already made functions
 // so we don't have to write stuff like Document.getElement and stuff
 
+var Interests;
+var Sexualities;
+var Genders;
+$(document).ready(function () {
+    ReadProfileOptions();
+})
+
+function ReadProfileOptions() {
+    $.ajax({
+        url: '/Account/GetGenders',
+        type: 'get',
+        datatype: 'json',
+        contentype: 'application/json;charset=utf-8',
+        success: function (result) {
+            Genders = result.genders;
+        }
+    })
+    $.ajax({
+        url: '/Account/GetSexualities',
+        type: 'get',
+        datatype: 'json',
+        contentype: 'application/json;charset=utf-8',
+        success: function (result) {
+            Sexualities = result.sexualities;
+        }
+    })
+    $.ajax({
+        url: '/Account/GetInterests',
+        type: 'get',
+        datatype: 'json',
+        contentype: 'application/json;charset=utf-8',
+        success: function (result) {
+            Interests = result.interests;
+        }
+    })
+}
+
 //Name
 jQuery(`#BtnName`).click(function () {
     //reset ChangeNameModal
@@ -91,14 +128,22 @@ jQuery(`#BtnGender`).click(function () {
     //reset ChangeNameModal
     $("#NewGenderErrorLabel").text("");
     $("#NewGenderInput").val("");
+    $("#GendersList").empty();
     //show Modal
+    Genders.forEach(function (item) {
+        var genderBtn = $("<button></button>")
+            .text(item)
+            .addClass("p-1 m-1 background-grass-green zoom-in-hover fw-bold text-white text-truncate rounded-3 border")
+            .on("click", function () {
+                EditGender(item);
+            });
+        $("#GendersList").append(genderBtn);
+    })
     jQuery('#ChangeGenderModal').modal('show');
 })
-function EditGender() {
-    //get the data from html
+function EditGender(newGender) {
     var formData = new Object();
-    //formData.newAge = $("#NewGenderInput").val();
-
+    formData.selectedGender = newGender;
     //send the data
     $.ajax({
         url: '/Account/EditGender',
