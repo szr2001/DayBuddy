@@ -6,5 +6,10 @@
         {
             return message;
         }
+
+        public bool ContainsProfanity(string message)
+        {
+            return false;
+        }
     }
 }

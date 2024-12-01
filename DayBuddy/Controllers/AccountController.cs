@@ -13,11 +13,13 @@ namespace DayBuddy.Controllers
         private readonly UserManager<DayBuddyUser> userManager;
         private readonly SignInManager<DayBuddyUser> signInManager;
         private readonly UserProfileValidatorService userProfileValidatorService;
-        public AccountController(UserManager<DayBuddyUser> userManager, SignInManager<DayBuddyUser> signInManager, UserProfileValidatorService userProfileValidatorService)
+        private readonly ProfanityFilterService profanityFilterService;
+        public AccountController(UserManager<DayBuddyUser> userManager, SignInManager<DayBuddyUser> signInManager, UserProfileValidatorService userProfileValidatorService, ProfanityFilterService profanityFilterService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.userProfileValidatorService = userProfileValidatorService;
+            this.profanityFilterService = profanityFilterService;
         }
 
         public IActionResult Login()
@@ -66,12 +68,17 @@ namespace DayBuddy.Controllers
                                     .SelectMany(v => v.Errors)
                                     .Select(e => e.ErrorMessage)
                                     .ToArray();
-                return Json(errorMessages);
+                return Json(new { success = false, errors = errorMessages });
             }
             DayBuddyUser? user = await userManager.GetUserAsync(User);
             if(user == null)
             {
-                return Json("User doesn't exist");
+                return Json(new { success = false, errors = new[] { "User doesn't exist" } });
+            }
+
+            if (profanityFilterService.ContainsProfanity(newName))
+            {
+                return Json(new { success = false, errors = new[] { "Name cannot contain profanity" } });
             }
 
             user.UserName = newName;
@@ -79,7 +86,7 @@ namespace DayBuddy.Controllers
 
             await userManager.UpdateAsync(user);
 
-            return Json("Name Changed!");
+            return Json(new { success = true, errors = Array.Empty<string>() });
         }
 
         [Authorize]
@@ -102,40 +109,6 @@ namespace DayBuddy.Controllers
             };
 
             return View(profileData);
-        }
-
-        //get rid of EditProfile page and leave the Profile and use Modal popups for editing values
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> EditProfile(UserProfile profile)
-        {
-            if (ModelState.IsValid)
-            {
-                profile = userProfileValidatorService.ValidateUserProfile(profile);
-                DayBuddyUser? user = await userManager.GetUserAsync(User);
-                if (user == null)
-                {
-                    return RedirectToAction(nameof(Login));
-                }
-
-                user.Sexuality = profile.Sexuality;
-                user.Age = profile.Age;
-                user.Interests = profile.Interests;
-                user.Gender = profile.Gender;
-
-                IdentityResult result = await userManager.UpdateAsync(user);
-                if (!result.Succeeded)
-                {
-                    foreach (IdentityError error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
-                }
-                ViewBag.Genders = userProfileValidatorService.Genders.ToList();
-                ViewBag.Sexualities = userProfileValidatorService.Sexualities.ToList();
-                ViewBag.Interests = userProfileValidatorService.Interests.ToList();
-            }
-            return View(profile);
         }
 
         public IActionResult Register()
