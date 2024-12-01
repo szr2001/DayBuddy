@@ -90,6 +90,53 @@ namespace DayBuddy.Controllers
         }
 
         [Authorize]
+        [HttpPost]
+        public async Task<JsonResult> EditAge([Range(18,150,ErrorMessage ="Age must be between 18 and 150")] [Required]int newAge)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelState.Values
+                                    .SelectMany(v => v.Errors)
+                                    .Select(e => e.ErrorMessage)
+                                    .ToArray();
+                return Json(new { success = false, errors = errorMessages });
+            }
+            DayBuddyUser? user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Json(new { success = false, errors = new[] { "User doesn't exist" } });
+            }
+
+            user.Age = newAge;
+            await userManager.UpdateAsync(user);
+
+            return Json(new { success = true, errors = Array.Empty<string>() });
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<JsonResult> EditGender([Required]string selectedGender)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelState.Values
+                                    .SelectMany(v => v.Errors)
+                                    .Select(e => e.ErrorMessage)
+                                    .ToArray();
+                return Json(new { success = false, errors = errorMessages });
+            }
+            DayBuddyUser? user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Json(new { success = false, errors = new[] { "User doesn't exist" } });
+            }
+
+            await userManager.UpdateAsync(user);
+
+            return Json(new { success = true, errors = Array.Empty<string>() });
+        }
+
+        [Authorize]
         public async Task<IActionResult> Profile()
         {
             DayBuddyUser? user = await userManager.GetUserAsync(User);

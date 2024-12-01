@@ -24,7 +24,7 @@
                     @Html.DisplayFor(model => model.Name)
                 </div>
             </button>
-            <button class="green-outline-focus zoom-in-hover btn m-1 border container rounded-6 d-flex justify-content-between">
+            <button id="BtnAge" class="green-outline-focus zoom-in-hover btn m-1 border container rounded-6 d-flex justify-content-between">
                 <div class="align-content-end d-flex fw-bold">
                     @Html.DisplayNameFor(model => model.Age)
                 </div>
@@ -32,7 +32,7 @@
                     @Html.DisplayFor(model => model.Age)
                 </div>
             </button>
-            <button class="green-outline-focus zoom-in-hover btn m-1 border container rounded-6 d-flex justify-content-between">
+            <button id="BtnGender" class="green-outline-focus zoom-in-hover btn m-1 border container rounded-6 d-flex justify-content-between">
                 <div class="align-content-end d-flex fw-bold">
                     @Html.DisplayNameFor(model => model.Gender)
                 </div>
@@ -96,6 +96,63 @@
 
          </div>
      </div>
+</div>
+
+<div class="modal" id="ChangeAgeModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="fw-bold">Edit Age</h5>
+            </div>
+
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="form-group m-2">
+                        <label class="control-label">New Age</label>
+                        <input name="newAge" id="NewAgeInput" type="number" class="green-outline-focus form-control" />
+                        <label id="NewAgeErrorLabel" class="text-danger"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-header">
+                <button class="btn rounded-6 outline-none-focus border-0 text-white background-grass-green btn-outline-success"
+                        onclick="EditAge();">Save</button>
+                <button class="btn rounded-6 outline-none-focus border-0 btn-secondary" data-bs-dismiss="modal"
+                        onclick="HideAgeModal();">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="ChangeGenderModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="fw-bold">Edit Gender</h5>
+            </div>
+
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="form-group m-2">
+                        <label class="control-label">Select Gender</label>
+                        <label id="NewGenderErrorLabel" class="text-danger"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-header">
+                <button class="btn rounded-6 outline-none-focus border-0 text-white background-grass-green btn-outline-success"
+                        onclick="EditGender();">Save</button>
+                <button class="btn rounded-6 outline-none-focus border-0 btn-secondary" data-bs-dismiss="modal"
+                        onclick="HideGenderModal();">Close</button>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
