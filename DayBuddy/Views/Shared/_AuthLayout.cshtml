@@ -13,16 +13,18 @@
     <div class="container-fluid d-flex" style="padding-left: 0rem !important;">
         <div class="col-md-3 col-lg-2 sidebar py-4 border-end d-flex flex-column">
             <div class="container">
-                <div class="d-flex">
-                    <div class="rounded-pill background-grass-green">
-                        <img class="m-1" src="/Assets/Images/person.png" width="25" height="25" />
-                    </div>
-                    <label class="fw-bolder align-self-center text-dark text-truncate ms-1">@User!.Identity!.Name</label>
+                <div class="d-flex justify-content-center">
+                    <img src="/Assets/Images/hug.png" class="" width="30" />
+                    <a class="text-grass-green navbar-brand pb-0"
+                       style="font-family: Lapsus Pro; font-size:18px"
+                       asp-area="" asp-controller="Home" asp-action="Index">
+                        DayBuddy
+                    </a>
                 </div>
                 <hr class="w-75 container"/>
                 <ul class="nav text-center m-1 flex-column">
-                    <a class="btn text-white border-0 btn-outline-success background-grass-green  rounded-pill m-1 fw-bold" asp-area="" asp-controller="DayBuddy" asp-action="SearchBuddy">Find A Buddy!</a>
-                    <a class="btn text-white border-0 rounded-pill m-1 btn-info fw-bold" asp-area="" asp-controller="Account" asp-action="Premium">Upgrade To Premium</a>
+                    <a class="btn text-white green-outline-focus border-0 btn-outline-success background-grass-green  rounded-pill m-1 fw-bold" asp-area="" asp-controller="DayBuddy" asp-action="SearchBuddy">Find A Buddy!</a>
+                    <a class="btn text-white green-outline-focus border-0 rounded-pill m-1 btn-info fw-bold" asp-area="" asp-controller="Account" asp-action="Premium">Upgrade To Premium</a>
                     <a class="nav-link fw-bold text-black-50 hover-dark" asp-area="" asp-controller="Account" asp-action="Profile">Edit Profile</a>
                     <a class="nav-link fw-bold text-black-50 hover-dark" asp-area="" asp-controller="Account" asp-action="Profile">Inventory</a>
                     <a class="nav-link fw-bold text-black-50 hover-dark" asp-area="" asp-controller="Account" asp-action="LogOut">Log Out</a>

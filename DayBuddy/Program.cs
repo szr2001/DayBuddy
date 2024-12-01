@@ -21,6 +21,7 @@ namespace DayBuddy
             builder.Services.AddScoped<UserReportService>();
             builder.Services.AddScoped<UserService>();
             builder.Services.AddSingleton<BuddyGroupCacheService>();
+            builder.Services.AddSingleton<ProfanityFilterService>();
             builder.Services.AddSingleton<UserProfileValidatorService>();
 
             //hosted service run as part of the starting process before everything else runs.

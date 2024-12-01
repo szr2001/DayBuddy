@@ -3,9 +3,8 @@ using DayBuddy.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.ComponentModel.DataAnnotations;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Text.Json.Nodes;
 
 namespace DayBuddy.Controllers
 {
@@ -54,6 +53,33 @@ namespace DayBuddy.Controllers
             }
             ModelState.AddModelError("", "Login Failed, invalid email or password");
             return View();
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<JsonResult> EditName([MaxLength(20, ErrorMessage = "Name too long")]
+        [MinLength(5, ErrorMessage = "Name too short")] [Required]string newName)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelState.Values
+                                    .SelectMany(v => v.Errors)
+                                    .Select(e => e.ErrorMessage)
+                                    .ToArray();
+                return Json(errorMessages);
+            }
+            DayBuddyUser? user = await userManager.GetUserAsync(User);
+            if(user == null)
+            {
+                return Json("User doesn't exist");
+            }
+
+            user.UserName = newName;
+            user.NormalizedUserName = userManager.NormalizeName(newName);
+
+            await userManager.UpdateAsync(user);
+
+            return Json("Name Changed!");
         }
 
         [Authorize]

@@ -20,7 +20,7 @@
                 <div class="align-content-end d-flex fw-bold">
                     @Html.DisplayNameFor(model => model.Name)
                 </div>
-                <div class="align-self-start">
+                <div class="align-self-start text-truncate">
                     @Html.DisplayFor(model => model.Name)
                 </div>
             </button>
@@ -72,20 +72,35 @@
 <div class="modal" id="ChangeNameModal">
      <div class="modal-dialog">
          <div class="modal-content">
-            <div class="modal-header">
 
+            <div class="modal-header">
+                <h5 class="fw-bold">Edit Name</h5>
             </div>
+
             <div class="modal-body">
-                <button class="btn btn-primary">
-
-                </button>
+                <div class="text-center">
+                    <form asp-action="EditName">
+                        <div class="form-group m-2">
+                            <label class="control-label">New Name</label>
+                            <input name="newName" type="text" class="green-outline-focus form-control" />
+                        </div>
+                        <div class="form-group m-2">
+                            <button class="btn align-self-center btn-primary outline-none-focus border-0 fw-bold rounded-pill" style="background:purple" type="submit">Edit</button>
+                        </div>
+                    </form>
+                </div>
             </div>
+
             <div class="modal-header">
-                <button class="btn btn-danger" data-bs-dismiss="modal"
+                <button class="btn rounded-6 outline-none-focus border-0 text-white background-grass-green btn-outline-success"
+                        onclick="SaveName();">Save</button>
+                <button class="btn rounded-6 outline-none-focus border-0 btn-secondary" data-bs-dismiss="modal"
                 onclick="HideNameModal();">Close</button>
             </div>
+
          </div>
      </div>
 </div>
+
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/ProfileEdit.js"></script>
