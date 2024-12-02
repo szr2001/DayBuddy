@@ -230,32 +230,40 @@
     </div>
 </div>
 
-<div class="modal" id="ChangeSexualityModal">
+<div class="modal" id="ChangeInterestsModal">
     <div class="modal-dialog">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="fw-bold">Edit Sexuality</h5>
+                <h5 class="fw-bold">Edit Interests</h5>
             </div>
 
             <div class="modal-body">
                 <div class="text-center">
                     <div class="form-group m-2">
-                        <label class="control-label">Select Sexuality</label>
-                        <div class="d-flex justify-content-center flex-wrap" id="SexualityList">
+                        <label class="control-label">Select Interests</label>
+                        <label class="control-label">(0/5)</label>
+                        <!-- Set a max-height and make it scrollable -->
+                        <div class="d-flex border rounded-3 justify-content-center flex-wrap" id="InterestsList" style="max-height: 300px; overflow-y: auto; scrollbar-width: thin;">
                         </div>
                     </div>
                 </div>
+
+                <label id="NewInterestsErrorLabel" class="text-danger"></label>
             </div>
 
             <div class="modal-header justify-content-center">
-                <button class="btn rounded-6 outline-none-focus border-0 btn-secondary" data-bs-dismiss="modal"
-                        onclick="HideSexualityModal();">Close</button>
+                <button class="btn rounded-6 m  -1 outline-none-focus border-0 background-grass-green btn-success" data-bs-dismiss="modal"
+                        onclick="HideInterestsModal();">Save</button>
+                <button class="btn rounded-6 m-1 outline-none-focus border-0 btn-secondary" data-bs-dismiss="modal"
+                        onclick="HideInterestsModal();">Close</button>
+
             </div>
 
         </div>
     </div>
 </div>
+
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/ProfileEdit.js"></script>

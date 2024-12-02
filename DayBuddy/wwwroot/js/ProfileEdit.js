@@ -254,6 +254,15 @@ function ReadProfileOptions() {
         contentype: 'application/json;charset=utf-8',
         success: function (result) {
             Interests = result.interests;
+            Interests.forEach(function (item) {
+                var interestsBtn = $("<button></button>")
+                    .text(item)
+                    .addClass("p-1 m-1 background-grass-green zoom-in-hover fw-bold text-white text-truncate rounded-3 border")
+                    .on("click", function () {
+                        SelectInterest(item);
+                    });
+                $("#InterestsList").append(interestsBtn);
+            })
         }
     })
     Countries.forEach(function (item) {
@@ -419,23 +428,17 @@ function HideSexualityModal() {
 }
 
 //interests
+var selectedInterests = [];
 jQuery(`#BtnInterests`).click(function () {
     //reset ChangeNameModal
     $("#NewInterestsErrorLabel").text("");
-    $("#InterestsList").empty();
-    //show Modal
-    Sexualities.forEach(function (item) {
-        var interestsBtn = $("<button></button>")
-            .text(item)
-            .addClass("p-1 m-1 background-grass-green zoom-in-hover fw-bold text-white text-truncate rounded-3 border")
-            .on("click", function () {
-                EditInterests(item);
-            });
-        $("#InterestsList").append(interestsBtn);
-    })
-    jQuery('#ChangeSexualityModal').modal('show');
+    jQuery('#ChangeInterestsModal').modal('show');
 })
-function EditInterests(newInterests) {
+function SelectInterest(interest)
+{
+
+}
+function EditInterests() {
     var formData = new Object();
     formData.selectedSexuality = newSexuality;
     //send the data
@@ -461,7 +464,7 @@ function EditInterests(newInterests) {
         }
     });
 }
-function HideSexualityModal() {
+function HideInterestsModal() {
     $('#ChangeInterestsModal').modal('hide');
 }
 
