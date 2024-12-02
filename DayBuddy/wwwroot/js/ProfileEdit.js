@@ -206,6 +206,7 @@ var Countries =
         "Zambia",
         "Zimbabwe"
     ];
+var maxInterests = 5;
 $(document).ready(function () {
     ReadProfileOptions();
 })
@@ -259,10 +260,28 @@ function ReadProfileOptions() {
                     .text(item)
                     .addClass("p-1 m-1 background-grass-green zoom-in-hover fw-bold text-white text-truncate rounded-3 border")
                     .on("click", function () {
+                        if ($(this).hasClass("background-grass-green")) {
+                            if (selectedInterests.length >= maxInterests){
+
+                                $("#NewInterestsErrorLabel").text("You have reached the maximum number of interests.");
+                                return;
+                            }
+                            $(this)
+                                .removeClass("background-grass-green")
+                                .addClass("btn-primary");
+                        } else {
+                            $(this)
+                                .removeClass("btn-primary")
+                                .addClass("background-grass-green");
+                        }
+
+                        $("#NewInterestsErrorLabel").text("");
                         SelectInterest(item);
                     });
+
                 $("#InterestsList").append(interestsBtn);
-            })
+            });
+
         }
     })
     Countries.forEach(function (item) {
@@ -436,7 +455,15 @@ jQuery(`#BtnInterests`).click(function () {
 })
 function SelectInterest(interest)
 {
+    const index = selectedInterests.indexOf(interest);
 
+    if (index !== -1) {
+        selectedInterests.splice(index, 1);
+    }
+    else {
+        selectedInterests.push(interest);
+    }
+    $("#InterestCount").text(`(${selectedInterests.length}/${maxInterests})`);
 }
 function EditInterests() {
     var formData = new Object();
