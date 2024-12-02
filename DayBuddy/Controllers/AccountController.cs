@@ -159,6 +159,35 @@ namespace DayBuddy.Controllers
         }
 
         [Authorize]
+        [HttpPost]
+        public async Task<JsonResult> EditSexuality([Required] string selectedSexuality)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errorMessages = ModelState.Values
+                                    .SelectMany(v => v.Errors)
+                                    .Select(e => e.ErrorMessage)
+                                    .ToArray();
+                return Json(new { success = false, errors = errorMessages });
+            }
+            DayBuddyUser? user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Json(new { success = false, errors = new[] { "User doesn't exist" } });
+            }
+
+            if (!userProfileValidatorService.Sexualities.Contains(selectedSexuality))
+            {
+                return Json(new { success = false, errors = new[] { "Gender not available" } });
+            }
+
+            user.Sexuality = selectedSexuality;
+            await userManager.UpdateAsync(user);
+
+            return Json(new { success = true, errors = Array.Empty<string>() });
+        }
+
+        [Authorize]
         public async Task<IActionResult> Profile()
         {
             DayBuddyUser? user = await userManager.GetUserAsync(User);

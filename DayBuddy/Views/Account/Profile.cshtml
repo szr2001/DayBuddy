@@ -40,7 +40,7 @@
                     @Html.DisplayFor(model => model.Gender)
                 </div>
             </button>
-            <button class="green-outline-focus zoom-in-hover btn m-1 border container rounded-6 d-flex justify-content-between">
+            <button id="BtnSexuality" class="green-outline-focus zoom-in-hover btn m-1 border container rounded-6 d-flex justify-content-between">
                 <div class="align-content-end d-flex fw-bold">
                     @Html.DisplayNameFor(model => model.Sexuality)
                 </div>
@@ -148,6 +148,35 @@
             <div class="modal-header justify-content-center">
                 <button class="btn rounded-6 outline-none-focus border-0 btn-secondary" data-bs-dismiss="modal"
                         onclick="HideGenderModal();">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="ChangeSexualityModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="fw-bold">Edit Sexuality</h5>
+            </div>
+
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="form-group m-2">
+                        <label class="control-label">Select Sexuality</label>
+                        <div class="d-flex justify-content-center flex-wrap" id="SexualityList">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-header justify-content-center">
+                <button class="btn rounded-6 outline-none-focus border-0 btn-secondary" data-bs-dismiss="modal"
+                        onclick="HideSexualityModal();">
+                    Close
+                </button>
             </div>
 
         </div>

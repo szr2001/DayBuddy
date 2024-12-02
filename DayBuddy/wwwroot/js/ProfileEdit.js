@@ -127,7 +127,6 @@ function HideAgeModal() {
 jQuery(`#BtnGender`).click(function () {
     //reset ChangeNameModal
     $("#NewGenderErrorLabel").text("");
-    $("#NewGenderInput").val("");
     $("#GendersList").empty();
     //show Modal
     Genders.forEach(function (item) {
@@ -169,4 +168,51 @@ function EditGender(newGender) {
 }
 function HideGenderModal() {
     $('#ChangeGenderModal').modal('hide');
+}
+
+//sexuality
+jQuery(`#BtnSexuality`).click(function () {
+    //reset ChangeNameModal
+    $("#NewSexualityErrorLabel").text("");
+    $("#SexualityList").empty();
+    //show Modal
+    Sexualities.forEach(function (item) {
+        var sexualityBtn = $("<button></button>")
+            .text(item)
+            .addClass("p-1 m-1 background-grass-green zoom-in-hover fw-bold text-white text-truncate rounded-3 border")
+            .on("click", function () {
+                EditSexuality(item);
+            });
+        $("#SexualityList").append(sexualityBtn);
+    })
+    jQuery('#ChangeSexualityModal').modal('show');
+})
+function EditSexuality(newSexuality) {
+    var formData = new Object();
+    formData.selectedSexuality = newSexuality;
+    //send the data
+    $.ajax({
+        url: '/Account/EditSexuality',
+        data: formData,
+        type: 'post',
+        //if the call was a success, check if the action was a success
+        success: function (response) {
+            //if yes, reload the page
+            if (response.success) {
+                window.location.reload(true);
+            }
+            //if no, show the errors
+            else {
+                $("#NewSexualityInput").css('border-color', 'Red');
+                $("#NewSexualityErrorLabel").text(response.errors.join(", "));
+            }
+        },
+        //if the call couldn't be made, show a generic error
+        error: function () {
+            $("#NewSexualityErrorLabel").text("An error occurred while changing the name.");
+        }
+    });
+}
+function HideSexualityModal() {
+    $('#ChangeSexualityModal').modal('hide');
 }
