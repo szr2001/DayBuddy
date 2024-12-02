@@ -216,3 +216,50 @@ function EditSexuality(newSexuality) {
 function HideSexualityModal() {
     $('#ChangeSexualityModal').modal('hide');
 }
+
+//interests
+jQuery(`#BtnInterests`).click(function () {
+    //reset ChangeNameModal
+    $("#NewInterestsErrorLabel").text("");
+    $("#InterestsList").empty();
+    //show Modal
+    Sexualities.forEach(function (item) {
+        var interestsBtn = $("<button></button>")
+            .text(item)
+            .addClass("p-1 m-1 background-grass-green zoom-in-hover fw-bold text-white text-truncate rounded-3 border")
+            .on("click", function () {
+                EditInterests(item);
+            });
+        $("#InterestsList").append(interestsBtn);
+    })
+    jQuery('#ChangeSexualityModal').modal('show');
+})
+function EditInterests(newInterests) {
+    var formData = new Object();
+    formData.selectedSexuality = newSexuality;
+    //send the data
+    $.ajax({
+        url: '/Account/EditInterests',
+        data: formData,
+        type: 'post',
+        //if the call was a success, check if the action was a success
+        success: function (response) {
+            //if yes, reload the page
+            if (response.success) {
+                window.location.reload(true);
+            }
+            //if no, show the errors
+            else {
+                $("#NewInterestsInput").css('border-color', 'Red');
+                $("#NewInterestsErrorLabel").text(response.errors.join(", "));
+            }
+        },
+        //if the call couldn't be made, show a generic error
+        error: function () {
+            $("#NewInterestsErrorLabel").text("An error occurred while changing the name.");
+        }
+    });
+}
+function HideSexualityModal() {
+    $('#ChangeInterestsModal').modal('hide');
+}

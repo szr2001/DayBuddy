@@ -10,10 +10,12 @@ namespace DayBuddy.Models
     {
         public int Age { get; set; } = 18;
         public int[] AgeRange { get; set; } = { 18, 100 }; 
-        public string[] Interests { get; set; } = ["Programming", "Test", "Sleeping", "Cocaine", "Drugs"];
-        public string? Gender { get; set; } = "Male";
+        public string[] Interests { get; set; } = ["Programming", "Movies", "Sleeping", "Reading", "Dogs"];
+        public string? Gender { get; set; } = "None";
         public float Score { get; set; } = 8;
-        public string? Sexuality { get; set; } = "Straight";
+        public string? Sexuality { get; set; } = "None";
+        public string? Country { get; set; } = "None";
+        public string? City { get; set; } = "None";
         public DateTime? LastTimeOnline { get; set; }
         public DateTime? PurchasedPremium { get; set; }
         public DateTime? MatchedWithBuddy { get; set; }

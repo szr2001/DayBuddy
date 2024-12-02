@@ -8,6 +8,7 @@ using System.Text.Json.Nodes;
 
 namespace DayBuddy.Controllers
 {
+    //maybe move edit logic in another controller?
     public class AccountController : Controller
     {
         private readonly UserManager<DayBuddyUser> userManager;
@@ -188,6 +189,27 @@ namespace DayBuddy.Controllers
         }
 
         [Authorize]
+        [HttpPost]
+        public async Task<JsonResult> EditInterests(string[] interests)
+        {
+            DayBuddyUser? user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Json(new { success = false, errors = new[] { "User doesn't exist" } });
+            }
+
+            if (!userProfileValidatorService.Sexualities.Contains(""))
+            {
+                return Json(new { success = false, errors = new[] { "Gender not available" } });
+            }
+
+            user.Interests = interests;
+            await userManager.UpdateAsync(user);
+
+            return Json(new { success = true, errors = Array.Empty<string>() });
+        }
+
+        [Authorize]
         public async Task<IActionResult> Profile()
         {
             DayBuddyUser? user = await userManager.GetUserAsync(User);
@@ -203,7 +225,9 @@ namespace DayBuddy.Controllers
                 Age = user.Age,
                 Interests = user.Interests,
                 Gender = user.Gender,
-                Premium = true
+                Country = user.Country,
+                City = user.City,
+                Premium = false
             };
 
             return View(profileData);
