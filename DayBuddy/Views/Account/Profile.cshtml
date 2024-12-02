@@ -69,14 +69,14 @@
             @if (Model.Premium)
             {
                 <div class="btn text-white rounded-pill btn-info border row rounded-6 d-flex justify-content-center">
-                    <label class="fw-bold fs-5 text-center" >Premium Enabled</label>
+                    <label class="fw-bold fs-5 text-center" >Premium Active</label>
                     <label id="PremiumTimer" class="fw-bold fs-6 text-center" >32:12:45</label>
                 </div>
             }
             else
             {
                 <div class="btn text-white rounded-pill bg-light border row rounded-6 d-flex justify-content-center">
-                    <label class="fw-bold text-black-50 fs-5 text-center">Premium Disabled</label>
+                    <label class="fw-bold text-black-50 fs-5 text-center">Premium Inactive</label>
                 </div>
             }
         </div>
@@ -188,6 +188,42 @@
             <div class="modal-header justify-content-center">
                 <button class="btn rounded-6 outline-none-focus border-0 btn-secondary" data-bs-dismiss="modal"
                         onclick="HideSexualityModal();">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="ChangeLocationModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="fw-bold">Edit Location</h5>
+            </div>
+
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="form-group m-2">
+                        <label class="control-label">Select Location</label>
+                        <div class="d-flex justify-content-center">
+                            <div class="rounded-3 p-2 background-grass-green">
+                                <label class="control-label fw-bold">Country</label>
+                                <select id="NewCountryInput" class="text-black green-outline-focus form-control">
+                                </select>
+                            </div>
+                        </div>
+
+                        <label id="NewLocationErrorLabel" class="text-danger"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-header justify-content-center">
+                <button class="btn m-1 rounded-6 outline-none-focus text-white border-0 btn-success background-grass-green"
+                        onclick="EditLocation();">Save</button>
+                <button class="btn m-1 rounded-6 outline-none-focus border-0 btn-secondary" data-bs-dismiss="modal"
+                        onclick="HideLocationModal();">Close</button>
             </div>
 
         </div>

@@ -210,6 +210,27 @@ namespace DayBuddy.Controllers
         }
 
         [Authorize]
+        [HttpPost]
+        public async Task<JsonResult> EditLocation(string city, string country)
+        {
+            DayBuddyUser? user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return Json(new { success = false, errors = new[] { "User doesn't exist" } });
+            }
+
+            if (!userProfileValidatorService.Countries.Contains(country))
+            {
+                return Json(new { success = false, errors = new[] { "Country is not available" } });
+            }
+
+            user.Country = country;
+            await userManager.UpdateAsync(user);
+
+            return Json(new { success = true, errors = Array.Empty<string>() });
+        }
+
+        [Authorize]
         public async Task<IActionResult> Profile()
         {
             DayBuddyUser? user = await userManager.GetUserAsync(User);
