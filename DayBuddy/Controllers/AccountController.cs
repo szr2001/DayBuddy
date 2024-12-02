@@ -192,15 +192,29 @@ namespace DayBuddy.Controllers
         [HttpPost]
         public async Task<JsonResult> EditInterests(string[] interests)
         {
+            if(interests.Length > 5)
+            {
+                return Json(new { success = false, errors = new[] { "Too many interests" } });
+            }
+            if (interests.Length == 0)
+            {
+                return Json(new { success = false, errors = new[] { "No interests selected" } });
+            }
+
             DayBuddyUser? user = await userManager.GetUserAsync(User);
             if (user == null)
             {
                 return Json(new { success = false, errors = new[] { "User doesn't exist" } });
             }
 
-            if (!userProfileValidatorService.Sexualities.Contains(""))
+            string[] validInterest = userProfileValidatorService.Interests.
+                Intersect(interests)
+                .Distinct()
+                .ToArray();
+
+            if (validInterest.Length == 0)
             {
-                return Json(new { success = false, errors = new[] { "Gender not available" } });
+                return Json(new { success = false, errors = new[] { "No valid Interest present" } });
             }
 
             user.Interests = interests;

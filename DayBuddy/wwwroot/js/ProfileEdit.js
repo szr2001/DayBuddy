@@ -467,7 +467,7 @@ function SelectInterest(interest)
 }
 function EditInterests() {
     var formData = new Object();
-    formData.selectedSexuality = newSexuality;
+    formData.interests = selectedInterests;
     //send the data
     $.ajax({
         url: '/Account/EditInterests',
@@ -481,7 +481,6 @@ function EditInterests() {
             }
             //if no, show the errors
             else {
-                $("#NewInterestsInput").css('border-color', 'Red');
                 $("#NewInterestsErrorLabel").text(response.errors.join(", "));
             }
         },
