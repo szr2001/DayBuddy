@@ -10,14 +10,17 @@ namespace DayBuddy.Controllers
     [Authorize]
     public class DayBuddyController : Controller
     {
+        //move some methods inside services
         private readonly UserManager<DayBuddyUser> userManager;
         private readonly ChatGroupsService chatLobbysService;
         private readonly UserService userService;
-        public DayBuddyController(UserManager<DayBuddyUser> userManager, ChatGroupsService chatLobbysService, UserService userService)
+        private readonly BuddyGroupCacheService buddyGroupCacheService;
+        public DayBuddyController(UserManager<DayBuddyUser> userManager, ChatGroupsService chatLobbysService, UserService userService, BuddyGroupCacheService buddyGroupCacheService)
         {
             this.userManager = userManager;
             this.chatLobbysService = chatLobbysService;
             this.userService = userService;
+            this.buddyGroupCacheService = buddyGroupCacheService;
         }
 
         public async Task<IActionResult> SearchBuddy()
@@ -65,9 +68,50 @@ namespace DayBuddy.Controllers
             return RedirectToAction(nameof(SearchBuddy));
         }
 
-        public IActionResult BuddyChat()
+        public async Task<IActionResult> BuddyChat()
         {
-            return View();
+            DayBuddyUser? user = await userManager.GetUserAsync(User);
+            if(user == null)
+            {
+               return RedirectToAction("Login","Account");
+            }
+
+            string groupId = buddyGroupCacheService.GetUserGroup(user.Id.ToString());
+
+            if(string.IsNullOrEmpty(groupId))
+            {
+                //there has been an error so delete the group
+                Console.WriteLine($"Group ID not found with user {user.UserName}");
+                return RedirectToAction(nameof(SearchBuddy));
+            }
+
+            string[] groupUsers = buddyGroupCacheService.GetUsersInGroup(groupId);
+            string? buddyId = groupUsers.Where(id => id != user.Id.ToString()).FirstOrDefault();
+            if (string.IsNullOrEmpty(buddyId))
+            {
+                //there has been an error so delete the group
+                Console.WriteLine($"Something is wrong when retriving the user from the group {user.UserName}");
+                return RedirectToAction(nameof(SearchBuddy));
+            }
+
+            DayBuddyUser? buddyUser = await userManager.FindByIdAsync(buddyId);
+            if(buddyUser == null)
+            {
+                Console.WriteLine($"Couldn't find user in the group with {user.UserName}");
+                return RedirectToAction(nameof(SearchBuddy));
+            }
+
+            UserProfile buddyProfile = new() 
+            {
+                Name = user.UserName,
+                Sexuality = user.Sexuality,
+                Age = user.Age,
+                Interests = user.Interests,
+                Gender = user.Gender,
+                Country = user.Country,
+                City = user.City,
+            };
+            return View(buddyProfile);
         }
     }
 }

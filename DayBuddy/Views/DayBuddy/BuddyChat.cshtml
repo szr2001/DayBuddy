@@ -1,4 +1,5 @@
-﻿
+﻿@model DayBuddy.Models.UserProfile
+
 @{
     ViewData["Title"] = "BuddyChat";
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
@@ -10,7 +11,7 @@
         
         <div class="container-fluid d-flex flex-column">
             <div class="top-0 m-2 border-bottom text-center">
-                <label class="fw-bolder text-black-50 fs-1">23:35:12</label>
+                <label id="BuddyChatTimer" class="fw-bolder text-black-50 fs-1">23:35:12</label>
             </div>
             <div class="row container">
                 <div class="container d-flex flex-column" id="messagesList" style="gap: 10px;">
@@ -30,10 +31,38 @@
             </div>
         </div>
 
-        <div class="border-start w-25 d-flex flex-column">
+        <div class="border-start w-50 d-flex flex-column">
             <div class="container m-3 text-center">
-                <label class="fw-bolder text-dark text-truncate ms-1">George</label>
+                <label class="fw-bolder text-dark text-truncate ms-1">@Model.Name</label>
                 <hr class="w-100 "/>
+                <div>
+                    <div class="row m-1">
+                        <label class="fw-bold text-dark">Age: </label>
+                        <label class="text-light rounded-6 background-grass-green">@Model.Age</label>
+                    </div>
+                    <div class="row m-1">
+                        <label class="fw-bold text-dark">Gender: </label>
+                        <label class="text-light rounded-6 background-grass-green">@Model.Gender</label>
+                    </div>
+                    <div class="row m-1">
+                        <label class="fw-bold text-dark">Sexuality: </label>
+                        <label class="text-light rounded-6 background-grass-green">@Model.Sexuality</label>
+                    </div>
+                    <div class="row m-1">
+                        <label class="fw-bold text-dark">Country: </label>
+                        <label class="text-light rounded-6 background-grass-green">@Model.Country</label>
+                    </div>
+                    <div class="row m-1">
+                        <label class="fw-bold text-dark">Interests: </label>
+                        <div class="border rounded-6 border-1 flex-wrap p-1">
+                            @foreach(string interest in Model.Interests)
+                            {
+                                <label class="text-dark p-1 m-1 fw-bold rounded-3 background-grass-green" style="font-size:10px;">@interest</label>
+                            }
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>            
