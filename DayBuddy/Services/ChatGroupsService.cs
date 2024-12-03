@@ -3,6 +3,7 @@ using DayBuddy.Settings;
 using Microsoft.AspNetCore.Identity;
 using MongoDB.Driver;
 using MongoDbGenericRepository.Attributes;
+using System.Text.RegularExpressions;
 
 namespace DayBuddy.Services
 {
@@ -57,7 +58,25 @@ namespace DayBuddy.Services
         public async Task RemoveGroupAsync(Guid groupId)
         {
             var filter = Builders<BuddyChatGroup>.Filter.Eq(g => g.Id, groupId);
-            await groupsCollection.DeleteOneAsync(filter);
+            BuddyChatGroup? group = groupsCollection.FindOneAndDelete(filter);
+            if(group != null)
+            {
+                DayBuddyUser? user1 = await userManager.FindByIdAsync(group.Users[0].ToString());
+                DayBuddyUser? user2 = await userManager.FindByIdAsync(group.Users[1].ToString());
+
+                if (user1 != null)
+                {
+                    user1.BuddyChatLobbyID = Guid.Empty;
+                    await userManager.UpdateAsync(user1);
+                }
+                if(user2 != null)
+                {
+                    user2.BuddyChatLobbyID = Guid.Empty;
+                    await userManager.UpdateAsync(user2);
+                }
+                cacheService.RemoveGroup(groupId.ToString());
+            }
+            Console.WriteLine("rawr");
         }
 
         public async Task AddGroupAsync(BuddyChatGroup group)

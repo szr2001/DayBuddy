@@ -68,6 +68,23 @@ namespace DayBuddy.Controllers
             return RedirectToAction(nameof(SearchBuddy));
         }
 
+        public async Task<IActionResult> UnmatchBuddy()
+        {
+            DayBuddyUser? user = await userManager.GetUserAsync(User);
+
+            if(user == null)
+            {
+                return RedirectToAction("Login","Account");
+            }
+            if(user.BuddyChatLobbyID != Guid.Empty)
+            {
+                string GroupId = user.BuddyChatLobbyID.ToString();
+                await chatLobbysService.RemoveGroupAsync(user.BuddyChatLobbyID);
+            }
+
+            return RedirectToAction(nameof(SearchBuddy));
+        }
+
         public async Task<IActionResult> BuddyChat()
         {
             DayBuddyUser? user = await userManager.GetUserAsync(User);
@@ -103,13 +120,13 @@ namespace DayBuddy.Controllers
 
             UserProfile buddyProfile = new() 
             {
-                Name = user.UserName,
-                Sexuality = user.Sexuality,
-                Age = user.Age,
-                Interests = user.Interests,
-                Gender = user.Gender,
-                Country = user.Country,
-                City = user.City,
+                Name = buddyUser.UserName,
+                Sexuality = buddyUser.Sexuality,
+                Age = buddyUser.Age,
+                Interests = buddyUser.Interests,
+                Gender = buddyUser.Gender,
+                Country = buddyUser.Country,
+                City = buddyUser.City,
             };
             return View(buddyProfile);
         }
