@@ -1,7 +1,5 @@
-﻿using AspNetCore.Identity.MongoDbCore;
-using AspNetCore.Identity.MongoDbCore.Models;
+﻿using AspNetCore.Identity.MongoDbCore.Models;
 using MongoDbGenericRepository.Attributes;
-using System.ComponentModel.DataAnnotations;
 
 namespace DayBuddy.Models
 {

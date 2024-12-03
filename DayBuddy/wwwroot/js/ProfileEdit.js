@@ -213,7 +213,7 @@ $(document).ready(function () {
 
 function ReadProfileOptions() {
     $.ajax({
-        url: '/Account/GetGenders',
+        url: '/EditAccount/GetGenders',
         type: 'get',
         datatype: 'json',
         contentype: 'application/json;charset=utf-8',
@@ -231,7 +231,7 @@ function ReadProfileOptions() {
         }
     })
     $.ajax({
-        url: '/Account/GetSexualities',
+        url: '/EditAccount/GetSexualities',
         type: 'get',
         datatype: 'json',
         contentype: 'application/json;charset=utf-8',
@@ -249,7 +249,7 @@ function ReadProfileOptions() {
         }
     })
     $.ajax({
-        url: '/Account/GetInterests',
+        url: '/EditAccount/GetInterests',
         type: 'get',
         datatype: 'json',
         contentype: 'application/json;charset=utf-8',
@@ -308,7 +308,7 @@ function EditName() {
 
     //send the data
     $.ajax({
-        url: '/Account/EditName',
+        url: '/EditAccount/EditName',
         data: formData,
         type: 'post',
         //if the call was a success, check if the action was a success
@@ -349,7 +349,7 @@ function EditAge() {
 
     //send the data
     $.ajax({
-        url: '/Account/EditAge',
+        url: '/EditAccount/EditAge',
         data: formData,
         type: 'post',
         //if the call was a success, check if the action was a success
@@ -385,7 +385,7 @@ function EditGender(newGender) {
     formData.selectedGender = newGender;
     //send the data
     $.ajax({
-        url: '/Account/EditGender',
+        url: '/EditAccount/EditGender',
         data: formData,
         type: 'post',
         //if the call was a success, check if the action was a success
@@ -421,7 +421,7 @@ function EditSexuality(newSexuality) {
     formData.selectedSexuality = newSexuality;
     //send the data
     $.ajax({
-        url: '/Account/EditSexuality',
+        url: '/EditAccount/EditSexuality',
         data: formData,
         type: 'post',
         //if the call was a success, check if the action was a success
@@ -470,7 +470,7 @@ function EditInterests() {
     formData.interests = selectedInterests;
     //send the data
     $.ajax({
-        url: '/Account/EditInterests',
+        url: '/EditAccount/EditInterests',
         data: formData,
         type: 'post',
         //if the call was a success, check if the action was a success
@@ -506,7 +506,7 @@ function EditLocation() {
     formData.city = "";
     //send the data
     $.ajax({
-        url: '/Account/EditLocation',
+        url: '/EditAccount/EditLocation',
         data: formData,
         type: 'post',
         //if the call was a success, check if the action was a success
