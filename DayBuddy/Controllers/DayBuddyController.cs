@@ -60,7 +60,7 @@ namespace DayBuddy.Controllers
                 DayBuddyUser? buddyUser = await userService.GetRndAvailableUserAsync(user);
                 if (buddyUser != null && buddyUser.Id != user.Id)
                 {
-                    await chatLobbysService.ConnectUsers(user, buddyUser);
+                    await chatLobbysService.AddBuddyGroup(user, buddyUser);
                     return RedirectToAction(nameof(BuddyChat));
                 }
             }
@@ -79,7 +79,7 @@ namespace DayBuddy.Controllers
             if(user.BuddyChatLobbyID != Guid.Empty)
             {
                 string GroupId = user.BuddyChatLobbyID.ToString();
-                await chatLobbysService.RemoveGroupAsync(user.BuddyChatLobbyID);
+                await chatLobbysService.RemoveBuddyGroup(user.BuddyChatLobbyID);
             }
 
             return RedirectToAction(nameof(SearchBuddy));
@@ -118,16 +118,7 @@ namespace DayBuddy.Controllers
                 return RedirectToAction(nameof(SearchBuddy));
             }
 
-            UserProfile buddyProfile = new() 
-            {
-                Name = buddyUser.UserName,
-                Sexuality = buddyUser.Sexuality,
-                Age = buddyUser.Age,
-                Interests = buddyUser.Interests,
-                Gender = buddyUser.Gender,
-                Country = buddyUser.Country,
-                City = buddyUser.City,
-            };
+            UserProfile buddyProfile = userService.GetUserProfile(buddyUser);
             return View(buddyProfile);
         }
     }

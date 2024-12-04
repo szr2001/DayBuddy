@@ -30,6 +30,23 @@ namespace DayBuddy.Services
             return users[random.Next(users.Count)];
         }
 
+        public UserProfile GetUserProfile(DayBuddyUser user)
+        {
+            UserProfile prfile = new()
+            {
+                Name = user.UserName,
+                Sexuality = user.Sexuality,
+                Age = user.Age,
+                Interests = user.Interests,
+                Gender = user.Gender,
+                Country = user.Country,
+                City = user.City,
+                Score = user.Score,
+                Premium = false
+            };
+            return prfile;
+        }
+
         public async Task<List<DayBuddyUser>> GetUsersByInterestsAsync(string interest)
         {
             var filter = Builders<DayBuddyUser>.Filter.AnyEq(u => u.Interests, interest);

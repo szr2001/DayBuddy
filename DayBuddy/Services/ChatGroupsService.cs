@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 namespace DayBuddy.Services
 {
     //might need improvement if I want to add a friends list and real time messaging for friends
-    //this needs to be scouped not singleton
     public class ChatGroupsService
     {
         private readonly IMongoCollection<BuddyChatGroup> groupsCollection;
@@ -24,11 +23,12 @@ namespace DayBuddy.Services
             this.userManager = userManager;
         }
 
-        public async Task ConnectUsers(DayBuddyUser user1, DayBuddyUser user2)
+        public async Task AddBuddyGroup(DayBuddyUser user1, DayBuddyUser user2)
         {
             BuddyChatGroup chatLobby = new([user1.Id, user2.Id]);
-            await AddGroupAsync(chatLobby);
             
+            await groupsCollection.InsertOneAsync(chatLobby);
+
             user1.MatchedWithBuddy = DateTime.UtcNow;
             user1.BuddyChatLobbyID = chatLobby.Id;
             user1.IsAvailable = false;
@@ -50,12 +50,7 @@ namespace DayBuddy.Services
             return await groupsCollection.Find(filter).ToListAsync();
         }
 
-        public async Task UpdateUsersInGroup(Guid groupId, Guid[] users)
-        {
-
-        }
-
-        public async Task RemoveGroupAsync(Guid groupId)
+        public async Task RemoveBuddyGroup(Guid groupId)
         {
             var filter = Builders<BuddyChatGroup>.Filter.Eq(g => g.Id, groupId);
             BuddyChatGroup? group = groupsCollection.FindOneAndDelete(filter);
@@ -76,12 +71,6 @@ namespace DayBuddy.Services
                 }
                 cacheService.RemoveGroup(groupId.ToString());
             }
-            Console.WriteLine("rawr");
-        }
-
-        public async Task AddGroupAsync(BuddyChatGroup group)
-        {
-            await groupsCollection.InsertOneAsync(group);
         }
     }
 }

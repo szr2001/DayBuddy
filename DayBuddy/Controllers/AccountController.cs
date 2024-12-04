@@ -13,10 +13,12 @@ namespace DayBuddy.Controllers
     {
         private readonly UserManager<DayBuddyUser> userManager;
         private readonly SignInManager<DayBuddyUser> signInManager;
-        public AccountController(UserManager<DayBuddyUser> userManager, SignInManager<DayBuddyUser> signInManager)
+        private readonly UserService userService;
+        public AccountController(UserManager<DayBuddyUser> userManager, SignInManager<DayBuddyUser> signInManager, UserService userService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.userService = userService;
         }
 
         public IActionResult Login()
@@ -63,17 +65,7 @@ namespace DayBuddy.Controllers
                 return RedirectToAction(nameof(Login));
             }
 
-            UserProfile profileData = new()
-            {
-                Name = user.UserName,
-                Sexuality = user.Sexuality,
-                Age = user.Age,
-                Interests = user.Interests,
-                Gender = user.Gender,
-                Country = user.Country,
-                City = user.City,
-                Premium = false
-            };
+            UserProfile profileData = userService.GetUserProfile(user);
 
             return View(profileData);
         }
