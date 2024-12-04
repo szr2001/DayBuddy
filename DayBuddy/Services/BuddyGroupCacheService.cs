@@ -73,13 +73,13 @@ namespace DayBuddy.Services
 
         public bool IsUserInGroup(string userId) => users.ContainsKey(userId);
 
-        public string GetUserGroup(string userId)
+        public string? GetUserGroup(string userId)
         {
-            if (!users.TryGetValue(userId, out var groupId))
+            if (users.TryGetValue(userId, out var groupId))
             {
-                throw new KeyNotFoundException($"User '{userId}' is not part of any group.");
+                return groupId;
             }
-            return groupId;
+            return null;
         }
     }
 }

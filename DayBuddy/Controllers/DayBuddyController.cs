@@ -93,7 +93,7 @@ namespace DayBuddy.Controllers
                return RedirectToAction("Login","Account");
             }
 
-            string groupId = buddyGroupCacheService.GetUserGroup(user.Id.ToString());
+            string? groupId = buddyGroupCacheService.GetUserGroup(user.Id.ToString());
 
             if(string.IsNullOrEmpty(groupId))
             {

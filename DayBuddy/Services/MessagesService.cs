@@ -6,6 +6,7 @@ using MongoDbGenericRepository.Attributes;
 using System.Runtime.Intrinsics.X86;
 using System.Xml.Linq;
 using System;
+using System.Text.RegularExpressions;
 
 namespace DayBuddy.Services
 {
@@ -19,6 +20,17 @@ namespace DayBuddy.Services
            var collectionNameAttribute = Attribute.GetCustomAttribute(typeof(BuddyMessage), typeof(CollectionNameAttribute)) as CollectionNameAttribute;
             string collectionName = collectionNameAttribute?.Name ?? "Messages";
             _messagesCollection = database.GetCollection<BuddyMessage>(collectionName);
+        }
+
+        public async Task<BuddyMessage[]> GetMessageInGroup(Guid groupId,int offset, int amount)
+        {
+            return [];
+        }
+
+        public async Task DeleteMesagesInGroup(Guid groupID)
+        {
+            var filter = Builders<BuddyMessage>.Filter.Eq(m => m.ChatLobbyId, groupID);
+            await _messagesCollection.DeleteManyAsync(filter);
         }
 
         public async Task CreateMessageAsync(BuddyMessage message)

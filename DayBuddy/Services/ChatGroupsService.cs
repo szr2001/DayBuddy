@@ -13,7 +13,8 @@ namespace DayBuddy.Services
         private readonly IMongoCollection<BuddyChatGroup> groupsCollection;
         private readonly BuddyGroupCacheService cacheService;
         private readonly UserManager<DayBuddyUser> userManager;
-        public ChatGroupsService(IMongoClient mongoClient, MongoDbConfig config, BuddyGroupCacheService cacheService, UserManager<DayBuddyUser> userManager)
+        private readonly MessagesService messagesService;
+        public ChatGroupsService(IMongoClient mongoClient, MongoDbConfig config, BuddyGroupCacheService cacheService, UserManager<DayBuddyUser> userManager, MessagesService messagesService)
         {
             var database = mongoClient.GetDatabase(config.Name);
             var collectionNameAttribute = Attribute.GetCustomAttribute(typeof(BuddyChatGroup), typeof(CollectionNameAttribute)) as CollectionNameAttribute;
@@ -21,6 +22,7 @@ namespace DayBuddy.Services
             groupsCollection = database.GetCollection<BuddyChatGroup>(collectionName);
             this.cacheService = cacheService;
             this.userManager = userManager;
+            this.messagesService = messagesService;
         }
 
         public async Task AddBuddyGroup(DayBuddyUser user1, DayBuddyUser user2)
@@ -53,8 +55,9 @@ namespace DayBuddy.Services
         public async Task RemoveBuddyGroup(Guid groupId)
         {
             var filter = Builders<BuddyChatGroup>.Filter.Eq(g => g.Id, groupId);
-            BuddyChatGroup? group = groupsCollection.FindOneAndDelete(filter);
-            if(group != null)
+            BuddyChatGroup? group = await groupsCollection.FindOneAndDeleteAsync(filter);
+            await messagesService.DeleteMesagesInGroup(groupId);
+            if (group != null)
             {
                 DayBuddyUser? user1 = await userManager.FindByIdAsync(group.Users[0].ToString());
                 DayBuddyUser? user2 = await userManager.FindByIdAsync(group.Users[1].ToString());

@@ -48,7 +48,13 @@ namespace DayBuddy.Hubs
             string? localUserId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (localUserId == null) return;
 
-            await Clients.Group(groupsCacheService.GetUserGroup(localUserId)).SendAsync("ReceiveMessage", Context?.User?.Identity?.Name, message);
+            string? groupId = groupsCacheService.GetUserGroup(localUserId);
+            if(groupId == null) return;
+
+            BuddyMessage newMessage = new(message, Guid.Parse(localUserId),Guid.Parse(groupId));
+            await messagesService.CreateMessageAsync(newMessage);
+
+            await Clients.Group(groupId).SendAsync("ReceiveMessage", Context?.User?.Identity?.Name, message);
         }
     }
 }
