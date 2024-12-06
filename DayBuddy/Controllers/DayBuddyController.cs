@@ -118,8 +118,10 @@ namespace DayBuddy.Controllers
                 return RedirectToAction(nameof(SearchBuddy));
             }
 
+
             UserProfile buddyProfile = userService.GetUserProfile(buddyUser);
-            return View(buddyProfile);
+            GroupChat groupChat = new(buddyProfile, []);
+            return View(groupChat);
         }
     }
 }

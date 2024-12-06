@@ -22,6 +22,9 @@ connection.on("ReceiveMessage", function (user, message) {
     li.textContent = `${message}`;
     MessageList.appendChild(li);
 });
+connection.on("UnMatched", function () {
+    window.location.href = '/DayBuddy/SearchBuddy';
+});
 
 connection.start().then(function () {
     document.getElementById("sendButton").disabled = false;

@@ -1,4 +1,4 @@
-﻿@model DayBuddy.Models.UserProfile
+﻿@model DayBuddy.Models.GroupChat
 
 @{
     ViewData["Title"] = "BuddyChat";
@@ -33,29 +33,29 @@
 
         <div class="border-start w-50 d-flex flex-column">
             <div class="container m-3 text-center">
-                <label class="fw-bolder text-dark text-truncate ms-1">@Model.Name</label>
+                <label class="fw-bolder text-dark text-truncate ms-1">@Model.BuddyProfile.Name</label>
                 <hr class="w-100 "/>
                 <div>
                     <div class="row m-1">
                         <label class="fw-bold text-dark">Age: </label>
-                        <label class="text-light rounded-6 background-grass-green">@Model.Age</label>
+                        <label class="text-light rounded-6 background-grass-green">@Model.BuddyProfile.Age</label>
                     </div>
                     <div class="row m-1">
                         <label class="fw-bold text-dark">Gender: </label>
-                        <label class="text-light rounded-6 background-grass-green">@Model.Gender</label>
+                        <label class="text-light rounded-6 background-grass-green">@Model.BuddyProfile.Gender</label>
                     </div>
                     <div class="row m-1">
                         <label class="fw-bold text-dark">Sexuality: </label>
-                        <label class="text-light rounded-6 background-grass-green">@Model.Sexuality</label>
+                        <label class="text-light rounded-6 background-grass-green">@Model.BuddyProfile.Sexuality</label>
                     </div>
                     <div class="row m-1">
                         <label class="fw-bold text-dark">Country: </label>
-                        <label class="text-light rounded-6 background-grass-green">@Model.Country</label>
+                        <label class="text-light rounded-6 background-grass-green">@Model.BuddyProfile.Country</label>
                     </div>
                     <div class="row m-1">
                         <label class="fw-bold text-dark">Interests: </label>
                         <div class="border rounded-6 border-1 flex-wrap p-1">
-                            @foreach(string interest in Model.Interests)
+                            @foreach (string interest in Model.BuddyProfile.Interests)
                             {
                                 <label class="text-dark p-1 m-1 fw-bold rounded-3 background-grass-green" style="font-size:10px;">@interest</label>
                             }

@@ -1,6 +1,8 @@
-﻿using DayBuddy.Models;
+﻿using DayBuddy.Hubs;
+using DayBuddy.Models;
 using DayBuddy.Settings;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using MongoDB.Driver;
 using MongoDbGenericRepository.Attributes;
 using System.Text.RegularExpressions;
@@ -10,11 +12,12 @@ namespace DayBuddy.Services
     //might need improvement if I want to add a friends list and real time messaging for friends
     public class ChatGroupsService
     {
+        private readonly IHubContext<BuddyMatchHub> buddyMathHubContext;
         private readonly IMongoCollection<BuddyChatGroup> groupsCollection;
         private readonly BuddyGroupCacheService cacheService;
         private readonly UserManager<DayBuddyUser> userManager;
         private readonly MessagesService messagesService;
-        public ChatGroupsService(IMongoClient mongoClient, MongoDbConfig config, BuddyGroupCacheService cacheService, UserManager<DayBuddyUser> userManager, MessagesService messagesService)
+        public ChatGroupsService(IMongoClient mongoClient, MongoDbConfig config, BuddyGroupCacheService cacheService, UserManager<DayBuddyUser> userManager, MessagesService messagesService, IHubContext<BuddyMatchHub> buddyMathHubContext)
         {
             var database = mongoClient.GetDatabase(config.Name);
             var collectionNameAttribute = Attribute.GetCustomAttribute(typeof(BuddyChatGroup), typeof(CollectionNameAttribute)) as CollectionNameAttribute;
@@ -23,6 +26,7 @@ namespace DayBuddy.Services
             this.cacheService = cacheService;
             this.userManager = userManager;
             this.messagesService = messagesService;
+            this.buddyMathHubContext = buddyMathHubContext;
         }
 
         public async Task AddBuddyGroup(DayBuddyUser user1, DayBuddyUser user2)
@@ -44,6 +48,9 @@ namespace DayBuddy.Services
 
             cacheService.AddUser(user1.Id.ToString(),user1.BuddyChatLobbyID.ToString());
             cacheService.AddUser(user2.Id.ToString(), user2.BuddyChatLobbyID.ToString());
+
+            await buddyMathHubContext.Clients.User(user1.Id.ToString()).SendAsync("Matched");
+            await buddyMathHubContext.Clients.User(user2.Id.ToString()).SendAsync("Matched");
         }
 
         public async Task<List<BuddyChatGroup>> GetActiveGroupsAsync()
@@ -66,11 +73,13 @@ namespace DayBuddy.Services
                 {
                     user1.BuddyChatLobbyID = Guid.Empty;
                     await userManager.UpdateAsync(user1);
+                    await buddyMathHubContext.Clients.User(user1.Id.ToString()).SendAsync("UnMatched");
                 }
-                if(user2 != null)
+                if (user2 != null)
                 {
                     user2.BuddyChatLobbyID = Guid.Empty;
                     await userManager.UpdateAsync(user2);
+                    await buddyMathHubContext.Clients.User(user2.Id.ToString()).SendAsync("UnMatched");
                 }
                 cacheService.RemoveGroup(groupId.ToString());
             }

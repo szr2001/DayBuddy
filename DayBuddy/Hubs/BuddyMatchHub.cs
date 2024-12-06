@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Build.Framework;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace DayBuddy.Hubs
 {
@@ -21,10 +22,10 @@ namespace DayBuddy.Hubs
         private readonly UserManager<DayBuddyUser> userManager;
         private readonly ChatGroupsService chatLobbysService;
         private readonly MessagesService messagesService;
-        public BuddyMatchHub(BuddyGroupCacheService userCacheService, ChatGroupsService chatLobbysService, MessagesService messagesService, UserManager<DayBuddyUser> userManager)
+        public BuddyMatchHub(BuddyGroupCacheService groupsCacheService, ChatGroupsService chatLobbysService, MessagesService messagesService, UserManager<DayBuddyUser> userManager)
         {
             //Context.User get the current user similar to controllers
-            this.groupsCacheService = userCacheService;
+            this.groupsCacheService = groupsCacheService;
             this.chatLobbysService = chatLobbysService;
             this.messagesService = messagesService;
             this.userManager = userManager;

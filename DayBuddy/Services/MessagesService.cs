@@ -1,12 +1,7 @@
 ﻿using DayBuddy.Models;
 using DayBuddy.Settings;
-using Humanizer;
 using MongoDB.Driver;
 using MongoDbGenericRepository.Attributes;
-using System.Runtime.Intrinsics.X86;
-using System.Xml.Linq;
-using System;
-using System.Text.RegularExpressions;
 
 namespace DayBuddy.Services
 {
