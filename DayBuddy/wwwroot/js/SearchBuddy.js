@@ -1,5 +1,4 @@
-﻿"use strict";
-
+﻿
 var connection = new signalR.HubConnectionBuilder().withUrl("/BuddyHub").build();
 
 connection.on("Matched", function () {

@@ -8,31 +8,33 @@
 <input type="hidden" id="loggedInUsername" value="@User?.Identity?.Name" />
 <div class="d-flex h-100">
     <div class="container-fluid d-flex" style="padding-left: 0rem !important;">
-        
+
         <div class="container-fluid d-flex flex-column">
             <div class="top-0 m-2 border-bottom text-center">
                 <label id="BuddyChatTimer" class="fw-bolder text-black-50 fs-1">23:35:12</label>
             </div>
-            <div class="row container">
-                <div class="container d-flex flex-column" id="messagesList" style="gap: 10px;">
-                    
 
-
+            <div class="row flex-grow-1 overflow-hidden">
+                <div class="d-flex flex-column overflow-auto"
+                     id="messagesList" style="gap: 10px; scrollbar-width:none; max-height: 100%;">
                 </div>
             </div>
-            
-            <div class="flex-grow-1 d-flex flex-column justify-content-end">
-                <div class="d-flex align-items-center">
-                    <input type="text" name="Message" id="messageInput"
-                           class="form-control green-outline-focus custom-input me-2"
-                            placeholder="Enter your message"/>
-                    <button type="submit" id="sendButton" class="green-outline-focus btn background-grass-green border-0 btn-outline-success text-white fw-bold">Send</button>
-                </div>
-            </div>
+
+            <form id="messageForm" class="d-flex mt-2 align-items-center">
+                <input type="text" name="Message" id="messageInput"
+                       class="form-control green-outline-focus custom-input me-2"
+                       placeholder="Enter your message" autocomplete="off" />
+                <button type="submit" id="sendButton"
+                        class="green-outline-focus btn background-grass-green border-0 btn-outline-success text-white fw-bold">
+                    Send
+                </button>
+            </form>
         </div>
 
+    </div>
+
         <div class="border-start w-50 d-flex flex-column">
-            <div class="container m-3 text-center">
+        <div class="container m-3 text-center overflow-auto">
                 <label class="fw-bolder text-dark text-truncate ms-1">@Model.BuddyProfile.Name</label>
                 <hr class="w-100 "/>
                 <div>
@@ -69,5 +71,7 @@
         </div>
     </div>            
 </div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/BuddyChat.js"></script>
