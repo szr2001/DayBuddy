@@ -43,7 +43,7 @@ label {
 .hide-scrollbar {
     overflow: auto;
     -ms-overflow-style: none;
-    scrollbar-width: none;
+    scrollbar-width: none !important;
 }
 
 ::-webkit-scrollbar {
