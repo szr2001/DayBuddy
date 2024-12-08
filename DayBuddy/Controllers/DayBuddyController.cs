@@ -1,6 +1,7 @@
 ﻿using DayBuddy.Hubs;
 using DayBuddy.Models;
 using DayBuddy.Services;
+using DayBuddy.Services.Caches;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

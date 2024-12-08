@@ -1,6 +1,7 @@
 ﻿
 using DayBuddy.Models;
 using DayBuddy.Services;
+using DayBuddy.Services.Caches;
 
 namespace DayBuddy.BackgroundServices
 {

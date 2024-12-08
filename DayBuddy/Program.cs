@@ -5,6 +5,7 @@ using DayBuddy.Hubs;
 using DayBuddy.Services;
 using MongoDB.Driver;
 using DayBuddy.BackgroundServices;
+using DayBuddy.Services.Caches;
 
 namespace DayBuddy
 {
@@ -21,6 +22,7 @@ namespace DayBuddy
             builder.Services.AddScoped<UserReportService>();
             builder.Services.AddScoped<UserService>();
             builder.Services.AddSingleton<BuddyGroupCacheService>();
+            builder.Services.AddSingleton<MessagesCacheService>();
             builder.Services.AddSingleton<ProfanityFilterService>();
             builder.Services.AddSingleton<UserProfileValidatorService>();
 

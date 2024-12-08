@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace DayBuddy.Services
+namespace DayBuddy.Services.Caches
 {
     /// <summary>
     /// An In memory cache of users and their groups used by BuddyMatchHub for transporting messages to and from users

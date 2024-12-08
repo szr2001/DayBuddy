@@ -1,5 +1,6 @@
 ﻿using DayBuddy.Hubs;
 using DayBuddy.Models;
+using DayBuddy.Services.Caches;
 using DayBuddy.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
