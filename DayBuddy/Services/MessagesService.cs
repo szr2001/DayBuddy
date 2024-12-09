@@ -63,7 +63,6 @@ namespace DayBuddy.Services
             if (cacheSize > 0 && cacheSize > offset)
             {
                 messages = messagesCacheService.GetGroupCache(groupId)
-                            .OrderByDescending(m => m.CreatedDate) 
                             .Skip(offset) 
                             .Take(amount) 
                             .ToList();
@@ -73,11 +72,10 @@ namespace DayBuddy.Services
 
             if(remainingAmount > 0)
             {
-                var filter = Builders<BuddyMessage>.Filter.Eq(m => m.Id, groupId);
+                var filter = Builders<BuddyMessage>.Filter.Eq(m => m.ChatGroupId, groupId);
                 int remainingOffest = cacheSize > offset ? 0 : offset - cacheSize;
 
                 var restMessages = await _messagesCollection.Find(filter)
-                                .Sort(Builders<BuddyMessage>.Sort.Descending(m => m.CreatedDate))
                                 .Skip(remainingOffest)
                                 .Limit(remainingAmount)
                                 .ToListAsync();
@@ -85,7 +83,7 @@ namespace DayBuddy.Services
                 messages.AddRange(restMessages);
             }
 
-            return messages;
+            return messages.OrderBy(m => m.CreatedDate).ToList();
         }
 
         public async Task DeleteMesagesInGroupAsync(Guid groupID)

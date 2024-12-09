@@ -20,9 +20,9 @@
                     @{
                         foreach (var message in Model.Messages)
                         {
-                            var senderVisuals = message.Sender == User?.Identity?.Name ? "background-grass-green flex-start" : "bg-secondary flex-end";
+                            var senderVisuals = message.Sender == User?.Identity?.Name ? "background-grass-green align-self flex-start" : "bg-secondary align-self flex-end";
 
-                            <div class="@senderVisuals p-2 align-self rounded-6 text-white">@message.Message</div>
+                            <div class="@senderVisuals p-2 rounded-6 text-white">@message.Message</div>
                         }
                      }
                 </div>
