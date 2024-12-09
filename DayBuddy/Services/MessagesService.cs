@@ -13,7 +13,7 @@ namespace DayBuddy.Services
         //injected with DI, used to run code when the app is closing
         private readonly IHostApplicationLifetime applicationLifetime;
         private readonly MessagesCacheService messagesCacheService;
-        private int WriteToDbThershold = 5;
+        private int WriteToDbThershold = 100;
         public MessagesService(IMongoClient mongoClient, MongoDbConfig config, IHostApplicationLifetime applicationLifetime, MessagesCacheService messagesCacheService)
         {
             this.applicationLifetime = applicationLifetime;

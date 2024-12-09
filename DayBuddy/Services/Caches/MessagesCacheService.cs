@@ -30,6 +30,13 @@ namespace DayBuddy.Services.Caches
             return localCache[groupId];
         }
 
+        public void RemoveCache(Guid groupId)
+        {
+            if (!localCache.ContainsKey(groupId)) return;
+
+            localCache.Remove(groupId);
+        }
+
         public void ClearCache(Guid groupId)
         {
             if (!localCache.ContainsKey(groupId)) return;

@@ -15,19 +15,21 @@ namespace DayBuddy.Services
     {
         private readonly IHubContext<BuddyMatchHub> buddyMathHubContext;
         private readonly IMongoCollection<BuddyChatGroup> groupsCollection;
-        private readonly BuddyGroupCacheService cacheService;
+        private readonly BuddyGroupCacheService buddyGroupCacheService;
         private readonly UserManager<DayBuddyUser> userManager;
         private readonly MessagesService messagesService;
-        public ChatGroupsService(IMongoClient mongoClient, MongoDbConfig config, BuddyGroupCacheService cacheService, UserManager<DayBuddyUser> userManager, MessagesService messagesService, IHubContext<BuddyMatchHub> buddyMathHubContext)
+        private readonly MessagesCacheService messagesCacheService;
+        public ChatGroupsService(IMongoClient mongoClient, MongoDbConfig config, BuddyGroupCacheService cacheService, UserManager<DayBuddyUser> userManager, MessagesService messagesService, IHubContext<BuddyMatchHub> buddyMathHubContext, MessagesCacheService messagesCacheService)
         {
             var database = mongoClient.GetDatabase(config.Name);
             var collectionNameAttribute = Attribute.GetCustomAttribute(typeof(BuddyChatGroup), typeof(CollectionNameAttribute)) as CollectionNameAttribute;
             string collectionName = collectionNameAttribute?.Name ?? "ActiveChats";
             groupsCollection = database.GetCollection<BuddyChatGroup>(collectionName);
-            this.cacheService = cacheService;
+            this.buddyGroupCacheService = cacheService;
             this.userManager = userManager;
             this.messagesService = messagesService;
             this.buddyMathHubContext = buddyMathHubContext;
+            this.messagesCacheService = messagesCacheService;
         }
 
         public async Task AddBuddyGroup(DayBuddyUser user1, DayBuddyUser user2)
@@ -47,8 +49,8 @@ namespace DayBuddy.Services
             await userManager.UpdateAsync(user1);
             await userManager.UpdateAsync(user2);
 
-            cacheService.AddUser(user1.Id.ToString(),user1.BuddyChatLobbyID.ToString());
-            cacheService.AddUser(user2.Id.ToString(), user2.BuddyChatLobbyID.ToString());
+            buddyGroupCacheService.AddUser(user1.Id.ToString(),user1.BuddyChatLobbyID.ToString());
+            buddyGroupCacheService.AddUser(user2.Id.ToString(), user2.BuddyChatLobbyID.ToString());
 
             await buddyMathHubContext.Clients.User(user1.Id.ToString()).SendAsync("Matched");
             await buddyMathHubContext.Clients.User(user2.Id.ToString()).SendAsync("Matched");
@@ -82,7 +84,8 @@ namespace DayBuddy.Services
                     await userManager.UpdateAsync(user2);
                     await buddyMathHubContext.Clients.User(user2.Id.ToString()).SendAsync("UnMatched");
                 }
-                cacheService.RemoveGroup(groupId.ToString());
+                buddyGroupCacheService.RemoveGroup(groupId.ToString());
+                messagesCacheService.RemoveCache(groupId);
             }
         }
     }
