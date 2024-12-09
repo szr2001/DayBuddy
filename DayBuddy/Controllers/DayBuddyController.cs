@@ -17,6 +17,8 @@ namespace DayBuddy.Controllers
         private readonly MessagesService messagesService;
         private readonly UserService userService;
         private readonly BuddyGroupCacheService buddyGroupCacheService;
+
+        private readonly int messageHistoryLength = 50;
         public DayBuddyController(UserManager<DayBuddyUser> userManager, ChatGroupsService chatLobbysService, UserService userService, BuddyGroupCacheService buddyGroupCacheService, MessagesService messagesService)
         {
             this.userManager = userManager;
@@ -28,44 +30,19 @@ namespace DayBuddy.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<JsonResult> GetBuddyMessages(int offset, int amount)
+        public async Task<JsonResult> GetBuddyMessages(int offset)
         {
-            Dictionary<Guid, DayBuddyUser?> userCache = new();
-
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if(user == null)
+            DayBuddyUser? authUser = await userManager.GetUserAsync(User);
+            if(authUser == null)
             {
                 return Json(new { success = false, errors = new[] { "User doesn't exist" } });
             }
-            if(user.BuddyChatGroupID == Guid.Empty)
+            if(authUser.BuddyChatGroupID == Guid.Empty)
             {
                 return Json(new { success = false, errors = new[] { "User is not inside a Group" } });
             }
-            userCache.Add(user.BuddyChatGroupID, user);
 
-            List<GroupMessage> groupMessages = new();
-
-            List<BuddyMessage> Messages = await messagesService.GetMessageInGroupAsync
-                (
-                    user.BuddyChatGroupID, 
-                    offset,
-                    amount
-                );
-
-            foreach(BuddyMessage message in Messages)
-            {
-                if (!userCache.ContainsKey(message.SenderId))
-                {
-                    DayBuddyUser? senderUser = await userManager.FindByIdAsync(message.SenderId.ToString());
-                    userCache.Add(message.SenderId, senderUser);
-                }
-                if (userCache[message.SenderId] == null) continue;
-
-                GroupMessage groupMessage = new(userCache[message.SenderId]!.UserName!, message.Message);
-                groupMessages.Add(groupMessage);
-            }
-
-            return Json(groupMessages);
+            return Json(messagesService.GetGroupMessageInGroupAsync(authUser.BuddyChatGroupID, authUser, offset, messageHistoryLength));
         }
 
         public async Task<IActionResult> SearchBuddy()
@@ -165,7 +142,9 @@ namespace DayBuddy.Controllers
 
 
             UserProfile buddyProfile = userService.GetUserProfile(buddyUser);
-            GroupChat groupChat = new(buddyProfile, []);
+            List<GroupMessage> messages = await messagesService.GetGroupMessageInGroupAsync(user.BuddyChatGroupID, user, 0, messageHistoryLength);
+
+            GroupChat groupChat = new(buddyProfile, messages);
             return View(groupChat);
         }
     }

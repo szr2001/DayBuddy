@@ -17,6 +17,14 @@
             <div class="row flex-grow-1 overflow-hidden">
                 <div class="d-flex flex-column overflow-auto hide-scrollbar"
                      id="messagesList" style="gap: 10px; max-height: 100%;">
+                    @{
+                        foreach (var message in Model.Messages)
+                        {
+                            var senderVisuals = message.Sender == User?.Identity?.Name ? "background-grass-green flex-start" : "bg-secondary flex-end";
+
+                            <div class="@senderVisuals p-2 align-self rounded-6 text-white">@message.Message</div>
+                        }
+                     }
                 </div>
             </div>
 

@@ -1,6 +1,7 @@
 ﻿using DayBuddy.Models;
 using DayBuddy.Services.Caches;
 using DayBuddy.Settings;
+using Microsoft.AspNetCore.Identity;
 using MongoDB.Driver;
 using MongoDbGenericRepository.Attributes;
 
@@ -10,18 +11,51 @@ namespace DayBuddy.Services
     {
         private readonly IMongoCollection<BuddyMessage> _messagesCollection;
         private readonly MessagesCacheService messagesCacheService;
+        private readonly UserManager<DayBuddyUser> userManager;
         private int WriteToDbThershold = 100;
-        public MessagesService(IMongoClient mongoClient, MongoDbConfig config, MessagesCacheService messagesCacheService)
+        public MessagesService(IMongoClient mongoClient, MongoDbConfig config, MessagesCacheService messagesCacheService, UserManager<DayBuddyUser> userManager)
         {
+            this.userManager = userManager;
+            this.messagesCacheService = messagesCacheService;
+
             var database = mongoClient.GetDatabase(config.Name);
             var collectionNameAttribute = Attribute.GetCustomAttribute(typeof(BuddyMessage), typeof(CollectionNameAttribute)) as CollectionNameAttribute;
             string collectionName = collectionNameAttribute?.Name ?? "Messages";
             _messagesCollection = database.GetCollection<BuddyMessage>(collectionName);
-            this.messagesCacheService = messagesCacheService;
         }
 
-        //ofset 10 amount 10 cache 5 db 20
-        public async Task<List<BuddyMessage>> GetMessageInGroupAsync(Guid groupId, int offset, int amount)
+        public async Task<List<GroupMessage>> GetGroupMessageInGroupAsync(Guid groupId, DayBuddyUser authUser, int offset, int amount)
+        {
+            Dictionary<Guid, DayBuddyUser?> userCache = new()
+            {
+                { authUser.BuddyChatGroupID, authUser }
+            };
+
+            List<GroupMessage> groupMessages = new();
+
+            List<BuddyMessage> Messages = await GetBuddyMessageInGroupAsync
+                (
+                    authUser.BuddyChatGroupID,
+                    offset,
+                    amount
+                );
+
+            foreach (BuddyMessage message in Messages)
+            {
+                if (!userCache.ContainsKey(message.SenderId))
+                {
+                    DayBuddyUser? senderUser = await userManager.FindByIdAsync(message.SenderId.ToString());
+                    userCache.Add(message.SenderId, senderUser);
+                }
+                if (userCache[message.SenderId] == null) continue;
+
+                GroupMessage groupMessage = new(userCache[message.SenderId]!.UserName!, message.Message);
+                groupMessages.Add(groupMessage);
+            }
+            return groupMessages;
+        }
+
+        public async Task<List<BuddyMessage>> GetBuddyMessageInGroupAsync(Guid groupId, int offset, int amount)
         {
             List<BuddyMessage> messages = new();
             int cacheSize = messagesCacheService.GetCacheSize(groupId);
