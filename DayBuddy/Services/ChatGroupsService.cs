@@ -39,18 +39,18 @@ namespace DayBuddy.Services
             await groupsCollection.InsertOneAsync(chatLobby);
 
             user1.MatchedWithBuddy = DateTime.UtcNow;
-            user1.BuddyChatLobbyID = chatLobby.Id;
+            user1.BuddyChatGroupID = chatLobby.Id;
             user1.IsAvailable = false;
 
             user2.MatchedWithBuddy = DateTime.UtcNow;
-            user2.BuddyChatLobbyID = chatLobby.Id;
+            user2.BuddyChatGroupID = chatLobby.Id;
             user2.IsAvailable = false;
 
             await userManager.UpdateAsync(user1);
             await userManager.UpdateAsync(user2);
 
-            buddyGroupCacheService.AddUser(user1.Id.ToString(),user1.BuddyChatLobbyID.ToString());
-            buddyGroupCacheService.AddUser(user2.Id.ToString(), user2.BuddyChatLobbyID.ToString());
+            buddyGroupCacheService.AddUser(user1.Id.ToString(),user1.BuddyChatGroupID.ToString());
+            buddyGroupCacheService.AddUser(user2.Id.ToString(), user2.BuddyChatGroupID.ToString());
 
             await buddyMathHubContext.Clients.User(user1.Id.ToString()).SendAsync("Matched");
             await buddyMathHubContext.Clients.User(user2.Id.ToString()).SendAsync("Matched");
@@ -74,13 +74,13 @@ namespace DayBuddy.Services
 
                 if (user1 != null)
                 {
-                    user1.BuddyChatLobbyID = Guid.Empty;
+                    user1.BuddyChatGroupID = Guid.Empty;
                     await userManager.UpdateAsync(user1);
                     await buddyMathHubContext.Clients.User(user1.Id.ToString()).SendAsync("UnMatched");
                 }
                 if (user2 != null)
                 {
-                    user2.BuddyChatLobbyID = Guid.Empty;
+                    user2.BuddyChatGroupID = Guid.Empty;
                     await userManager.UpdateAsync(user2);
                     await buddyMathHubContext.Clients.User(user2.Id.ToString()).SendAsync("UnMatched");
                 }

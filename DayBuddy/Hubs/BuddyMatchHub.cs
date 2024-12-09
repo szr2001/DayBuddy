@@ -34,15 +34,15 @@ namespace DayBuddy.Hubs
         public override async Task OnConnectedAsync()
         {
             DayBuddyUser? user = await userManager.GetUserAsync(Context.User!);
-            if (user == null || user.BuddyChatLobbyID == Guid.Empty) return;
-            await Groups.AddToGroupAsync(Context.ConnectionId, user.BuddyChatLobbyID.ToString());
+            if (user == null || user.BuddyChatGroupID == Guid.Empty) return;
+            await Groups.AddToGroupAsync(Context.ConnectionId, user.BuddyChatGroupID.ToString());
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             DayBuddyUser? user = await userManager.GetUserAsync(Context.User!);
-            if (user == null || user.BuddyChatLobbyID == Guid.Empty) return;
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, user.BuddyChatLobbyID.ToString());
+            if (user == null || user.BuddyChatGroupID == Guid.Empty) return;
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, user.BuddyChatGroupID.ToString());
         }
 
         public async Task SendMessage(string message)

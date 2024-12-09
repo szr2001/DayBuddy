@@ -18,6 +18,6 @@ namespace DayBuddy.Models
         public DateTime? PurchasedPremium { get; set; }
         public DateTime? MatchedWithBuddy { get; set; }
         public bool IsAvailable { get; set; }
-        public Guid BuddyChatLobbyID{ get; set; }
+        public Guid BuddyChatGroupID{ get; set; }
     }
 }

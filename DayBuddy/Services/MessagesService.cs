@@ -3,7 +3,6 @@ using DayBuddy.Services.Caches;
 using DayBuddy.Settings;
 using MongoDB.Driver;
 using MongoDbGenericRepository.Attributes;
-using System.Text.RegularExpressions;
 
 namespace DayBuddy.Services
 {
@@ -21,9 +20,38 @@ namespace DayBuddy.Services
             this.messagesCacheService = messagesCacheService;
         }
 
-        public async Task<BuddyMessage[]> GetMessageInGroupAsync(Guid groupId,int offset, int amount)
+        //ofset 10 amount 10 cache 5 db 20
+        public async Task<List<BuddyMessage>> GetMessageInGroupAsync(Guid groupId, int offset, int amount)
         {
-            return [];
+            List<BuddyMessage> messages = new();
+            int cacheSize = messagesCacheService.GetCacheSize(groupId);
+
+            if (cacheSize > 0 && cacheSize > offset)
+            {
+                messages = messagesCacheService.GetGroupCache(groupId)
+                            .OrderByDescending(m => m.CreatedDate) 
+                            .Skip(offset) 
+                            .Take(amount) 
+                            .ToList();
+            }
+            
+            int remainingAmount = amount - messages.Count;
+
+            if(remainingAmount > 0)
+            {
+                var filter = Builders<BuddyMessage>.Filter.Eq(m => m.Id, groupId);
+                int remainingOffest = cacheSize > offset ? 0 : offset - cacheSize;
+
+                var restMessages = await _messagesCollection.Find(filter)
+                                .Sort(Builders<BuddyMessage>.Sort.Descending(m => m.CreatedDate))
+                                .Skip(remainingOffest)
+                                .Limit(remainingAmount)
+                                .ToListAsync();
+
+                messages.AddRange(restMessages);
+            }
+
+            return messages;
         }
 
         public async Task DeleteMesagesInGroupAsync(Guid groupID)

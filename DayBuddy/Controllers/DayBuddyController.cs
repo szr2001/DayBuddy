@@ -14,20 +14,64 @@ namespace DayBuddy.Controllers
         //move some methods inside services
         private readonly UserManager<DayBuddyUser> userManager;
         private readonly ChatGroupsService chatLobbysService;
+        private readonly MessagesService messagesService;
         private readonly UserService userService;
         private readonly BuddyGroupCacheService buddyGroupCacheService;
-        public DayBuddyController(UserManager<DayBuddyUser> userManager, ChatGroupsService chatLobbysService, UserService userService, BuddyGroupCacheService buddyGroupCacheService)
+        public DayBuddyController(UserManager<DayBuddyUser> userManager, ChatGroupsService chatLobbysService, UserService userService, BuddyGroupCacheService buddyGroupCacheService, MessagesService messagesService)
         {
             this.userManager = userManager;
             this.chatLobbysService = chatLobbysService;
             this.userService = userService;
             this.buddyGroupCacheService = buddyGroupCacheService;
+            this.messagesService = messagesService;
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<JsonResult> GetBuddyMessages(int offset, int amount)
+        {
+            Dictionary<Guid, DayBuddyUser?> userCache = new();
+
+            DayBuddyUser? user = await userManager.GetUserAsync(User);
+            if(user == null)
+            {
+                return Json(new { success = false, errors = new[] { "User doesn't exist" } });
+            }
+            if(user.BuddyChatGroupID == Guid.Empty)
+            {
+                return Json(new { success = false, errors = new[] { "User is not inside a Group" } });
+            }
+            userCache.Add(user.BuddyChatGroupID, user);
+
+            List<GroupMessage> groupMessages = new();
+
+            List<BuddyMessage> Messages = await messagesService.GetMessageInGroupAsync
+                (
+                    user.BuddyChatGroupID, 
+                    offset,
+                    amount
+                );
+
+            foreach(BuddyMessage message in Messages)
+            {
+                if (!userCache.ContainsKey(message.SenderId))
+                {
+                    DayBuddyUser? senderUser = await userManager.FindByIdAsync(message.SenderId.ToString());
+                    userCache.Add(message.SenderId, senderUser);
+                }
+                if (userCache[message.SenderId] == null) continue;
+
+                GroupMessage groupMessage = new(userCache[message.SenderId]!.UserName!, message.Message);
+                groupMessages.Add(groupMessage);
+            }
+
+            return Json(groupMessages);
         }
 
         public async Task<IActionResult> SearchBuddy()
         {
             DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if (user?.BuddyChatLobbyID != Guid.Empty)
+            if (user?.BuddyChatGroupID != Guid.Empty)
             {
                 return RedirectToAction(nameof(BuddyChat));
             }
@@ -49,7 +93,7 @@ namespace DayBuddy.Controllers
             //Create a lobby with those two and assign them
             //save it in the database
             //set the users LobbyId to the new saved one
-            if (user == null || user.BuddyChatLobbyID != Guid.Empty) return RedirectToAction(nameof(SearchBuddy));
+            if (user == null || user.BuddyChatGroupID != Guid.Empty) return RedirectToAction(nameof(SearchBuddy));
 
             if (user.IsAvailable != available)
             {
@@ -77,10 +121,10 @@ namespace DayBuddy.Controllers
             {
                 return RedirectToAction("Login","Account");
             }
-            if(user.BuddyChatLobbyID != Guid.Empty)
+            if(user.BuddyChatGroupID != Guid.Empty)
             {
-                string GroupId = user.BuddyChatLobbyID.ToString();
-                await chatLobbysService.RemoveBuddyGroup(user.BuddyChatLobbyID);
+                string GroupId = user.BuddyChatGroupID.ToString();
+                await chatLobbysService.RemoveBuddyGroup(user.BuddyChatGroupID);
             }
 
             return RedirectToAction(nameof(SearchBuddy));
