@@ -26,9 +26,10 @@ namespace DayBuddy
             builder.Services.AddSingleton<ProfanityFilterService>();
             builder.Services.AddSingleton<UserProfileValidatorService>();
 
-            //hosted service run as part of the starting process before everything else runs.
+            //hosted service run as part of the starting/closing process before everything else runs.
             builder.Services.AddHostedService<GroupCachePopulationService>();
             builder.Services.AddHostedService<DbRolesPopulationService>();
+            builder.Services.AddHostedService<MessagesCacheFlushService>();
 
             MongoDbConfig? mongoDBSettings = builder.Configuration.GetSection(nameof(MongoDbConfig)).Get<MongoDbConfig>();
             

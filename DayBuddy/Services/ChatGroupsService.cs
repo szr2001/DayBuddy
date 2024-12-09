@@ -66,7 +66,7 @@ namespace DayBuddy.Services
         {
             var filter = Builders<BuddyChatGroup>.Filter.Eq(g => g.Id, groupId);
             BuddyChatGroup? group = await groupsCollection.FindOneAndDeleteAsync(filter);
-            await messagesService.DeleteMesagesInGroup(groupId);
+            await messagesService.DeleteMesagesInGroupAsync(groupId);
             if (group != null)
             {
                 DayBuddyUser? user1 = await userManager.FindByIdAsync(group.Users[0].ToString());
