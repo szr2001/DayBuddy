@@ -12,7 +12,7 @@ namespace DayBuddy.Services
         private readonly IMongoCollection<BuddyMessage> _messagesCollection;
         private readonly MessagesCacheService messagesCacheService;
         private readonly UserManager<DayBuddyUser> userManager;
-        private int WriteToDbThershold = 100;
+        private int WriteToDbThershold = 5;
         public MessagesService(IMongoClient mongoClient, MongoDbConfig config, MessagesCacheService messagesCacheService, UserManager<DayBuddyUser> userManager)
         {
             this.userManager = userManager;

@@ -9,9 +9,9 @@ connection.on("ReceiveMessage", function (user, message) {
     var div = $("<div></div>").addClass("p-2 rounded-6 text-white");
     
     if (user === loggedInUsername) {
-        div.addClass("background-grass-green").css("align-self", "flex-start");
+        div.addClass("background-grass-green align-self-start");
     } else {
-        div.addClass("bg-secondary").css("align-self", "flex-end");
+        div.addClass("bg-secondary align-self-end");
     }
 
     div.text(message);
