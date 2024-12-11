@@ -1,5 +1,6 @@
 ﻿const loggedInUsername = $("#loggedInUsername").val();
 const MessagesList = $("#messagesList");
+const BuddyChatTimer = $("#buddyChatTimer");
 var connection = new signalR.HubConnectionBuilder().withUrl("/BuddyHub").build();
 
 // Disable the send button until connection is established.
@@ -16,13 +17,15 @@ connection.on("ReceiveMessage", function (user, message) {
 
     div.text(message);
     MessagesList.append(div);
-    MessagesList.scrollTop(MessagesList[0].scrollHeight);
+    ScrollMessageList();
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-    const messagesList = document.getElementById('messagesList');
-    messagesList.scrollTop = messagesList.scrollHeight;
-});
+function ScrollMessageList() {
+    MessagesList.scrollTop(MessagesList[0].scrollHeight);
+}
+
+$(document).ready(ScrollMessageList);
+
 
 connection.on("UnMatched", function () {
     window.location.href = '/DayBuddy/SearchBuddy';

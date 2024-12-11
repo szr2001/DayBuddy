@@ -16,19 +16,28 @@ namespace DayBuddy.Controllers
         private readonly ChatGroupsService chatLobbysService;
         private readonly MessagesService messagesService;
         private readonly UserService userService;
+        private readonly IConfiguration config;
         private readonly BuddyGroupCacheService buddyGroupCacheService;
+        private readonly int FindBuddyCooldownHours = 0;
 
         private readonly int messageHistoryLength = 50;
-        public DayBuddyController(UserManager<DayBuddyUser> userManager, ChatGroupsService chatLobbysService, UserService userService, BuddyGroupCacheService buddyGroupCacheService, MessagesService messagesService)
+        public DayBuddyController(UserManager<DayBuddyUser> userManager, ChatGroupsService chatLobbysService, UserService userService, BuddyGroupCacheService buddyGroupCacheService, MessagesService messagesService, IConfiguration config)
         {
             this.userManager = userManager;
             this.chatLobbysService = chatLobbysService;
             this.userService = userService;
             this.buddyGroupCacheService = buddyGroupCacheService;
             this.messagesService = messagesService;
+            this.config = config;
+
+            FindBuddyCooldownHours = config.GetValue<int>("FindBuddyCooldownHours");
         }
 
-        [Authorize]
+        public IActionResult BuddyCooldown()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<JsonResult> GetBuddyMessages(int offset)
         {
