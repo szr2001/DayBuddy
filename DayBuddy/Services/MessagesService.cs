@@ -24,6 +24,7 @@ namespace DayBuddy.Services
             _messagesCollection = database.GetCollection<BuddyMessage>(collectionName);
         }
 
+        //bug here, doesn't seem to get in the correct order
         public async Task<List<GroupMessage>> GetGroupMessageInGroupAsync(Guid groupId, DayBuddyUser authUser, int offset, int amount)
         {
             Dictionary<Guid, DayBuddyUser?> userCache = new()
@@ -63,6 +64,7 @@ namespace DayBuddy.Services
             if (cacheSize > 0 && cacheSize > offset)
             {
                 messages = messagesCacheService.GetGroupCache(groupId)
+                            .OrderByDescending(m => m.CreatedDate)
                             .Skip(offset) 
                             .Take(amount) 
                             .ToList();
@@ -76,6 +78,7 @@ namespace DayBuddy.Services
                 int remainingOffest = cacheSize > offset ? 0 : offset - cacheSize;
 
                 var restMessages = await _messagesCollection.Find(filter)
+                                .Sort(Builders<BuddyMessage>.Sort.Descending(m => m.CreatedDate))
                                 .Skip(remainingOffest)
                                 .Limit(remainingAmount)
                                 .ToListAsync();

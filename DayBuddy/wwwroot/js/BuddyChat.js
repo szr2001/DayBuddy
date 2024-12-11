@@ -1,5 +1,5 @@
 ﻿const loggedInUsername = $("#loggedInUsername").val();
-const MessageList = $("#messagesList");
+const MessagesList = $("#messagesList");
 var connection = new signalR.HubConnectionBuilder().withUrl("/BuddyHub").build();
 
 // Disable the send button until connection is established.
@@ -15,8 +15,13 @@ connection.on("ReceiveMessage", function (user, message) {
     }
 
     div.text(message);
-    MessageList.append(div);
-    MessageList.scrollTop(MessageList[0].scrollHeight);
+    MessagesList.append(div);
+    MessagesList.scrollTop(MessagesList[0].scrollHeight);
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const messagesList = document.getElementById('messagesList');
+    messagesList.scrollTop = messagesList.scrollHeight;
 });
 
 connection.on("UnMatched", function () {
