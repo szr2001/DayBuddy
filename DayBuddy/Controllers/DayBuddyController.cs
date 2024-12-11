@@ -3,6 +3,7 @@ using DayBuddy.Models;
 using DayBuddy.Services;
 using DayBuddy.Services.Caches;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,26 +17,16 @@ namespace DayBuddy.Controllers
         private readonly ChatGroupsService chatLobbysService;
         private readonly MessagesService messagesService;
         private readonly UserService userService;
-        private readonly IConfiguration config;
         private readonly BuddyGroupCacheService buddyGroupCacheService;
-        private readonly int FindBuddyCooldownHours = 0;
 
         private readonly int messageHistoryLength = 50;
-        public DayBuddyController(UserManager<DayBuddyUser> userManager, ChatGroupsService chatLobbysService, UserService userService, BuddyGroupCacheService buddyGroupCacheService, MessagesService messagesService, IConfiguration config)
+        public DayBuddyController(UserManager<DayBuddyUser> userManager, ChatGroupsService chatLobbysService, UserService userService, BuddyGroupCacheService buddyGroupCacheService, MessagesService messagesService)
         {
             this.userManager = userManager;
             this.chatLobbysService = chatLobbysService;
             this.userService = userService;
             this.buddyGroupCacheService = buddyGroupCacheService;
             this.messagesService = messagesService;
-            this.config = config;
-
-            FindBuddyCooldownHours = config.GetValue<int>("FindBuddyCooldownHours");
-        }
-
-        public IActionResult BuddyCooldown()
-        {
-            return View();
         }
 
         [HttpPost]
@@ -57,12 +48,21 @@ namespace DayBuddy.Controllers
         public async Task<IActionResult> SearchBuddy()
         {
             DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if (user?.BuddyChatGroupID != Guid.Empty)
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (user.BuddyChatGroupID != Guid.Empty)
             {
                 return RedirectToAction(nameof(BuddyChat));
             }
 
-            ViewBag.IsAvailable = user == null ? false : user.IsAvailable;
+            if (userService.IsUserOnBuddySearchCooldown(user))
+            {
+                return RedirectToAction(nameof(BuddyCooldown));
+            }
+            
+            ViewBag.IsAvailable = user.IsAvailable;
 
             return View();
         }
@@ -79,7 +79,19 @@ namespace DayBuddy.Controllers
             //Create a lobby with those two and assign them
             //save it in the database
             //set the users LobbyId to the new saved one
-            if (user == null || user.BuddyChatGroupID != Guid.Empty) return RedirectToAction(nameof(SearchBuddy));
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+            if (user.BuddyChatGroupID != Guid.Empty)
+            {
+                return RedirectToAction(nameof(BuddyChat));
+            }
+
+            if (userService.IsUserOnBuddySearchCooldown(user))
+            {
+                return RedirectToAction(nameof(BuddyCooldown));
+            }
 
             if (user.IsAvailable != available)
             {
@@ -97,6 +109,11 @@ namespace DayBuddy.Controllers
             }
 
             return RedirectToAction(nameof(SearchBuddy));
+        }
+
+        public IActionResult BuddyCooldown()
+        {
+            return View();
         }
 
         public async Task<IActionResult> UnmatchBuddy()

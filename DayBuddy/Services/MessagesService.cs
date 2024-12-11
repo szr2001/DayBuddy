@@ -12,19 +12,18 @@ namespace DayBuddy.Services
         private readonly IMongoCollection<BuddyMessage> _messagesCollection;
         private readonly MessagesCacheService messagesCacheService;
         private readonly UserManager<DayBuddyUser> userManager;
-        private int WriteToDbThershold = 5;
-        public MessagesService(IMongoClient mongoClient, MongoDbConfig config, MessagesCacheService messagesCacheService, UserManager<DayBuddyUser> userManager)
+        private readonly int WriteToDbThershold = 5;
+        public MessagesService(IMongoClient mongoClient, MongoDbConfig nongoConfig, MessagesCacheService messagesCacheService, UserManager<DayBuddyUser> userManager)
         {
-            this.userManager = userManager;
             this.messagesCacheService = messagesCacheService;
+            this.userManager = userManager;
 
-            var database = mongoClient.GetDatabase(config.Name);
+            var database = mongoClient.GetDatabase(nongoConfig.Name);
             var collectionNameAttribute = Attribute.GetCustomAttribute(typeof(BuddyMessage), typeof(CollectionNameAttribute)) as CollectionNameAttribute;
             string collectionName = collectionNameAttribute?.Name ?? "Messages";
             _messagesCollection = database.GetCollection<BuddyMessage>(collectionName);
         }
 
-        //bug here, doesn't seem to get in the correct order
         public async Task<List<GroupMessage>> GetGroupMessageInGroupAsync(Guid groupId, DayBuddyUser authUser, int offset, int amount)
         {
             Dictionary<Guid, DayBuddyUser?> userCache = new()
