@@ -111,8 +111,19 @@ namespace DayBuddy.Controllers
             return RedirectToAction(nameof(SearchBuddy));
         }
 
-        public IActionResult BuddyCooldown()
+        public async Task<IActionResult> BuddyCooldown()
         {
+            DayBuddyUser? user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            if (!userService.IsUserOnBuddySearchCooldown(user))
+            {
+                return RedirectToAction(nameof(SearchBuddy));
+            }
+            ViewBag.Cooldown = userService.GetUserBuddySearchCooldown(user);
             return View();
         }
 
@@ -166,6 +177,7 @@ namespace DayBuddy.Controllers
                 return RedirectToAction(nameof(SearchBuddy));
             }
 
+            ViewBag.Cooldown = userService.GetUserBuddySearchCooldown(user);
 
             UserProfile buddyProfile = userService.GetUserProfile(buddyUser);
             List<GroupMessage> messages = await messagesService.GetGroupMessageInGroupAsync(user.BuddyChatGroupID, user, 0, messageHistoryLength);

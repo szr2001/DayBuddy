@@ -3,6 +3,20 @@
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
+<nav class="text-center">
+    <div class="d-flex justify-content-center">
+        <img src="/Assets/Images/hug.png" class="p-1" width="75" />
+    </div>
+</nav>
+
+<div class="text-center container-fluid p-md-5 h-100">
+    <div class="border row container align-content-center h-75 rounded-6 align-self-center">
+        <label id="cooldownIndicator" dataCooldown="@ViewBag.Cooldown.TotalSeconds"
+            class="fw-bold btn-outline-danger btn-danger text-white fw-bold rounded-pill fs-1 text-warp"> @ViewBag.Cooldown.ToString(@"hh\:mm\:ss")</label>
+        <label class="text-warp p-1">We already assigned you a buddy, come back after a while!</label>
+    </div>
+</div>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/BuddyCooldown.js"></script>
+<script src="~/js/utils/timeSpanTimer.js"></script>

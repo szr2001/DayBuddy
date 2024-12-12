@@ -20,12 +20,26 @@ connection.on("ReceiveMessage", function (user, message) {
     ScrollMessageList();
 });
 
+function cooldownEndCallback() {
+
+}
+
+function startTimer() {
+    //the & here is a naming convention to show that this is a jquery object
+    var $cooldownIndicator = $("#buddyChatTimer");
+    var cooldownAmount = parseInt($cooldownIndicator.attr('dataCooldown'), 10);
+    timeSpanTimer(cooldownAmount, $cooldownIndicator, cooldownEndCallback);
+}
+
 function ScrollMessageList() {
     MessagesList.scrollTop(MessagesList[0].scrollHeight);
 }
 
-$(document).ready(ScrollMessageList);
-
+$(document).ready(function ()
+{
+    startTimer();
+    ScrollMessageList();
+});
 
 connection.on("UnMatched", function () {
     window.location.href = '/DayBuddy/SearchBuddy';

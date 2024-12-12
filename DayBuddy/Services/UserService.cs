@@ -9,7 +9,7 @@ namespace DayBuddy.Services
     {
         private readonly IMongoCollection<DayBuddyUser> usersCollection;
         private readonly IConfiguration config;
-        private readonly int FindBuddyCooldownHours = 0;
+        private readonly TimeSpan FindBuddyCooldown;
         public UserService(IMongoClient mongoClient, MongoDbConfig mongoDbConfig, IConfiguration config)
         {
             this.config = config;
@@ -18,14 +18,31 @@ namespace DayBuddy.Services
             string collectionName = collectionNameAttribute?.Name ?? "Users";
 
             usersCollection = database.GetCollection<DayBuddyUser>(collectionName);
-            FindBuddyCooldownHours = config.GetValue<int>("FindBuddyCooldownHours");
+            //write the whole timespan inside the appsettings
+            int hoursCooldown = config.GetValue<int>("FindBuddyCooldownHours");
+            FindBuddyCooldown = new(hoursCooldown, 0, 0);
         }
 
         public bool IsUserOnBuddySearchCooldown(DayBuddyUser user)
         {
-            TimeSpan? time = DateTime.UtcNow - user.MatchedWithBuddy;
-            Console.WriteLine($"Buddy last match {time.Value.Hours} hours ago");
-            return time.HasValue && time.Value.Hours < FindBuddyCooldownHours;
+            if(user.MatchedWithBuddy == null) return false;
+
+            TimeSpan time = (TimeSpan)(DateTime.UtcNow - user.MatchedWithBuddy);
+
+            Console.WriteLine($"Buddy last match {time.Hours} hours ago");
+            return time < FindBuddyCooldown;
+        }
+
+        public TimeSpan GetUserBuddySearchCooldown(DayBuddyUser user)
+        {
+            if(user.MatchedWithBuddy == null) return TimeSpan.Zero;
+
+            TimeSpan time = (TimeSpan)(DateTime.UtcNow - user.MatchedWithBuddy);
+
+            Console.WriteLine($"Buddy last match {time.Hours} hours ago");
+            TimeSpan cooldownLeft = FindBuddyCooldown - time;
+
+            return cooldownLeft;
         }
 
         //public async Task<DayBuddyUser?> GetRandomUserByAgeAsync(int minAge, int maxAge)

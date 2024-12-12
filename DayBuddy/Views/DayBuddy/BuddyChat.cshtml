@@ -11,7 +11,8 @@
 
         <div class="container-fluid d-flex flex-column">
             <div class="top-0 m-2 border-bottom text-center">
-                <label id="buddyChatTimer" class="fw-bolder text-black-50 fs-1">23:35:12</label>
+                <label id="buddyChatTimer" dataCooldown="@ViewBag.Cooldown.TotalSeconds" 
+                class="fw-bolder text-black-50 fs-1"> @ViewBag.Cooldown.ToString(@"hh\:mm\:ss")</label>
             </div>
 
             <div class="row flex-grow-1 overflow-hidden">
@@ -82,4 +83,5 @@
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script src="~/JS/utils/timeSpanTimer.js"></script>
 <script src="~/js/BuddyChat.js"></script>
