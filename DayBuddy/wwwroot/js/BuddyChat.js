@@ -5,6 +5,7 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/BuddyHub").build()
 
 // Disable the send button until connection is established.
 $("#sendButton").prop("disabled", true);
+$("#messageInput").prop("disabled", true);
 
 connection.on("ReceiveMessage", function (user, message) {
     var div = $("<div></div>").addClass("p-2 rounded-6 text-white");
@@ -36,6 +37,10 @@ function ScrollMessageList() {
 }
 
 function loadMessages() {
+    var scrollHeightBefore = $MessagesList[0].scrollHeight;
+    var $loading = $("<div>Loading messages...</div>").addClass("fw-bold text-center text-grass-green");
+    $MessagesList.prepend($loading); 
+
     $.ajax({
         url: '/DayBuddy/GetBuddyMessages',
         type: 'get',
@@ -44,7 +49,6 @@ function loadMessages() {
         contentype: 'application/json;charset=utf-8',
         success: function (result) {
             if (result.success) {
-                var scrollHeightBefore = $MessagesList[0].scrollHeight;
                 result.messagesFound.forEach(function (mess) {
                     var $div = $("<div></div>").addClass("p-2 rounded-6 text-white");
 
@@ -58,15 +62,18 @@ function loadMessages() {
                     $MessagesList.prepend($div);
                 });
 
-                var scrollHeightAfter = $MessagesList[0].scrollHeight;
-                $MessagesList.scrollTop(scrollHeightAfter - scrollHeightBefore);
             } else {
                 console.error(result.errors.join(", "));
             }
         },
         error: function () {
             console.error("Failed to load messages");
-        } 
+        },
+        complete: function () {
+            $loading.remove();
+            var scrollHeightAfter = $MessagesList[0].scrollHeight;
+            $MessagesList.scrollTop(scrollHeightAfter - scrollHeightBefore);
+        }
     })
 }
 
@@ -79,7 +86,6 @@ $("#messagesList").on("scroll", function () {
 $(document).ready(function ()
 {
     startTimer();
-    ScrollMessageList();
 });
 
 connection.on("UnMatched", function () {
@@ -87,7 +93,9 @@ connection.on("UnMatched", function () {
 });
 
 connection.start().then(function () {
+    ScrollMessageList();
     $("#sendButton").prop("disabled", false);
+    $("#messageInput").prop("disabled", false);
     $("#sendButton").on("click", SubmitText);
     $("#messageForm").on("submit", SubmitText);
 }).catch(function (err) {
