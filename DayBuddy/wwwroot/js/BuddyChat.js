@@ -43,23 +43,24 @@ function loadMessages() {
         data: { offset: $("#messagesList").children().length},
         contentype: 'application/json;charset=utf-8',
         success: function (result) {
-            //console.log("Response received: ", result);
-            //apend messages
             if (result.success) {
+                var scrollHeightBefore = $MessagesList[0].scrollHeight;
                 result.messagesFound.forEach(function (mess) {
-                    var div = $("<div></div>").addClass("p-2 rounded-6 text-white");
+                    var $div = $("<div></div>").addClass("p-2 rounded-6 text-white");
 
                     if (mess.sender === loggedInUsername) {
-                        div.addClass("background-grass-green align-self-start");
+                        $div.addClass("background-grass-green align-self-start");
                     } else {
-                        div.addClass("bg-secondary align-self-end");
+                        $div.addClass("bg-secondary align-self-end");
                     }
 
-                    div.text(mess.message);
-                    $MessagesList.prepend(div);
+                    $div.text(mess.message);
+                    $MessagesList.prepend($div);
                 });
-            }
-            else {
+
+                var scrollHeightAfter = $MessagesList[0].scrollHeight;
+                $MessagesList.scrollTop(scrollHeightAfter - scrollHeightBefore);
+            } else {
                 console.error(result.errors.join(", "));
             }
         },
