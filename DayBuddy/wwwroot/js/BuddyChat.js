@@ -1,6 +1,6 @@
 ﻿const loggedInUsername = $("#loggedInUsername").val();
-const MessagesList = $("#messagesList");
-const BuddyChatTimer = $("#buddyChatTimer");
+const $MessagesList = $("#messagesList");
+const $BuddyChatTimer = $("#buddyChatTimer");
 var connection = new signalR.HubConnectionBuilder().withUrl("/BuddyHub").build();
 
 // Disable the send button until connection is established.
@@ -16,7 +16,7 @@ connection.on("ReceiveMessage", function (user, message) {
     }
 
     div.text(message);
-    MessagesList.append(div);
+    $MessagesList.append(div);
     ScrollMessageList();
 });
 
@@ -32,8 +32,48 @@ function startTimer() {
 }
 
 function ScrollMessageList() {
-    MessagesList.scrollTop(MessagesList[0].scrollHeight);
+    $MessagesList.scrollTop($MessagesList[0].scrollHeight);
 }
+
+function loadMessages() {
+    $.ajax({
+        url: '/DayBuddy/GetBuddyMessages',
+        type: 'get',
+        datatype: 'json',
+        data: { offset: $("#messagesList").children().length},
+        contentype: 'application/json;charset=utf-8',
+        success: function (result) {
+            //console.log("Response received: ", result);
+            //apend messages
+            if (result.success) {
+                result.messagesFound.forEach(function (mess) {
+                    var div = $("<div></div>").addClass("p-2 rounded-6 text-white");
+
+                    if (mess.sender === loggedInUsername) {
+                        div.addClass("background-grass-green align-self-start");
+                    } else {
+                        div.addClass("bg-secondary align-self-end");
+                    }
+
+                    div.text(mess.message);
+                    $MessagesList.prepend(div);
+                });
+            }
+            else {
+                console.error(result.errors.join(", "));
+            }
+        },
+        error: function () {
+            console.error("Failed to load messages");
+        } 
+    })
+}
+
+$("#messagesList").on("scroll", function () {
+    if ($(this).scrollTop() === 0) {
+        loadMessages();
+    }
+});
 
 $(document).ready(function ()
 {

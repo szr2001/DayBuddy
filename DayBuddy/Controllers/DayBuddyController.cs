@@ -19,7 +19,7 @@ namespace DayBuddy.Controllers
         private readonly UserService userService;
         private readonly BuddyGroupCacheService buddyGroupCacheService;
 
-        private readonly int messageHistoryLength = 50;
+        private readonly int messageHistoryLength = 30;
         public DayBuddyController(UserManager<DayBuddyUser> userManager, ChatGroupsService chatLobbysService, UserService userService, BuddyGroupCacheService buddyGroupCacheService, MessagesService messagesService)
         {
             this.userManager = userManager;
@@ -29,7 +29,7 @@ namespace DayBuddy.Controllers
             this.messagesService = messagesService;
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<JsonResult> GetBuddyMessages(int offset)
         {
             DayBuddyUser? authUser = await userManager.GetUserAsync(User);
@@ -42,7 +42,10 @@ namespace DayBuddy.Controllers
                 return Json(new { success = false, errors = new[] { "User is not inside a Group" } });
             }
 
-            return Json(messagesService.GetGroupMessageInGroupAsync(authUser.BuddyChatGroupID, authUser, offset, messageHistoryLength));
+            List<GroupMessage> messages = await messagesService.GetGroupMessageInGroupAsync(authUser.BuddyChatGroupID, authUser, offset, messageHistoryLength);
+            messages.Reverse();
+
+            return Json(new { success = true, errors = Array.Empty<string>(), messagesFound = messages });
         }
 
         public async Task<IActionResult> SearchBuddy()

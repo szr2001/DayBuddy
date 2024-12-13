@@ -285,10 +285,10 @@ function ReadProfileOptions() {
         }
     })
     Countries.forEach(function (item) {
-        var sexualityBtn = $("<option></option>")
+        var $sexualityBtn = $("<option></option>")
             .text(item)
             .val(item);
-        $("#NewCountryInput").append(sexualityBtn);
+        $("#NewCountryInput").append($sexualityBtn);
     })
 }
 

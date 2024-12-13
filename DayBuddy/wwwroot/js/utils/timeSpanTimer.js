@@ -1,5 +1,5 @@
 ﻿function timeSpanTimer(durationSeconds, $display, timeOutCallback) {
-    var timer = durationSeconds, hours, minutes, seconds;
+    var timer = durationSeconds , hours, minutes, seconds;
     var interval = setInterval(function() {
         hours = parseInt(timer / 3600, 10);
         minutes = parseInt((timer % 3600) / 60, 10);
@@ -14,7 +14,7 @@
         if (--timer < 0) {
             clearInterval(interval);
             if (typeof timeOutCallback === 'function') {
-                timeOutCallback();  // This will call the passed function
+                timeOutCallback();
             }
         }
     }, 1000);
