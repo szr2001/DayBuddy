@@ -146,6 +146,17 @@ namespace DayBuddy.Controllers
         [Authorize]
         public async Task<IActionResult> LogOut()
         {
+            //test
+            DayBuddyUser? user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+            user.PurchasedPremium = null;
+
+            await userManager.UpdateAsync(user);
+            //test
+
             await signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
