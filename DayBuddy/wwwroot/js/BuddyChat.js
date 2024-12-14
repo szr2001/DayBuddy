@@ -28,6 +28,7 @@ function cooldownEndCallback() {
 function startTimer() {
     //the & here is a naming convention to show that this is a jquery object
     var $cooldownIndicator = $("#buddyChatTimer");
+    if ($cooldownIndicator == null) return;
     var cooldownAmount = parseInt($cooldownIndicator.attr('dataCooldown'), 10);
     timeSpanTimer(cooldownAmount, $cooldownIndicator, cooldownEndCallback);
 }

@@ -60,7 +60,7 @@ namespace DayBuddy.Controllers
                 return RedirectToAction(nameof(BuddyChat));
             }
 
-            if (userService.IsUserOnBuddySearchCooldown(user))
+            if (userService.IsUserOnBuddySearchCooldown(user) && !userService.IsPremiumUser(user))
             {
                 return RedirectToAction(nameof(BuddyCooldown));
             }
@@ -91,7 +91,7 @@ namespace DayBuddy.Controllers
                 return RedirectToAction(nameof(BuddyChat));
             }
 
-            if (userService.IsUserOnBuddySearchCooldown(user))
+            if (userService.IsUserOnBuddySearchCooldown(user) && !userService.IsPremiumUser(user))
             {
                 return RedirectToAction(nameof(BuddyCooldown));
             }
@@ -122,10 +122,11 @@ namespace DayBuddy.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            if (!userService.IsUserOnBuddySearchCooldown(user))
+            if (!userService.IsUserOnBuddySearchCooldown(user) || userService.IsPremiumUser(user))
             {
                 return RedirectToAction(nameof(SearchBuddy));
             }
+
             ViewBag.Cooldown = userService.GetUserBuddySearchCooldown(user);
             return View();
         }
@@ -179,6 +180,8 @@ namespace DayBuddy.Controllers
                 Console.WriteLine($"Couldn't find user in the group with {user.UserName}");
                 return RedirectToAction(nameof(SearchBuddy));
             }
+
+            ViewBag.IsPremium = userService.IsPremiumUser(user);
 
             ViewBag.Cooldown = userService.GetUserBuddySearchCooldown(user);
 

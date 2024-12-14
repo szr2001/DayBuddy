@@ -46,13 +46,23 @@ namespace DayBuddy.Services
             return time < FindBuddyCooldown;
         }
 
+        public TimeSpan GetUserPremiumDurationLeft(DayBuddyUser user)
+        {
+            if (user.PurchasedPremium == null) return TimeSpan.Zero;
+
+            TimeSpan time = (TimeSpan)(DateTime.UtcNow - user.PurchasedPremium);
+
+            TimeSpan cooldownLeft = PremiumDuration - time;
+
+            return cooldownLeft;
+        }
+
         public TimeSpan GetUserBuddySearchCooldown(DayBuddyUser user)
         {
             if(user.MatchedWithBuddy == null) return TimeSpan.Zero;
 
             TimeSpan time = (TimeSpan)(DateTime.UtcNow - user.MatchedWithBuddy);
 
-            Console.WriteLine($"Buddy last match {time.Hours} hours ago");
             TimeSpan cooldownLeft = FindBuddyCooldown - time;
 
             return cooldownLeft;
