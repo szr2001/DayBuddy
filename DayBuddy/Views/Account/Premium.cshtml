@@ -4,5 +4,32 @@
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
-<h1>Premium</h1>
+<nav class="text-center">
+    <div class="d-flex justify-content-center">
+        <img src="/Assets/Images/hug.png" class="p-1" width="75" />
+    </div>
+</nav>
 
+
+@{
+    if (ViewBag.IsPremium)
+    {
+        <div class="text-center container-fluid p-md-5 h-100">
+            <div class="border row container align-content-center h-75 rounded-6 align-self-center">
+                <label class="fw-bold fs-3 text-warp">Thank you for purchasing Premium!</label>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center container-fluid p-md-5 h-100">
+            <div class="border row container align-content-center h-75 rounded-6 align-self-center">
+                <label class="fw-bold fs-3 text-warp">Purchase Premium?</label>
+                <label class="fw-bold fs-1 text-warp">8$</label>
+                <form asp-action="PurchasePremium" method="get" class="flex-column row">
+                    <button class="btn text-white green-outline-focus fs-2 border-0 rounded-pill m-1 btn-info fw-bold" type="submit">Purchase</button>
+                </form>
+            </div>
+        </div>
+    }
+}

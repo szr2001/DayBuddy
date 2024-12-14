@@ -10,6 +10,7 @@ namespace DayBuddy.Services
         private readonly IMongoCollection<DayBuddyUser> usersCollection;
         private readonly IConfiguration config;
         private readonly TimeSpan FindBuddyCooldown;
+        private readonly TimeSpan PremiumDuration;
         public UserService(IMongoClient mongoClient, MongoDbConfig mongoDbConfig, IConfiguration config)
         {
             this.config = config;
@@ -19,8 +20,21 @@ namespace DayBuddy.Services
 
             usersCollection = database.GetCollection<DayBuddyUser>(collectionName);
             //write the whole timespan inside the appsettings
+            
+            int premiumDays = config.GetValue<int>("PremiumDurationDays");
+            PremiumDuration = FindBuddyCooldown = new(premiumDays, 0, 0,0);
+
             int hoursCooldown = config.GetValue<int>("FindBuddyCooldownHours");
             FindBuddyCooldown = new(hoursCooldown, 0, 0);
+        }
+
+        public bool IsPremiumUser(DayBuddyUser user)
+        {
+            if(user.PurchasedPremium == null) return false;
+
+            TimeSpan time = (TimeSpan)(DateTime.UtcNow - user.PurchasedPremium);
+
+            return time < PremiumDuration;
         }
 
         public bool IsUserOnBuddySearchCooldown(DayBuddyUser user)
@@ -29,7 +43,6 @@ namespace DayBuddy.Services
 
             TimeSpan time = (TimeSpan)(DateTime.UtcNow - user.MatchedWithBuddy);
 
-            Console.WriteLine($"Buddy last match {time.Hours} hours ago");
             return time < FindBuddyCooldown;
         }
 
@@ -74,7 +87,7 @@ namespace DayBuddy.Services
                 Country = user.Country,
                 City = user.City,
                 Score = user.Score,
-                Premium = false
+                Premium = IsPremiumUser(user)
             };
             return prfile;
         }
