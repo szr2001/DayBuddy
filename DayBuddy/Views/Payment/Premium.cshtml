@@ -26,14 +26,13 @@
     else
     {
         <div class="text-center container-fluid p-md-5 h-100">
-            <div class="border row container align-content-center h-75 rounded-6 align-self-center">
-                <label class="fw-bold fs-1 text-warp">Purchase 30 days Premium?</label>
+            <div class="border row container align-content-center h-75 p-1 rounded-6 align-self-center">
+                <label class="fw-bold fs-2 text-warp">Purchase 30 days Premium?</label>
                 <label class="fs-4 text-warp">•	No cooldowns</label>
                 <label class="fs-4 text-warp">•	One time purchase</label>
                 <label class="fs-4 text-warp">•	No ads</label>
-                <form asp-action="PurchasePremium" method="get" class="flex-column row">
-                    <button class="btn text-white green-outline-focus fs-2 border-0 rounded-pill m-1 btn-info fw-bold" type="submit">Purchase</button>
-                </form>
+                <a class="nav-link btn text-white green-outline-focus fs-2 border-0 rounded-pill m-1 btn-info fw-bold" 
+                asp-area="" asp-controller="Payment" asp-action="PurchasePremium">Purchase</a>
             </div>
         </div>
     }

@@ -26,39 +26,6 @@ namespace DayBuddy.Controllers
             return View();
         }
 
-        [Authorize]
-        public async Task<IActionResult> Premium()
-        {
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return RedirectToAction(nameof(Login));
-            }
-
-            ViewBag.IsPremium = userService.IsPremiumUser(user);
-
-            return View();
-        }
-
-        [Authorize]
-        public async Task<IActionResult> PurchasePremium()
-        {
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return RedirectToAction(nameof(Login));
-            }
-
-            if (!userService.IsPremiumUser(user))
-            {
-                user.PurchasedPremium = DateTime.UtcNow;
-
-                await userManager.UpdateAsync(user);
-            }
-
-            return RedirectToAction(nameof(Profile));
-        }
-
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]

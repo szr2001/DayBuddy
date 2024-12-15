@@ -6,6 +6,7 @@ using DayBuddy.Services;
 using MongoDB.Driver;
 using DayBuddy.BackgroundServices;
 using DayBuddy.Services.Caches;
+using Stripe;
 
 namespace DayBuddy
 {
@@ -71,6 +72,8 @@ namespace DayBuddy
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
             app.UseAuthentication();
             app.UseAuthorization();
