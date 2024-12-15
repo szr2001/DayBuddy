@@ -46,7 +46,6 @@ namespace DayBuddy.Services
             return time < FindBuddyCooldown;
         }
 
-        //check for returning negative numbers
         public TimeSpan GetUserPremiumDurationLeft(DayBuddyUser user)
         {
             if (user.PurchasedPremium == null) return TimeSpan.Zero;
@@ -55,10 +54,9 @@ namespace DayBuddy.Services
 
             TimeSpan cooldownLeft = PremiumDuration - time;
 
-            return cooldownLeft;
+            return cooldownLeft < TimeSpan.Zero ? TimeSpan.Zero : cooldownLeft;
         }
 
-        //check for returning negative numbers
         public TimeSpan GetUserBuddySearchCooldown(DayBuddyUser user)
         {
             if(user.MatchedWithBuddy == null) return TimeSpan.Zero;
@@ -67,7 +65,7 @@ namespace DayBuddy.Services
 
             TimeSpan cooldownLeft = FindBuddyCooldown - time;
 
-            return cooldownLeft;
+            return cooldownLeft < TimeSpan.Zero ? TimeSpan.Zero : cooldownLeft;
         }
 
         //public async Task<DayBuddyUser?> GetRandomUserByAgeAsync(int minAge, int maxAge)
