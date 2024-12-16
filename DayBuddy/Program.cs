@@ -26,6 +26,7 @@ namespace DayBuddy
             builder.Services.AddSingleton<MessagesCacheService>();
             builder.Services.AddSingleton<ProfanityFilterService>();
             builder.Services.AddSingleton<UserProfileValidatorService>();
+            builder.Services.AddSingleton<GmailSMTPEmailService>();
 
             //hosted service run as part of the starting/closing process before everything else runs.
             builder.Services.AddHostedService<GroupCachePopulationService>();

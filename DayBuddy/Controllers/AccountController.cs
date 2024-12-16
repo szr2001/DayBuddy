@@ -14,11 +14,13 @@ namespace DayBuddy.Controllers
         private readonly UserManager<DayBuddyUser> userManager;
         private readonly SignInManager<DayBuddyUser> signInManager;
         private readonly UserService userService;
-        public AccountController(UserManager<DayBuddyUser> userManager, SignInManager<DayBuddyUser> signInManager, UserService userService)
+        private readonly GmailSMTPEmailService gmailService;
+        public AccountController(UserManager<DayBuddyUser> userManager, SignInManager<DayBuddyUser> signInManager, UserService userService, GmailSMTPEmailService gmailService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.userService = userService;
+            this.gmailService = gmailService;
         }
 
         public IActionResult Login()
