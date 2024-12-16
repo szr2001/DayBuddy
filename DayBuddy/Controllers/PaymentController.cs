@@ -9,7 +9,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DayBuddy.Controllers
 {
-    [Authorize]
+    [Authorize("EmailVerified")]
     public class PaymentController : Controller
     {
         private readonly UserManager<DayBuddyUser> userManager;

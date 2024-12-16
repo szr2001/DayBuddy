@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DayBuddy.Controllers
 {
-    [Authorize]
+    [Authorize("EmailVerified")]
     public class EditAccountController : Controller
     {
         private readonly UserProfileValidatorService userProfileValidatorService;

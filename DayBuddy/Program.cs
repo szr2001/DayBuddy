@@ -22,10 +22,13 @@ namespace DayBuddy
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddSignalR();
+
+            //Classes that interact with the MongoDB are set as scoped
             builder.Services.AddScoped<MessagesService>();
             builder.Services.AddScoped<ChatGroupsService>();
             builder.Services.AddScoped<UserReportService>();
             builder.Services.AddScoped<UserService>();
+
             builder.Services.AddSingleton<BuddyGroupCacheService>();
             builder.Services.AddSingleton<MessagesCacheService>();
             builder.Services.AddSingleton<ProfanityFilterService>();
@@ -38,10 +41,15 @@ namespace DayBuddy
             builder.Services.AddHostedService<MessagesCacheFlushService>();
 
             //More requirements for Authorize attribute
+            //like [Authorize("EmailVerified")] to only allow access to user who have email verified
+            //we add the Requirement that acts as an Id, then the Handler that handle the requirement
             builder.Services.AddAuthorization(options =>
             {
                 options.AddPolicy("EmailVerified", policy =>
-                    policy.Requirements.Add(new EmailVerifiedRequirement()));
+                {
+                    policy.Requirements.Add(new EmailVerifiedRequirement());
+
+                });
             });
             builder.Services.AddSingleton<IAuthorizationHandler, EmailVerifiedHandler>();
             
@@ -73,7 +81,9 @@ namespace DayBuddy
                 options.User.RequireUniqueEmail = true;
             });
 
-            var app = builder.Build();  
+            var app = builder.Build();
+
+            //app.UseStatusCodePagesWithRedirects();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

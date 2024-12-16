@@ -27,7 +27,6 @@ namespace DayBuddy.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login([Required][EmailAddress] string email, [Required] string password)
         {
@@ -50,7 +49,7 @@ namespace DayBuddy.Controllers
             return View();
         }
 
-        [Authorize]
+        [Authorize("EmailVerified")]
         public async Task<IActionResult> Profile()
         {
             DayBuddyUser? user = await userManager.GetUserAsync(User);
@@ -75,7 +74,6 @@ namespace DayBuddy.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public async Task<IActionResult> Register(User user)
         {
             if (ModelState.IsValid)
