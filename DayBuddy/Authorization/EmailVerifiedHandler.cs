@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 namespace DayBuddy.Authorization
 {
     //acts as the answer to the EmailVerifiedRequirements question
-    //it can be used in [Authorize] attribute like [Authorize("EmailVerified")]
-    //to only allow access to the method/controller to accounts that have emaill verified
     public class EmailVerifiedHandler : AuthorizationHandler<EmailVerifiedRequirement>
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, EmailVerifiedRequirement requirement)
@@ -23,6 +21,20 @@ namespace DayBuddy.Authorization
             }
 
             return Task.CompletedTask;
+
+            //secure aproach but costly on the db calls
+
+            //if (context.User.Identity?.IsAuthenticated != true) return;
+
+            //DayBuddyUser? user = await userManager.GetUserAsync(context.User);
+
+            //if (user == null) return;
+
+            //if (user.EmailConfirmed)
+            //{
+            //    context.Succeed(requirement);
+            //}
         }
+
     }
 }

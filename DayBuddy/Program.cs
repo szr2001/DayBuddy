@@ -11,6 +11,7 @@ using DayBuddy.Authorization.Requirements;
 using DayBuddy.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using DayBuddy.Factories;
+using DayBuddy.Middleware;
 
 namespace DayBuddy
 {
@@ -39,6 +40,9 @@ namespace DayBuddy
             builder.Services.AddHostedService<GroupCachePopulationService>();
             builder.Services.AddHostedService<DbRolesPopulationService>();
             builder.Services.AddHostedService<MessagesCacheFlushService>();
+
+            //add the middleware responsable for redirecting the user to views based on failling policies like EmailVerified
+            builder.Services.AddTransient<RedirectOnPolicyFailureMiddleware>();
 
             //More requirements for Authorize attribute
             //like [Authorize("EmailVerified")] to only allow access to user who have email verified
@@ -102,6 +106,7 @@ namespace DayBuddy
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseMiddleware<RedirectOnPolicyFailureMiddleware>();
 
             app.MapHub<BuddyMatchHub>("/BuddyHub");
             app.MapControllerRoute(
