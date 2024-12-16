@@ -7,6 +7,9 @@ using MongoDB.Driver;
 using DayBuddy.BackgroundServices;
 using DayBuddy.Services.Caches;
 using Stripe;
+using DayBuddy.Authorization.Requirements;
+using DayBuddy.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DayBuddy
 {
@@ -33,6 +36,14 @@ namespace DayBuddy
             builder.Services.AddHostedService<DbRolesPopulationService>();
             builder.Services.AddHostedService<MessagesCacheFlushService>();
 
+            //More requirements for Authorize attribute
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("EmailVerified", policy =>
+                    policy.Requirements.Add(new EmailVerifiedRequirement()));
+            });
+            builder.Services.AddSingleton<IAuthorizationHandler, EmailVerifiedHandler>();
+            
             MongoDbConfig? mongoDBSettings = builder.Configuration.GetSection(nameof(MongoDbConfig)).Get<MongoDbConfig>();
             
             if(mongoDBSettings == null)

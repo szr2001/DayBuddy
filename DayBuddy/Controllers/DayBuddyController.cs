@@ -1,15 +1,14 @@
-﻿using DayBuddy.Hubs;
-using DayBuddy.Models;
+﻿using DayBuddy.Models;
 using DayBuddy.Services;
 using DayBuddy.Services.Caches;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DayBuddy.Controllers
 {
-    [Authorize]
+    //try to get rid of the if (user == null) check on methods
+    [Authorize("EmailVerified")]
     public class DayBuddyController : Controller
     {
         //move some methods inside services

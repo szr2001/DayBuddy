@@ -4,11 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Nodes;
 
 namespace DayBuddy.Controllers
 {
-    //maybe move edit logic in another controller?
     public class AccountController : Controller
     {
         private readonly UserManager<DayBuddyUser> userManager;

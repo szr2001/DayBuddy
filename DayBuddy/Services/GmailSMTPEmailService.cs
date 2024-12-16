@@ -28,7 +28,6 @@ namespace DayBuddy.Services
                 };
 
                 await smtpClient.SendMailAsync(message);    
-                Console.WriteLine("Sent");
             }
             catch (Exception ex)
             {
