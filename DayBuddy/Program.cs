@@ -10,6 +10,7 @@ using Stripe;
 using DayBuddy.Authorization.Requirements;
 using DayBuddy.Authorization;
 using Microsoft.AspNetCore.Authorization;
+using DayBuddy.Factories;
 
 namespace DayBuddy
 {
@@ -54,16 +55,18 @@ namespace DayBuddy
 
             builder.Services.AddSingleton(mongoDBSettings);
 
-            //Initialize the Identity authentication system using the Tournament roles
+            //Initialize the Identity authentication system using the DayBuddy roles
             //then add the mongodb settings from reading the appsetings.json
             builder.Services.AddIdentity<DayBuddyUser, DayBuddyRole>().
                 AddMongoDbStores<DayBuddyUser, DayBuddyRole, Guid>(mongoDBSettings.ConnectionString, mongoDBSettings.Name);
+
+            //factory method do add custom data in the claims to act as a cache to limit the calls to the db for some data
+            builder.Services.AddScoped<IUserClaimsPrincipalFactory<DayBuddyUser>, DayBuddyUserClaimsPrincipalFactory>();
 
             builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
             {
                 return new MongoClient(mongoDBSettings.ConnectionString);
             });
-
 
             builder.Services.Configure<IdentityOptions>(options =>
             {
