@@ -9,7 +9,6 @@ using System.ComponentModel.DataAnnotations;
 namespace DayBuddy.Controllers
 {
     [Authorize]
-    [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
     public class EditAccountController : Controller
     {
         private readonly UserProfileValidatorService userProfileValidatorService;
@@ -37,6 +36,7 @@ namespace DayBuddy.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
         public async Task<JsonResult> EditName([MaxLength(20, ErrorMessage = "Name too long")]
         [MinLength(5, ErrorMessage = "Name too short")] [Required]string newName)
         {
@@ -64,6 +64,7 @@ namespace DayBuddy.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
         public async Task<JsonResult> EditAge([Range(18, 150, ErrorMessage = "Age must be between 18 and 150")][Required] int newAge)
         {
             if (!ModelState.IsValid)
@@ -83,6 +84,7 @@ namespace DayBuddy.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
         public async Task<JsonResult> EditGender([Required] string selectedGender)
         {
             if (!ModelState.IsValid)
@@ -107,6 +109,7 @@ namespace DayBuddy.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
         public async Task<JsonResult> EditSexuality([Required] string selectedSexuality)
         {
             if (!ModelState.IsValid)
@@ -131,6 +134,7 @@ namespace DayBuddy.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
         public async Task<JsonResult> EditInterests(string[] interests)
         {
             if (interests.Length > 5)
@@ -161,6 +165,7 @@ namespace DayBuddy.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
         public async Task<JsonResult> EditLocation(string city, string country)
         {
             DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
