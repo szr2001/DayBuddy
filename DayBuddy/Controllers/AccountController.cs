@@ -40,6 +40,63 @@ namespace DayBuddy.Controllers
         }
 
         [Authorize]
+        public async Task <IActionResult> ConfirmVerifyEmail(string userId, string token)
+        {
+            if (userId == null || token == null)
+            {
+                return BadRequest("Invalid email confirmation request.");
+            }
+
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with specified Id");
+            }
+            if (user.EmailConfirmed)
+            {
+                return BadRequest("User Already Verified.");
+            }
+
+            var result = await userManager.ConfirmEmailAsync(user, token);
+            
+            if (result.Succeeded)
+            {
+                return RedirectToAction(nameof(Profile));
+            }
+            else
+            {
+                return BadRequest("Email verification failed.");
+            }
+        }
+
+        [Authorize]
+        [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
+        public async Task<IActionResult> ReSendVerificationEmail()
+        {
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
+            if (user.EmailConfirmed)
+            {
+                return RedirectToAction(nameof(Profile));
+            }
+
+            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            var confirmationLink = Url.Action("ConfirmVerifyEmail", "Account", new { userId = user.Id, token }, Request.Scheme);
+
+            bool emailSent = await gmailService.TrySendEmailAsync
+                (
+                    user.Email!, 
+                    $"<html><body> Your DayBuddy Email Verification link: <a>{confirmationLink}</a> </html></body>"
+                );
+            if (emailSent)
+            {
+                return View("VerifyEmail");
+            }
+
+            return BadRequest("Can't send an email today, try again later.");
+        }
+
+        [Authorize]
         [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
         public IActionResult ResetPassword()
         {
@@ -106,6 +163,17 @@ namespace DayBuddy.Controllers
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(newUser, "User");
+
+                    var token = await userManager.GenerateEmailConfirmationTokenAsync(newUser);
+
+                    var confirmationLink = Url.Action("VerifyEmail", "Account", new { userId = newUser.Id, token }, Request.Scheme);
+
+                    bool emailSent = await gmailService.TrySendEmailAsync
+                        (
+                            user.Email!,
+                            $"<html><body> Your DayBuddy Email Verification link: <a>{confirmationLink}</a> </html></body>"
+                        );
+
                     return RedirectToAction(nameof(Login));
                 }
                 else

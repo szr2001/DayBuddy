@@ -70,8 +70,10 @@ namespace DayBuddy
 
             //Initialize the Identity authentication system using the DayBuddy roles
             //then add the mongodb settings from reading the appsetings.json
-            builder.Services.AddIdentity<DayBuddyUser, DayBuddyRole>().
-                AddMongoDbStores<DayBuddyUser, DayBuddyRole, Guid>(mongoDBSettings.ConnectionString, mongoDBSettings.Name);
+            builder.Services.AddIdentity<DayBuddyUser, DayBuddyRole>()
+                .AddMongoDbStores<DayBuddyUser, DayBuddyRole, Guid>(mongoDBSettings.ConnectionString, mongoDBSettings.Name)
+                .AddDefaultTokenProviders(); // Ensure token providers are registered
+
 
             //factory method do add custom data in the claims to act as a cache to limit the calls to the db for some data
             builder.Services.AddScoped<IUserClaimsPrincipalFactory<DayBuddyUser>, DayBuddyUserClaimsPrincipalFactory>();
