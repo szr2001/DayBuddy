@@ -39,7 +39,6 @@ namespace DayBuddy.Controllers
             return View();
         }
 
-        [Authorize]
         public async Task <IActionResult> ConfirmVerifyEmail(string userId, string token)
         {
             if (userId == null || token == null)
@@ -61,6 +60,8 @@ namespace DayBuddy.Controllers
             
             if (result.Succeeded)
             {
+                user.EmailConfirmed = true;
+                await userManager.UpdateAsync(user);
                 return RedirectToAction(nameof(Profile));
             }
             else
@@ -81,12 +82,12 @@ namespace DayBuddy.Controllers
 
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
-            var confirmationLink = Url.Action("ConfirmVerifyEmail", "Account", new { userId = user.Id, token }, Request.Scheme);
+            var confirmationLink = Url.Action("ConfirmVerifyEmail", "Account", new { userId = user.Id.ToString(), token }, Request.Scheme);
 
             bool emailSent = await gmailService.TrySendEmailAsync
                 (
                     user.Email!, 
-                    $"<html><body> Your DayBuddy Email Verification link: <a>{confirmationLink}</a> </html></body>"
+                    $"<html><body>Verify your DayBuddy account by clicking this link: <a href = '{confirmationLink}'>{confirmationLink}</a> </html></body>"
                 );
             if (emailSent)
             {
@@ -166,12 +167,12 @@ namespace DayBuddy.Controllers
 
                     var token = await userManager.GenerateEmailConfirmationTokenAsync(newUser);
 
-                    var confirmationLink = Url.Action("VerifyEmail", "Account", new { userId = newUser.Id, token }, Request.Scheme);
+                    var confirmationLink = Url.Action("ConfirmVerifyEmail", "Account", new { userId = newUser.Id.ToString(), token }, Request.Scheme);
 
                     bool emailSent = await gmailService.TrySendEmailAsync
                         (
                             user.Email!,
-                            $"<html><body> Your DayBuddy Email Verification link: <a>{confirmationLink}</a> </html></body>"
+                            $"<html><body>Welcome to DayBuddy, Verify your account by clicking this link: <a href = '{confirmationLink}'>{confirmationLink}</a> </html></body>"
                         );
 
                     return RedirectToAction(nameof(Login));
@@ -193,7 +194,6 @@ namespace DayBuddy.Controllers
             return View();
         }
 
-        [Authorize]
         public async Task<IActionResult> LogOut()
         {
             //test

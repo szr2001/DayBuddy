@@ -1,5 +1,7 @@
 ﻿using DayBuddy.Authorization.Requirements;
+using DayBuddy.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace DayBuddy.Authorization
@@ -7,21 +9,26 @@ namespace DayBuddy.Authorization
     //acts as the answer to the EmailVerifiedRequirements question
     public class EmailVerifiedHandler : AuthorizationHandler<EmailVerifiedRequirement>
     {
-        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, EmailVerifiedRequirement requirement)
+        private readonly UserManager<DayBuddyUser> userManager;
+        
+        public EmailVerifiedHandler(UserManager<DayBuddyUser> userManager)
+        {
+            this.userManager = userManager;
+        }
+
+        protected async override Task HandleRequirementAsync(AuthorizationHandlerContext context, EmailVerifiedRequirement requirement)
         {
             //handle if the user is not authenticated
-            if (context.User.Identity?.IsAuthenticated != true)
-            {
-                return Task.CompletedTask;
-            }
+            if (context.User.Identity?.IsAuthenticated != true) return;
+            
+            DayBuddyUser? user = await userManager.GetUserAsync(context.User);
 
-            //get the cookie data, less secure but also less calls to the db to remain in the free tier
-            var emailConfirmedClaim = context.User.FindFirst("EmailConfirmed");
+            if (user == null) return;
 
-            if (emailConfirmedClaim != null && bool.TryParse(emailConfirmedClaim.Value, out var isEmailConfirmed) && isEmailConfirmed)
+            if (user.EmailConfirmed)
             {
                 context.Succeed(requirement);
-                return Task.CompletedTask;
+                return;
             }
 
             if (context.Resource is HttpContext mvcContext)
@@ -32,24 +39,7 @@ namespace DayBuddy.Authorization
 
                 //redirect to another page cuz it failed the requirement
                 mvcContext.Response.Redirect("/Account/VerifyEmail", false);
-                return Task.CompletedTask;
             }
-
-            return Task.CompletedTask;
-
-            //secure aproach but costly on the db calls
-
-            //if (context.User.Identity?.IsAuthenticated != true) return;
-
-            //DayBuddyUser? user = await userManager.GetUserAsync(context.User);
-
-            //if (user == null) return;
-
-            //if (user.EmailConfirmed)
-            //{
-            //    //the rest of the logic
-            //}
         }
-
     }
 }
