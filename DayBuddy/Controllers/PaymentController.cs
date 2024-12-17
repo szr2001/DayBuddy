@@ -1,4 +1,5 @@
-﻿using DayBuddy.Models;
+﻿using DayBuddy.Filters;
+using DayBuddy.Models;
 using DayBuddy.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -10,6 +11,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace DayBuddy.Controllers
 {
     [Authorize("EmailVerified")]
+    [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
     public class PaymentController : Controller
     {
         private readonly UserManager<DayBuddyUser> userManager;
@@ -20,13 +22,9 @@ namespace DayBuddy.Controllers
             this.userService = userService;
         }
 
-        public async Task<IActionResult> Premium()
+        public IActionResult Premium()
         {
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
 
             ViewBag.IsPremium = userService.IsPremiumUser(user);
 
@@ -35,11 +33,7 @@ namespace DayBuddy.Controllers
 
         public async Task<IActionResult> PremiumCheckout()
         {
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
 
             if (TempData.TryGetValue("PremiumPurchaseSession", out object? SessionId) && SessionId != null)
             {
@@ -63,11 +57,7 @@ namespace DayBuddy.Controllers
 
         public async Task<IActionResult> PurchasePremium()
         {
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
 
             if (userService.IsPremiumUser(user))
             {

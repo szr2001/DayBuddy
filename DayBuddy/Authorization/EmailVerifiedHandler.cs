@@ -31,7 +31,7 @@ namespace DayBuddy.Authorization
                 context.Succeed(requirement);
 
                 //redirect to another page cuz it failed the requirement
-                mvcContext.Response.Redirect("/Home/Index", false);
+                mvcContext.Response.Redirect("/Account/VerifyEmail", false);
                 return Task.CompletedTask;
             }
 
@@ -47,7 +47,7 @@ namespace DayBuddy.Authorization
 
             //if (user.EmailConfirmed)
             //{
-            //    context.Succeed(requirement);
+            //    //the rest of the logic
             //}
         }
 

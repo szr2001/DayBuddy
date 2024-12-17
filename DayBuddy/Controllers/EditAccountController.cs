@@ -1,4 +1,5 @@
-﻿using DayBuddy.Models;
+﻿using DayBuddy.Filters;
+using DayBuddy.Models;
 using DayBuddy.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -7,7 +8,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DayBuddy.Controllers
 {
-    [Authorize("EmailVerified")]
+    [Authorize]
+    [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
     public class EditAccountController : Controller
     {
         private readonly UserProfileValidatorService userProfileValidatorService;
@@ -33,7 +35,7 @@ namespace DayBuddy.Controllers
         {
             return Json(new { interests = userProfileValidatorService.Interests });
         }
-        [Authorize]
+
         [HttpPost]
         public async Task<JsonResult> EditName([MaxLength(20, ErrorMessage = "Name too long")]
         [MinLength(5, ErrorMessage = "Name too short")] [Required]string newName)
@@ -46,11 +48,7 @@ namespace DayBuddy.Controllers
                                     .ToArray();
                 return Json(new { success = false, errors = errorMessages });
             }
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return Json(new { success = false, errors = new[] { "User doesn't exist" } });
-            }
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
 
             if (profanityFilterService.ContainsProfanity(newName))
             {
@@ -65,7 +63,6 @@ namespace DayBuddy.Controllers
             return Json(new { success = true, errors = Array.Empty<string>() });
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<JsonResult> EditAge([Range(18, 150, ErrorMessage = "Age must be between 18 and 150")][Required] int newAge)
         {
@@ -77,11 +74,7 @@ namespace DayBuddy.Controllers
                                     .ToArray();
                 return Json(new { success = false, errors = errorMessages });
             }
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return Json(new { success = false, errors = new[] { "User doesn't exist" } });
-            }
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
 
             user.Age = newAge;
             await userManager.UpdateAsync(user);
@@ -89,7 +82,6 @@ namespace DayBuddy.Controllers
             return Json(new { success = true, errors = Array.Empty<string>() });
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<JsonResult> EditGender([Required] string selectedGender)
         {
@@ -101,11 +93,7 @@ namespace DayBuddy.Controllers
                                     .ToArray();
                 return Json(new { success = false, errors = errorMessages });
             }
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return Json(new { success = false, errors = new[] { "User doesn't exist" } });
-            }
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
 
             if (!userProfileValidatorService.Genders.Contains(selectedGender))
             {
@@ -118,7 +106,6 @@ namespace DayBuddy.Controllers
             return Json(new { success = true, errors = Array.Empty<string>() });
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<JsonResult> EditSexuality([Required] string selectedSexuality)
         {
@@ -130,11 +117,7 @@ namespace DayBuddy.Controllers
                                     .ToArray();
                 return Json(new { success = false, errors = errorMessages });
             }
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return Json(new { success = false, errors = new[] { "User doesn't exist" } });
-            }
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
 
             if (!userProfileValidatorService.Sexualities.Contains(selectedSexuality))
             {
@@ -147,7 +130,6 @@ namespace DayBuddy.Controllers
             return Json(new { success = true, errors = Array.Empty<string>() });
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<JsonResult> EditInterests(string[] interests)
         {
@@ -160,11 +142,7 @@ namespace DayBuddy.Controllers
                 return Json(new { success = false, errors = new[] { "No interests selected" } });
             }
 
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return Json(new { success = false, errors = new[] { "User doesn't exist" } });
-            }
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
 
             string[] validInterest = userProfileValidatorService.Interests.
                 Intersect(interests)
@@ -182,15 +160,10 @@ namespace DayBuddy.Controllers
             return Json(new { success = true, errors = Array.Empty<string>() });
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<JsonResult> EditLocation(string city, string country)
         {
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return Json(new { success = false, errors = new[] { "User doesn't exist" } });
-            }
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
 
             if (!userProfileValidatorService.Countries.Contains(country))
             {

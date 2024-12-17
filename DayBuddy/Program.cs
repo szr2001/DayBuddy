@@ -11,6 +11,7 @@ using DayBuddy.Authorization.Requirements;
 using DayBuddy.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using DayBuddy.Factories;
+using DayBuddy.Filters;
 
 namespace DayBuddy
 {
@@ -29,12 +30,16 @@ namespace DayBuddy
             builder.Services.AddScoped<UserReportService>();
             builder.Services.AddScoped<UserService>();
 
+            //Filters can be used with the attribute
+            //[ServiceFilter(typeof(EnsureUserNotNullFilter))]
+            //It must be applied like the [Authorize] attribute
+            builder.Services.AddScoped<EnsureDayBuddyUserNotNullFilter>();
+
             builder.Services.AddSingleton<BuddyGroupCacheService>();
             builder.Services.AddSingleton<MessagesCacheService>();
             builder.Services.AddSingleton<ProfanityFilterService>();
             builder.Services.AddSingleton<UserProfileValidatorService>();
             builder.Services.AddSingleton<GmailSMTPEmailService>();
-
             //hosted service run as part of the starting/closing process before everything else runs.
             builder.Services.AddHostedService<GroupCachePopulationService>();
             builder.Services.AddHostedService<DbRolesPopulationService>();

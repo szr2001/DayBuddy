@@ -1,4 +1,5 @@
-﻿using DayBuddy.Models;
+﻿using DayBuddy.Filters;
+using DayBuddy.Models;
 using DayBuddy.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -26,6 +27,25 @@ namespace DayBuddy.Controllers
             return View();
         }
 
+        [Authorize]
+        [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
+        public IActionResult VerifyEmail()
+        {
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
+            if (user.EmailConfirmed)
+            {
+                return RedirectToAction(nameof(Profile));
+            }
+            return View();
+        }
+
+        [Authorize]
+        [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login([Required][EmailAddress] string email, [Required] string password)
@@ -49,14 +69,11 @@ namespace DayBuddy.Controllers
             return View();
         }
 
-        [Authorize("EmailVerified")]
-        public async Task<IActionResult> Profile()
+        [Authorize]
+        [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
+        public IActionResult Profile()
         {
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return RedirectToAction(nameof(Login));
-            }
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
 
             UserProfile profileData = userService.GetUserProfile(user);
 

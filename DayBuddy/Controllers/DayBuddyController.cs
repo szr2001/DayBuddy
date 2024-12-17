@@ -1,4 +1,5 @@
-﻿using DayBuddy.Models;
+﻿using DayBuddy.Filters;
+using DayBuddy.Models;
 using DayBuddy.Services;
 using DayBuddy.Services.Caches;
 using Microsoft.AspNetCore.Authorization;
@@ -7,8 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DayBuddy.Controllers
 {
-    //try to get rid of the if (user == null) check on methods
     [Authorize("EmailVerified")]
+    [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
     public class DayBuddyController : Controller
     {
         //move some methods inside services
@@ -31,29 +32,23 @@ namespace DayBuddy.Controllers
         [HttpGet]
         public async Task<JsonResult> GetBuddyMessages(int offset)
         {
-            DayBuddyUser? authUser = await userManager.GetUserAsync(User);
-            if(authUser == null)
-            {
-                return Json(new { success = false, errors = new[] { "User doesn't exist" } });
-            }
-            if(authUser.BuddyChatGroupID == Guid.Empty)
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
+
+            if (user.BuddyChatGroupID == Guid.Empty)
             {
                 return Json(new { success = false, errors = new[] { "User is not inside a Group" } });
             }
 
-            List<GroupMessage> messages = await messagesService.GetGroupMessageInGroupAsync(authUser.BuddyChatGroupID, authUser, offset, messageHistoryLength);
+            List<GroupMessage> messages = await messagesService.GetGroupMessageInGroupAsync(user.BuddyChatGroupID, user, offset, messageHistoryLength);
             messages.Reverse();
 
             return Json(new { success = true, errors = Array.Empty<string>(), messagesFound = messages });
         }
 
-        public async Task<IActionResult> SearchBuddy()
+        public IActionResult SearchBuddy()
         {
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
+
             if (user.BuddyChatGroupID != Guid.Empty)
             {
                 return RedirectToAction(nameof(BuddyChat));
@@ -72,7 +67,7 @@ namespace DayBuddy.Controllers
         [HttpPost]
         public async Task<IActionResult> SearchBuddy(bool available)
         {
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
             //get a random user which is available
             //if none found, then continue
 
@@ -81,10 +76,6 @@ namespace DayBuddy.Controllers
             //Create a lobby with those two and assign them
             //save it in the database
             //set the users LobbyId to the new saved one
-            if (user == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
             if (user.BuddyChatGroupID != Guid.Empty)
             {
                 return RedirectToAction(nameof(BuddyChat));
@@ -113,13 +104,9 @@ namespace DayBuddy.Controllers
             return RedirectToAction(nameof(SearchBuddy));
         }
 
-        public async Task<IActionResult> BuddyCooldown()
+        public IActionResult BuddyCooldown()
         {
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return RedirectToAction("Login", "Account");
-            }
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
 
             if (!userService.IsUserOnBuddySearchCooldown(user) || userService.IsPremiumUser(user))
             {
@@ -132,13 +119,9 @@ namespace DayBuddy.Controllers
 
         public async Task<IActionResult> UnmatchBuddy()
         {
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
 
-            if(user == null)
-            {
-                return RedirectToAction("Login","Account");
-            }
-            if(user.BuddyChatGroupID != Guid.Empty)
+            if (user.BuddyChatGroupID != Guid.Empty)
             {
                 string GroupId = user.BuddyChatGroupID.ToString();
                 await chatLobbysService.RemoveBuddyGroup(user.BuddyChatGroupID);
@@ -149,11 +132,7 @@ namespace DayBuddy.Controllers
 
         public async Task<IActionResult> BuddyChat()
         {
-            DayBuddyUser? user = await userManager.GetUserAsync(User);
-            if(user == null)
-            {
-               return RedirectToAction("Login","Account");
-            }
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
 
             string? groupId = buddyGroupCacheService.GetUserGroup(user.Id.ToString());
 
