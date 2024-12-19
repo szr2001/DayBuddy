@@ -38,6 +38,8 @@ namespace DayBuddy.Controllers
             {
                 return RedirectToAction(nameof(Profile));
             }
+
+            ViewBag.EmailSent = false;
             return View();
         }
 
@@ -94,6 +96,7 @@ namespace DayBuddy.Controllers
                 );
             if (emailSent)
             {
+                ViewBag.EmailSent = true;
                 return View("VerifyEmail");
             }
 
