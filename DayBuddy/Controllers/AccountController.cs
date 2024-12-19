@@ -4,10 +4,12 @@ using DayBuddy.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.ComponentModel.DataAnnotations;
 
 namespace DayBuddy.Controllers
 {
+    [EnableRateLimiting("GeneralPolicy")]
     public class AccountController : Controller
     {
         private readonly UserManager<DayBuddyUser> userManager;
@@ -127,7 +129,7 @@ namespace DayBuddy.Controllers
             return View();
         }
 
-        [Authorize]
+        [Authorize][EnableRateLimiting("ProfilePolicy")]
         [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
         public IActionResult Profile()
         {

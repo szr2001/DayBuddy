@@ -5,10 +5,12 @@ using DayBuddy.Services.Caches;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace DayBuddy.Controllers
 {
     [Authorize("EmailVerified")]
+    [EnableRateLimiting("GeneralPolicy")]
     [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
     public class DayBuddyController : Controller
     {

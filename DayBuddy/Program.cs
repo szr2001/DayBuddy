@@ -11,6 +11,7 @@ using DayBuddy.Authorization.Requirements;
 using DayBuddy.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using DayBuddy.Filters;
+using System.Threading.RateLimiting;
 
 namespace DayBuddy
 {
@@ -56,9 +57,46 @@ namespace DayBuddy
                 });
             });
             builder.Services.AddScoped<IAuthorizationHandler, EmailVerifiedHandler>();
-            
+
+            // Add rate limiter
+            builder.Services.AddRateLimiter(options =>
+            {
+                options.OnRejected = (context, token) =>
+                {
+                    context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+                    return new ValueTask(); 
+                };
+
+                // General rate limit for controller actions (10 calls per second per user)
+                options.AddPolicy("GeneralPolicy", httpContext =>
+                {
+                    var userId = httpContext.User.Identity?.Name ?? "anonymous"; // Replace with your method to get a unique identifier
+                    return RateLimitPartition.GetTokenBucketLimiter(userId, _ => new TokenBucketRateLimiterOptions
+                    {
+                        TokenLimit = 10,
+                        ReplenishmentPeriod = TimeSpan.FromSeconds(1),
+                        TokensPerPeriod = 10,
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        QueueLimit = 2
+                    });
+                });
+
+                // Specific rate limit for the Profile action (1 call per 10 seconds per user)
+                options.AddPolicy("ProfilePolicy", httpContext =>
+                {
+                    var userId = httpContext.User.Identity?.Name ?? "anonymous"; // Replace with your method to get a unique identifier
+                    return RateLimitPartition.GetTokenBucketLimiter(userId, _ => new TokenBucketRateLimiterOptions
+                    {
+                        TokenLimit = 1,
+                        ReplenishmentPeriod = TimeSpan.FromSeconds(10),
+                        TokensPerPeriod = 1,
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        QueueLimit = 1
+                    });
+                });
+            });
+
             MongoDbConfig? mongoDBSettings = builder.Configuration.GetSection(nameof(MongoDbConfig)).Get<MongoDbConfig>();
-            
             if(mongoDBSettings == null)
             {
                 Console.WriteLine("ERROR, DB CONFIG MISSING");
@@ -85,7 +123,6 @@ namespace DayBuddy
 
             var app = builder.Build();
 
-            //app.UseStatusCodePagesWithRedirects();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -102,6 +139,7 @@ namespace DayBuddy
 
             StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
+            app.UseRateLimiter();
             app.UseAuthentication();
             app.UseAuthorization();
             
