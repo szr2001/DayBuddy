@@ -46,7 +46,7 @@ function loadMessages() {
         url: '/DayBuddy/GetBuddyMessages',
         type: 'get',
         datatype: 'json',
-        data: { offset: $("#messagesList").children().length},
+        data: { offset: $("#messagesList").children().length - 1 }, //- 1 because of the loading element
         contentype: 'application/json;charset=utf-8',
         success: function (result) {
             if (result.success) {
@@ -86,6 +86,7 @@ $("#messagesList").on("scroll", function () {
 
 $(document).ready(function ()
 {
+    loadMessages();
     startTimer();
 });
 
@@ -94,7 +95,6 @@ connection.on("UnMatched", function () {
 });
 
 connection.start().then(function () {
-    ScrollMessageList();
     $("#sendButton").prop("disabled", false);
     $("#messageInput").prop("disabled", false);
     $("#sendButton").on("click", SubmitText);

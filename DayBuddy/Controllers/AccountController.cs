@@ -131,7 +131,6 @@ namespace DayBuddy.Controllers
         }
 
         [Authorize]
-        [EnableRateLimiting("TestPolicy")]
         [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
         public IActionResult Profile()
         {

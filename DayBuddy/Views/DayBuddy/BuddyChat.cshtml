@@ -1,4 +1,4 @@
-﻿@model DayBuddy.Models.GroupChat
+﻿@model DayBuddy.Models.UserProfile
 
 @{
     ViewData["Title"] = "Buddy Chat";
@@ -11,30 +11,23 @@
 
         <div class="container-fluid d-flex flex-column">
             <div class="top-0 m-2 border-bottom text-center">
-                @if (!ViewBag.IsPremium)
-                {
-                    <label id="buddyChatTimer" dataCooldown="@ViewBag.Cooldown.TotalSeconds" 
-                    class="fw-bolder text-black-50 fs-1"> @ViewBag.Cooldown.ToString(@"hh\:mm\:ss")</label>
-                }
-                else
+                @if (Model.Premium)
                 {
                     <div class="m-2 p-1 text-white rounded-pill btn-info btn-outline-info border row rounded-6 d-flex justify-content-center">
                         <label class="fw-bold fs-5 text-center">Premium Active</label>
                     </div>
+                }
+                else
+                {
+                    <label id="buddyChatTimer" dataCooldown="@ViewBag.Cooldown.TotalSeconds" 
+                    class="fw-bolder text-black-50 fs-1"> @ViewBag.Cooldown.ToString(@"hh\:mm\:ss")</label>
                 }
             </div>
 
             <div class="row flex-grow-1 overflow-hidden">
                 <div class="d-flex flex-column overflow-auto hide-scrollbar"
                      id="messagesList" style="gap: 10px; max-height: 100%;">
-                    @{
-                        foreach (var message in Model.Messages)
-                        {
-                            var senderVisuals = message.Sender == User?.Identity?.Name ? "background-grass-green align-self-start" : "bg-secondary align-self-end";
 
-                            <div class="@senderVisuals p-2 rounded-6 text-white">@message.Message</div>
-                        }
-                     }
                 </div>
             </div>
 
@@ -53,29 +46,29 @@
 
         <div class="border-start w-50 d-flex flex-column">
         <div class="container m-3 text-center overflow-auto hide-scrollbar">
-                <label class="fw-bolder text-dark text-truncate ms-1">@Model.BuddyProfile.Name</label>
+                <label class="fw-bolder text-dark text-truncate ms-1">@Model.Name</label>
                 <hr class="w-100 "/>
                 <div>
                     <div class="row m-1">
                         <label class="fw-bold text-dark">Age: </label>
-                        <label class="text-light rounded-6 background-grass-green">@Model.BuddyProfile.Age</label>
+                        <label class="text-light rounded-6 background-grass-green">@Model.Age</label>
                     </div>
                     <div class="row m-1">
                         <label class="fw-bold text-dark">Gender: </label>
-                        <label class="text-light rounded-6 background-grass-green">@Model.BuddyProfile.Gender</label>
+                        <label class="text-light rounded-6 background-grass-green">@Model.Gender</label>
                     </div>
                     <div class="row m-1">
                         <label class="fw-bold text-dark">Sexuality: </label>
-                        <label class="text-light rounded-6 background-grass-green">@Model.BuddyProfile.Sexuality</label>
+                        <label class="text-light rounded-6 background-grass-green">@Model.Sexuality</label>
                     </div>
                     <div class="row m-1">
                         <label class="fw-bold text-dark">Country: </label>
-                        <label class="text-light rounded-6 background-grass-green">@Model.BuddyProfile.Country</label>
+                        <label class="text-light rounded-6 background-grass-green">@Model.Country</label>
                     </div>
                     <div class="row m-1">
                         <label class="fw-bold text-dark">Interests: </label>
                         <div class="border rounded-6 border-1 flex-wrap p-1">
-                            @foreach (string interest in Model.BuddyProfile.Interests)
+                            @foreach (string interest in Model.Interests)
                             {
                                 <label class="text-dark p-1 m-1 fw-bold rounded-3 background-grass-green" style="font-size:10px;">@interest</label>
                             }

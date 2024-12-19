@@ -166,10 +166,8 @@ namespace DayBuddy.Controllers
             ViewBag.Cooldown = userService.GetUserBuddySearchCooldown(user);
 
             UserProfile buddyProfile = userService.GetUserProfile(buddyUser);
-            List<GroupMessage> messages = await messagesService.GetGroupMessageInGroupAsync(user.BuddyChatGroupID, user, 0, messageHistoryLength);
 
-            GroupChat groupChat = new(buddyProfile, messages);
-            return View(groupChat);
+            return View(buddyProfile);
         }
     }
 }

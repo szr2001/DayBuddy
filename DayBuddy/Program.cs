@@ -75,21 +75,11 @@ namespace DayBuddy
                     var clientIp = GetClientIp(httpContext);
                     return RateLimitPartition.GetTokenBucketLimiter(clientIp, _ => new TokenBucketRateLimiterOptions
                     {
-                        TokenLimit = 4,
+                        TokenLimit = 24,
                         ReplenishmentPeriod = TimeSpan.FromSeconds(1),
-                        TokensPerPeriod = 2,
+                        TokensPerPeriod = 12,
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                         QueueLimit = 1
-                    });
-                });
-
-                options.AddPolicy("TestPolicy", httpContext =>
-                {
-                    var clientIp = GetClientIp(httpContext);
-                    return RateLimitPartition.GetFixedWindowLimiter(clientIp, _ => new FixedWindowRateLimiterOptions
-                    {
-                        PermitLimit = 1,
-                        Window = TimeSpan.FromSeconds(3),
                     });
                 });
 
