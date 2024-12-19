@@ -4,6 +4,7 @@ using DayBuddy.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using Stripe.Checkout;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -11,6 +12,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace DayBuddy.Controllers
 {
     [Authorize("EmailVerified")]
+    [EnableRateLimiting("GeneralPolicy")]
     [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
     public class PaymentController : Controller
     {

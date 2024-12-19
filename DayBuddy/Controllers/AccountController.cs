@@ -73,6 +73,7 @@ namespace DayBuddy.Controllers
         }
 
         [Authorize]
+        [EnableRateLimiting("ReSendEmailPolicy")]
         [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
         public async Task<IActionResult> ReSendVerificationEmail()
         {
@@ -129,7 +130,8 @@ namespace DayBuddy.Controllers
             return View();
         }
 
-        [Authorize][EnableRateLimiting("ProfilePolicy")]
+        [Authorize]
+        [EnableRateLimiting("TestPolicy")]
         [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
         public IActionResult Profile()
         {
@@ -189,11 +191,6 @@ namespace DayBuddy.Controllers
             }
 
             return View(user);
-        }
-
-        public IActionResult AccessDenied()
-        {
-            return View();
         }
 
         public async Task<IActionResult> LogOut()

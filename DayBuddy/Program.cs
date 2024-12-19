@@ -12,6 +12,7 @@ using DayBuddy.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using DayBuddy.Filters;
 using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.Http;
 
 namespace DayBuddy
 {
@@ -63,35 +64,42 @@ namespace DayBuddy
             {
                 options.OnRejected = (context, token) =>
                 {
+                    var clientIp = GetClientIp(context.HttpContext);
+                    Console.WriteLine($"Rate limit exceeded for User: {clientIp}");
                     context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
                     return new ValueTask(); 
                 };
 
-                // General rate limit for controller actions (10 calls per second per user)
                 options.AddPolicy("GeneralPolicy", httpContext =>
                 {
-                    var userId = httpContext.User.Identity?.Name ?? "anonymous"; // Replace with your method to get a unique identifier
-                    return RateLimitPartition.GetTokenBucketLimiter(userId, _ => new TokenBucketRateLimiterOptions
+                    var clientIp = GetClientIp(httpContext);
+                    return RateLimitPartition.GetTokenBucketLimiter(clientIp, _ => new TokenBucketRateLimiterOptions
                     {
-                        TokenLimit = 10,
+                        TokenLimit = 4,
                         ReplenishmentPeriod = TimeSpan.FromSeconds(1),
-                        TokensPerPeriod = 10,
+                        TokensPerPeriod = 2,
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                        QueueLimit = 2
+                        QueueLimit = 1
                     });
                 });
 
-                // Specific rate limit for the Profile action (1 call per 10 seconds per user)
-                options.AddPolicy("ProfilePolicy", httpContext =>
+                options.AddPolicy("TestPolicy", httpContext =>
                 {
-                    var userId = httpContext.User.Identity?.Name ?? "anonymous"; // Replace with your method to get a unique identifier
-                    return RateLimitPartition.GetTokenBucketLimiter(userId, _ => new TokenBucketRateLimiterOptions
+                    var clientIp = GetClientIp(httpContext);
+                    return RateLimitPartition.GetFixedWindowLimiter(clientIp, _ => new FixedWindowRateLimiterOptions
                     {
-                        TokenLimit = 1,
-                        ReplenishmentPeriod = TimeSpan.FromSeconds(10),
-                        TokensPerPeriod = 1,
-                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                        QueueLimit = 1
+                        PermitLimit = 1,
+                        Window = TimeSpan.FromSeconds(3),
+                    });
+                });
+
+                options.AddPolicy("ReSendEmailPolicy", httpContext =>
+                {
+                    var clientIp = GetClientIp(httpContext);
+                    return RateLimitPartition.GetFixedWindowLimiter(clientIp, _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 1,
+                        Window = TimeSpan.FromSeconds(1),
                     });
                 });
             });
@@ -132,6 +140,7 @@ namespace DayBuddy
                 app.UseHsts();
             }
 
+            app.UseStatusCodePagesWithReExecute("/Error/HandleError", "?code={0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -149,6 +158,18 @@ namespace DayBuddy
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
+        }
+
+        //add a way to insert UserID in the claims and use that instead of Ip
+        private static string GetClientIp(HttpContext httpContext)
+        {
+            // Check if behind a proxy
+            if (httpContext.Request.Headers.ContainsKey("X-Forwarded-For"))
+            {
+                return httpContext.Request.Headers["X-Forwarded-For"].ToString().Split(',').FirstOrDefault() ?? "unknown";
+            }
+
+            return httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
         }
     }
 }

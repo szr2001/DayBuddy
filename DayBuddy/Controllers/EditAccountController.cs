@@ -4,11 +4,13 @@ using DayBuddy.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.ComponentModel.DataAnnotations;
 
 namespace DayBuddy.Controllers
 {
     [Authorize]
+    [EnableRateLimiting("GeneralPolicy")]
     public class EditAccountController : Controller
     {
         private readonly UserProfileValidatorService userProfileValidatorService;
