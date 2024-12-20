@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using DayBuddy.Filters;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Http;
+using DayBuddy.Factories;
 
 namespace DayBuddy
 {
@@ -64,7 +65,7 @@ namespace DayBuddy
             {
                 options.OnRejected = (context, token) =>
                 {
-                    var clientIp = GetClientIp(context.HttpContext);
+                    var clientIp = GetClientIdentificator(context.HttpContext);
                     Console.WriteLine($"Rate limit exceeded for User: {clientIp}");
                     context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
                     return new ValueTask(); 
@@ -72,12 +73,26 @@ namespace DayBuddy
 
                 options.AddPolicy("GeneralPolicy", httpContext =>
                 {
-                    var clientIp = GetClientIp(httpContext);
-                    return RateLimitPartition.GetTokenBucketLimiter(clientIp, _ => new TokenBucketRateLimiterOptions
+                    var clientId = GetClientIdentificator(httpContext);
+                    Console.WriteLine(clientId);
+                    return RateLimitPartition.GetTokenBucketLimiter(clientId, _ => new TokenBucketRateLimiterOptions
                     {
-                        TokenLimit = 24,
+                        TokenLimit = 8,
                         ReplenishmentPeriod = TimeSpan.FromSeconds(1),
-                        TokensPerPeriod = 12,
+                        TokensPerPeriod = 2,
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        QueueLimit = 1
+                    });
+                });
+
+                options.AddPolicy("GenerousPolicy", httpContext =>
+                {
+                    var clientId = GetClientIdentificator(httpContext);
+                    return RateLimitPartition.GetTokenBucketLimiter(clientId, _ => new TokenBucketRateLimiterOptions
+                    {
+                        TokenLimit = 40,
+                        ReplenishmentPeriod = TimeSpan.FromSeconds(2),
+                        TokensPerPeriod = 10,
                         QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                         QueueLimit = 1
                     });
@@ -85,11 +100,11 @@ namespace DayBuddy
 
                 options.AddPolicy("RestrictedPolicy", httpContext =>
                 {
-                    var clientIp = GetClientIp(httpContext);
-                    return RateLimitPartition.GetFixedWindowLimiter(clientIp, _ => new FixedWindowRateLimiterOptions
+                    var clientId = GetClientIdentificator(httpContext);
+                    return RateLimitPartition.GetFixedWindowLimiter(clientId, _ => new FixedWindowRateLimiterOptions
                     {
                         PermitLimit = 1,
-                        Window = TimeSpan.FromMinutes(1),
+                        Window = TimeSpan.FromSeconds(10),
                     });
                 });
             });
@@ -108,6 +123,9 @@ namespace DayBuddy
             builder.Services.AddIdentity<DayBuddyUser, DayBuddyRole>()
                 .AddMongoDbStores<DayBuddyUser, DayBuddyRole, Guid>(mongoDBSettings.ConnectionString, mongoDBSettings.Name)
                 .AddDefaultTokenProviders();
+
+            //factory method do add custom data in the claims cookie to limit the calls to the db, not secure
+            builder.Services.AddScoped<IUserClaimsPrincipalFactory<DayBuddyUser>, DayBuddyUserClaimsPrincipalFactory>();
 
             builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
             {
@@ -138,9 +156,9 @@ namespace DayBuddy
 
             StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
 
-            app.UseRateLimiter();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseRateLimiter();
             
             app.MapHub<BuddyMatchHub>("/BuddyHub");
             app.MapControllerRoute(
@@ -150,10 +168,16 @@ namespace DayBuddy
             app.Run();
         }
 
-        //add a way to insert UserID in the claims and use that instead of Ip
-        private static string GetClientIp(HttpContext httpContext)
+        private static string GetClientIdentificator(HttpContext httpContext)
         {
-            // Check if behind a proxy
+            //check for user cookie
+            if (httpContext.User?.Claims != null)
+            {
+                var userId = httpContext.User.FindFirst("ID")?.Value;
+                if (userId != null) return userId;
+            }
+
+            //If the user is not authenticated, use Ip
             if (httpContext.Request.Headers.ContainsKey("X-Forwarded-For"))
             {
                 return httpContext.Request.Headers["X-Forwarded-For"].ToString().Split(',').FirstOrDefault() ?? "unknown";

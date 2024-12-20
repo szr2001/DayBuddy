@@ -132,6 +132,7 @@ namespace DayBuddy.Controllers
             return RedirectToAction(nameof(SearchBuddy));
         }
 
+        [EnableRateLimiting("RestrictedPolicy")]
         public async Task<IActionResult> BuddyChat()
         {
             DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;

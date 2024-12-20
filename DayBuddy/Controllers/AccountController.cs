@@ -110,6 +110,7 @@ namespace DayBuddy.Controllers
         }
 
         [HttpPost]
+        [EnableRateLimiting("RestrictedPolicy")]
         public async Task <IActionResult> ForgotPassword([Required]string email)
         {
             if (ModelState.IsValid)
@@ -126,8 +127,8 @@ namespace DayBuddy.Controllers
                     bool emailSent = await gmailService.TrySendEmailAsync
                         (
                             user.Email!,
-                            "DayBuddy Verify Email",
-                            $"<html><body>Verify your DayBuddy account by clicking this link: <a href = '{resetpasswordLink}'>{resetpasswordLink}</a> </html></body>"
+                            "DayBuddy Reset Password",
+                            $"<html><body>Reset your DayBuddy password by clicking this link: <a href = '{resetpasswordLink}'>{resetpasswordLink}</a> </html></body>"
                         );
 
                     if (!emailSent)

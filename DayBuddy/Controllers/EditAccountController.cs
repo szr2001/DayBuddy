@@ -24,14 +24,17 @@ namespace DayBuddy.Controllers
             this.userManager = userManager;
         }
 
+        [EnableRateLimiting("GenerousPolicy")]
         public JsonResult GetGenders()
         {
             return Json(new { genders = userProfileValidatorService.Genders });
         }
+        [EnableRateLimiting("GenerousPolicy")]
         public JsonResult GetSexualities()
         {
             return Json(new { sexualities = userProfileValidatorService.Sexualities });
         }
+        [EnableRateLimiting("GenerousPolicy")]
         public JsonResult GetInterests()
         {
             return Json(new { interests = userProfileValidatorService.Interests });
