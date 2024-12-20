@@ -16,6 +16,19 @@
     <div class="border row container align-content-center h-75 rounded-6 align-self-center">
         <label class="fs-3 text-wrap fw-bold">Do you want to delete your account?</label>
         <label class="fs-4 text-wrap">This acction is permanent and can't be undone, all your data will be deleted</label>
-        <a asp-controller="Account" asp-action="ConfirmDeleteAccount" class="container fw-bold rounded-pill btn outline-none-focus btn-danger">Delete Account</a>
+        <button id="DeleteBtn" disabled="true" asp-controller="Account" asp-action="ConfirmDeleteAccount" class="container fw-bold rounded-pill btn outline-none-focus btn-danger">Delete Account</button>
     </div>
 </div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    var $deleteBtn = $("#DeleteBtn");
+
+    $(document).ready(function () {
+        setTimeout(EnableButton, 3000);
+    })
+
+    function EnableButton() {
+        $deleteBtn.attr("disabled", false);
+    }
+</script>
