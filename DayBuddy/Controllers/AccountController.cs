@@ -14,14 +14,16 @@ namespace DayBuddy.Controllers
     {
         private readonly UserManager<DayBuddyUser> userManager;
         private readonly SignInManager<DayBuddyUser> signInManager;
+        private readonly ChatGroupsService chatGroupsService;
         private readonly UserService userService;
         private readonly GmailSMTPEmailService gmailService;
-        public AccountController(UserManager<DayBuddyUser> userManager, SignInManager<DayBuddyUser> signInManager, UserService userService, GmailSMTPEmailService gmailService)
+        public AccountController(UserManager<DayBuddyUser> userManager, SignInManager<DayBuddyUser> signInManager, UserService userService, GmailSMTPEmailService gmailService, ChatGroupsService chatGroupsService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.userService = userService;
             this.gmailService = gmailService;
+            this.chatGroupsService = chatGroupsService;
         }
 
         public IActionResult Login()
@@ -220,6 +222,30 @@ namespace DayBuddy.Controllers
         }
 
         [Authorize]
+        public IActionResult DeleteAccount()
+        {
+            return View();
+        }
+
+        [Authorize]
+        [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
+        public async Task<IActionResult> ConfirmDeleteAccount()
+        {
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
+            if (user.BuddyChatGroupID != Guid.Empty)
+            {
+                string GroupId = user.BuddyChatGroupID.ToString();
+                await chatGroupsService.RemoveBuddyGroup(user.BuddyChatGroupID);
+            }
+
+            await signInManager.SignOutAsync();
+
+            await userManager.DeleteAsync(user);
+
+            return RedirectToAction("Index","Home");
+        }
+
+        [Authorize]
         [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
         public IActionResult Profile()
         {
@@ -275,7 +301,7 @@ namespace DayBuddy.Controllers
 
                         await signInManager.PasswordSignInAsync(newUser, user.Password, false, false);
 
-                        return RedirectToAction(nameof(Login));
+                        return RedirectToAction(nameof(Profile));
                     }
                     else
                     {

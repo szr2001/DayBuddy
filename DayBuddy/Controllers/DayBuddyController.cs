@@ -16,7 +16,7 @@ namespace DayBuddy.Controllers
     {
         //move some methods inside services
         private readonly UserManager<DayBuddyUser> userManager;
-        private readonly ChatGroupsService chatLobbysService;
+        private readonly ChatGroupsService chatGroupsService;
         private readonly MessagesService messagesService;
         private readonly UserService userService;
         private readonly BuddyGroupCacheService buddyGroupCacheService;
@@ -25,7 +25,7 @@ namespace DayBuddy.Controllers
         public DayBuddyController(UserManager<DayBuddyUser> userManager, ChatGroupsService chatLobbysService, UserService userService, BuddyGroupCacheService buddyGroupCacheService, MessagesService messagesService)
         {
             this.userManager = userManager;
-            this.chatLobbysService = chatLobbysService;
+            this.chatGroupsService = chatLobbysService;
             this.userService = userService;
             this.buddyGroupCacheService = buddyGroupCacheService;
             this.messagesService = messagesService;
@@ -98,7 +98,7 @@ namespace DayBuddy.Controllers
                 DayBuddyUser? buddyUser = await userService.GetRndAvailableUserAsync(user);
                 if (buddyUser != null && buddyUser.Id != user.Id)
                 {
-                    await chatLobbysService.AddBuddyGroup(user, buddyUser);
+                    await chatGroupsService.AddBuddyGroup(user, buddyUser);
                     return RedirectToAction(nameof(BuddyChat));
                 }
             }
@@ -126,7 +126,7 @@ namespace DayBuddy.Controllers
             if (user.BuddyChatGroupID != Guid.Empty)
             {
                 string GroupId = user.BuddyChatGroupID.ToString();
-                await chatLobbysService.RemoveBuddyGroup(user.BuddyChatGroupID);
+                await chatGroupsService.RemoveBuddyGroup(user.BuddyChatGroupID);
             }
 
             return RedirectToAction(nameof(SearchBuddy));

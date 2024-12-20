@@ -10,15 +10,15 @@ namespace DayBuddy.BackgroundServices
     /// </summary>
     public class GroupCachePopulationService : IHostedService
     {
-        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly IServiceScopeFactory scopeFactory;
         public GroupCachePopulationService(IServiceScopeFactory scopeFactory)
         {
-            _scopeFactory = scopeFactory;
+            this.scopeFactory = scopeFactory;
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            using (var scope = _scopeFactory.CreateScope())
+            using (var scope = scopeFactory.CreateScope())
             {
                 ChatGroupsService chatGroupsService = scope.ServiceProvider.GetRequiredService<ChatGroupsService>();
                 BuddyGroupCacheService buddyGroupCacheService = scope.ServiceProvider.GetRequiredService<BuddyGroupCacheService>();
