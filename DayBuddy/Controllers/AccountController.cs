@@ -75,7 +75,7 @@ namespace DayBuddy.Controllers
         }
 
         [Authorize]
-        [EnableRateLimiting("ReSendEmailPolicy")]
+        [EnableRateLimiting("RestrictedPolicy")]
         [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
         public async Task<IActionResult> ReSendVerificationEmail()
         {
@@ -92,6 +92,7 @@ namespace DayBuddy.Controllers
             bool emailSent = await gmailService.TrySendEmailAsync
                 (
                     user.Email!, 
+                    "DayBuddy Verify Email",
                     $"<html><body>Verify your DayBuddy account by clicking this link: <a href = '{confirmationLink}'>{confirmationLink}</a> </html></body>"
                 );
             if (emailSent)
@@ -103,11 +104,95 @@ namespace DayBuddy.Controllers
             return BadRequest("Can't send an email today, try again later.");
         }
 
-        [Authorize]
-        [ServiceFilter(typeof(EnsureDayBuddyUserNotNullFilter))]
-        public IActionResult ResetPassword()
+        public IActionResult ForgotPassword()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task <IActionResult> ForgotPassword([Required]string email)
+        {
+            if (ModelState.IsValid)
+            {
+
+                DayBuddyUser? user = await userManager.FindByEmailAsync(email);
+
+                if(user != null)
+                {
+                    var token = await userManager.GeneratePasswordResetTokenAsync(user);
+
+                    var resetpasswordLink = Url.Action("ResetPassword", "Account", new { email = user.Email, token }, Request.Scheme);
+
+                    bool emailSent = await gmailService.TrySendEmailAsync
+                        (
+                            user.Email!,
+                            "DayBuddy Verify Email",
+                            $"<html><body>Verify your DayBuddy account by clicking this link: <a href = '{resetpasswordLink}'>{resetpasswordLink}</a> </html></body>"
+                        );
+
+                    if (!emailSent)
+                    {
+                        ModelState.AddModelError("", "Can't send an Email right now, try again tomorrow");
+                    }
+                    else
+                    {
+                        ViewBag.EmailSent = true;
+                    }
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Email Is Required");
+            }
+            
+            return View();
+        }
+
+        public IActionResult ResetPassword(string email, string token)
+        {
+            TempData["email"] = email;
+            TempData["token"] = token;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task <IActionResult> ConfirmResetPassword(string password, string repeatPassword)
+        {
+            if (TempData["email"] is string email && TempData["token"] is string token)
+            {
+                if(password != repeatPassword)
+                {
+                    ModelState.AddModelError("","Passwords doesn't match");
+                }
+                else
+                {
+                    DayBuddyUser? user = await userManager.FindByEmailAsync(email);
+
+                    if (user != null)
+                    {
+                        var result = await userManager.ResetPasswordAsync(user, token, password);
+                        if (result.Succeeded)
+                        {
+                            return RedirectToAction(nameof(Login));
+                        }
+                        else
+                        {
+                            foreach (IdentityError error in result.Errors)
+                            {
+                                ModelState.AddModelError("", error.Description);
+                            }
+                        }
+                    }
+                }
+
+                TempData["email"] = email;
+                TempData["token"] = token;
+                //ModelState errors exists even if we move to another view
+                return View(nameof(ResetPassword));
+            }
+
+            return View("Events");
         }
 
         [HttpPost]
@@ -159,35 +244,42 @@ namespace DayBuddy.Controllers
         {
             if (ModelState.IsValid)
             {
-                //check for passwords be the same
-                DayBuddyUser newUser = new()
+                if(user.Password != user.RepeatPassword)
                 {
-                    UserName = user.Name,
-                    Email = user.Email,
-                    LastTimeOnline = DateTime.UtcNow,
-                };
-                IdentityResult result = await userManager.CreateAsync(newUser, user.Password);
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(newUser, "User");
-
-                    var token = await userManager.GenerateEmailConfirmationTokenAsync(newUser);
-
-                    var confirmationLink = Url.Action("ConfirmVerifyEmail", "Account", new { userId = newUser.Id.ToString(), token }, Request.Scheme);
-
-                    bool emailSent = await gmailService.TrySendEmailAsync
-                        (
-                            user.Email!,
-                            $"<html><body>Welcome to DayBuddy, Verify your account by clicking this link: <a href = '{confirmationLink}'>{confirmationLink}</a> </html></body>"
-                        );
-
-                    return RedirectToAction(nameof(Login));
+                    ModelState.AddModelError("","Passwords doesn't match");
                 }
                 else
                 {
-                    foreach (IdentityError error in result.Errors)
+                    DayBuddyUser newUser = new()
                     {
-                        ModelState.AddModelError("", error.Description);
+                        UserName = user.Name,
+                        Email = user.Email,
+                        LastTimeOnline = DateTime.UtcNow,
+                    };
+                    IdentityResult result = await userManager.CreateAsync(newUser, user.Password);
+                    if (result.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(newUser, "User");
+
+                        var token = await userManager.GenerateEmailConfirmationTokenAsync(newUser);
+
+                        var confirmationLink = Url.Action("ConfirmVerifyEmail", "Account", new { userId = newUser.Id.ToString(), token }, Request.Scheme);
+
+                        bool emailSent = await gmailService.TrySendEmailAsync
+                            (
+                                user.Email!,
+                                "DayBuddy Reset Password",
+                                $"<html><body>Welcome to DayBuddy, Verify your account by clicking this link: <a href = '{confirmationLink}'>{confirmationLink}</a> </html></body>"
+                            );
+
+                        return RedirectToAction(nameof(Login));
+                    }
+                    else
+                    {
+                        foreach (IdentityError error in result.Errors)
+                        {
+                            ModelState.AddModelError("", error.Description);
+                        }
                     }
                 }
             }

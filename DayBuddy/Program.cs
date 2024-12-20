@@ -83,7 +83,7 @@ namespace DayBuddy
                     });
                 });
 
-                options.AddPolicy("ReSendEmailPolicy", httpContext =>
+                options.AddPolicy("RestrictedPolicy", httpContext =>
                 {
                     var clientIp = GetClientIp(httpContext);
                     return RateLimitPartition.GetFixedWindowLimiter(clientIp, _ => new FixedWindowRateLimiterOptions
