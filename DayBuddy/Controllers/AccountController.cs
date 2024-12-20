@@ -273,6 +273,8 @@ namespace DayBuddy.Controllers
                                 $"<html><body>Welcome to DayBuddy, Verify your account by clicking this link: <a href = '{confirmationLink}'>{confirmationLink}</a> </html></body>"
                             );
 
+                        await signInManager.PasswordSignInAsync(newUser, user.Password, false, false);
+
                         return RedirectToAction(nameof(Login));
                     }
                     else

@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
-<input type="hidden" id="loggedInUsername" value="@User?.Identity?.Name" />
+<input type="hidden" id="loggedInUserId" value="@ViewBag.UserId" />
 <div class="d-flex h-100">
     <div class="container-fluid d-flex" style="padding-left: 0rem !important;">
 
@@ -44,7 +44,7 @@
 
     </div>
 
-        <div class="border-start w-50 d-flex flex-column">
+    <div class="border-start w-50 d-flex flex-column">
         <div class="container m-3 text-center overflow-auto hide-scrollbar">
                 <label class="fw-bolder text-dark text-truncate ms-1">@Model.Name</label>
                 <hr class="w-100 "/>

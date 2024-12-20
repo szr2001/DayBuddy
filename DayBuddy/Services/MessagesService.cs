@@ -26,11 +26,6 @@ namespace DayBuddy.Services
 
         public async Task<List<GroupMessage>> GetGroupMessageInGroupAsync(Guid groupId, DayBuddyUser authUser, int offset, int amount)
         {
-            Dictionary<Guid, DayBuddyUser?> userCache = new()
-            {
-                { authUser.BuddyChatGroupID, authUser }
-            };
-
             List<GroupMessage> groupMessages = new();
 
             List<BuddyMessage> Messages = await GetBuddyMessageInGroupAsync
@@ -42,14 +37,7 @@ namespace DayBuddy.Services
 
             foreach (BuddyMessage message in Messages)
             {
-                if (!userCache.ContainsKey(message.SenderId))
-                {
-                    DayBuddyUser? senderUser = await userManager.FindByIdAsync(message.SenderId.ToString());
-                    userCache.Add(message.SenderId, senderUser);
-                }
-                if (userCache[message.SenderId] == null) continue;
-
-                GroupMessage groupMessage = new(userCache[message.SenderId]!.UserName!, message.Message);
+                GroupMessage groupMessage = new(message.SenderId.ToString(), message.Message);
                 groupMessages.Add(groupMessage);
             }
             return groupMessages;

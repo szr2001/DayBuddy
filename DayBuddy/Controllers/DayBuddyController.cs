@@ -132,7 +132,6 @@ namespace DayBuddy.Controllers
             return RedirectToAction(nameof(SearchBuddy));
         }
 
-        [EnableRateLimiting("RestrictedPolicy")]
         public async Task<IActionResult> BuddyChat()
         {
             DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
@@ -165,6 +164,7 @@ namespace DayBuddy.Controllers
             ViewBag.IsPremium = userService.IsPremiumUser(user);
 
             ViewBag.Cooldown = userService.GetUserBuddySearchCooldown(user);
+            ViewBag.UserId = user.Id.ToString();
 
             UserProfile buddyProfile = userService.GetUserProfile(buddyUser);
 

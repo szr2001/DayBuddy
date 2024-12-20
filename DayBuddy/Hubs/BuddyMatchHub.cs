@@ -56,7 +56,7 @@ namespace DayBuddy.Hubs
             BuddyMessage newMessage = new(message, Guid.Parse(localUserId),Guid.Parse(groupId));
             await messagesService.CacheMessageAsync(newMessage);
 
-            await Clients.Group(groupId).SendAsync("ReceiveMessage", Context?.User?.Identity?.Name, message);
+            await Clients.Group(groupId).SendAsync("ReceiveMessage", localUserId, message);
         }
     }
 }

@@ -2,12 +2,12 @@
 {
     public class GroupMessage
     {
-        public string Sender { get; set; }
+        public string SenderId { get; set; }
         public string Message { get; set; }
         
-        public GroupMessage(string sender, string message)
+        public GroupMessage(string senderId, string message)
         {
-            this.Sender = sender;
+            this.SenderId = senderId;
             this.Message = message;
         }
     }

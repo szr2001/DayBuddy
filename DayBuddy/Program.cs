@@ -104,7 +104,7 @@ namespace DayBuddy
                     return RateLimitPartition.GetFixedWindowLimiter(clientId, _ => new FixedWindowRateLimiterOptions
                     {
                         PermitLimit = 1,
-                        Window = TimeSpan.FromSeconds(10),
+                        Window = TimeSpan.FromMinutes(5),
                     });
                 });
             });

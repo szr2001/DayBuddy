@@ -1,4 +1,4 @@
-﻿const loggedInUsername = $("#loggedInUsername").val();
+﻿const loggedInUserId = $("#loggedInUserId").val();
 const $MessagesList = $("#messagesList");
 const $BuddyChatTimer = $("#buddyChatTimer");
 var connection = new signalR.HubConnectionBuilder().withUrl("/BuddyHub").build();
@@ -10,7 +10,7 @@ $("#messageInput").prop("disabled", true);
 connection.on("ReceiveMessage", function (user, message) {
     var div = $("<div></div>").addClass("p-2 rounded-6 text-white");
     
-    if (user === loggedInUsername) {
+    if (user === loggedInUserId) {
         div.addClass("background-grass-green align-self-start");
     } else {
         div.addClass("bg-secondary align-self-end");
@@ -52,8 +52,7 @@ function loadMessages() {
             if (result.success) {
                 result.messagesFound.forEach(function (mess) {
                     var $div = $("<div></div>").addClass("p-2 rounded-6 text-white");
-
-                    if (mess.sender === loggedInUsername) {
+                    if (mess.senderId === loggedInUserId) {
                         $div.addClass("background-grass-green align-self-start");
                     } else {
                         $div.addClass("bg-secondary align-self-end");
