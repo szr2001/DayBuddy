@@ -72,7 +72,6 @@ namespace DayBuddy
                 options.AddPolicy("GeneralPolicy", httpContext =>
                 {
                     var clientId = GetClientIdentificator(httpContext);
-                    Console.WriteLine(clientId);
                     return RateLimitPartition.GetTokenBucketLimiter(clientId, _ => new TokenBucketRateLimiterOptions
                     {
                         TokenLimit = 8,

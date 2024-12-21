@@ -16,7 +16,7 @@
             if(ViewBag.IsAvailable)
             {
                 <label class="fw-bold fs-3 text-warp p-3">Searching for a buddy...</label>
-                <label class="text-warp p-1">Check in after a while and see your new best friend.</label>
+                <label class="text-warp p-1">There are currently no active users available for chat, make sure to log in daily to count as Active and we will find you someone.</label>
                 <form method="post" class="flex-column row">
                     <input name="available" type="hidden" value="false" />
                     <button class="btn outline-none-focus align-self-center text-white border-0 fw-bold rounded-pill btn-danger" type="submit">Cancel</button>
@@ -25,7 +25,7 @@
             else
             {
                 <label class="fw-bold fs-3 text-warp p-3">Ready to find a buddy?</label>
-                <label class="text-warp p-1">We will randomly assign you a buddy for 24 hours, you can talk and become best friends.</label>
+                <label class="text-warp p-1">We will randomly assign you a buddy that has been active lately and has similar interests, you can talk for 8 hours and become best friends.</label>
                 <form method="post" class="flex-column row">
                     <input name="available" type="hidden" value="true" />
                     <button class="btn outline-none-focus align-self-center text-white btn-outline-success border-0 fw-bold rounded-pill background-grass-green" type="submit">Start Searching</button>

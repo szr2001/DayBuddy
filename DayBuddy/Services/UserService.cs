@@ -113,12 +113,12 @@ namespace DayBuddy.Services
         //    return users;
         //}
 
-        public async Task<DayBuddyUser?> GetRndAvailableUserAsync(DayBuddyUser ignoreUser)
+        public async Task<DayBuddyUser?> GetRndAvailableUserAsync(DayBuddyUser selfUser)
         {
             var oneDayAgo = DateTime.UtcNow.AddDays(-1);
 
             var filter = Builders<DayBuddyUser>.Filter.Eq(u => u.IsAvailable, true) &
-                            Builders<DayBuddyUser>.Filter.Ne(u => u.Id, ignoreUser.Id) &
+                            Builders<DayBuddyUser>.Filter.Ne(u => u.Id, selfUser.Id) &
                             Builders<DayBuddyUser>.Filter.Gte(u => u.LastTimeOnline, oneDayAgo);
 
             var aggregation = usersCollection.Aggregate()
@@ -132,8 +132,8 @@ namespace DayBuddy.Services
                     {
                         new BsonDocument("$and", new BsonArray
                         {
-                            new BsonDocument("$gte", new BsonArray { "$Age", ignoreUser.AgeRange[0] }),
-                            new BsonDocument("$lte", new BsonArray { "$Age", ignoreUser.AgeRange[1] })
+                            new BsonDocument("$gte", new BsonArray { "$Age", selfUser.AgeRange[0] }),
+                            new BsonDocument("$lte", new BsonArray { "$Age", selfUser.AgeRange[1] })
                         }),
                         1,
                         0
@@ -141,17 +141,17 @@ namespace DayBuddy.Services
                     new BsonDocument("$size", new BsonDocument("$setIntersection", new BsonArray
                     {
                         "$Interests",
-                        new BsonArray(ignoreUser.Interests)
+                        new BsonArray(selfUser.Interests)
                     })),
                     new BsonDocument("$cond", new BsonArray
                     {
-                        new BsonDocument("$eq", new BsonArray { "$Country", ignoreUser.Country }),
-                        1,
+                        new BsonDocument("$eq", new BsonArray { "$Country", selfUser.Country }),
+                        3,
                         0
                     }),
                     new BsonDocument("$cond", new BsonArray
                     {
-                        new BsonDocument("$eq", new BsonArray { "$Sexuality", ignoreUser.Sexuality }),
+                        new BsonDocument("$eq", new BsonArray { "$Sexuality", selfUser.Sexuality }),
                         1,
                         0
                     })
