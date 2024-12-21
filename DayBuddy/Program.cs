@@ -55,7 +55,6 @@ namespace DayBuddy
                 options.AddPolicy("EmailVerified", policy =>
                 {
                     policy.Requirements.Add(new EmailVerifiedRequirement());
-
                 });
             });
             builder.Services.AddScoped<IAuthorizationHandler, EmailVerifiedHandler>();
@@ -66,7 +65,6 @@ namespace DayBuddy
                 options.OnRejected = (context, token) =>
                 {
                     var clientIp = GetClientIdentificator(context.HttpContext);
-                    Console.WriteLine($"Rate limit exceeded for User: {clientIp}");
                     context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
                     return new ValueTask(); 
                 };

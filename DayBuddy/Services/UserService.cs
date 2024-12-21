@@ -2,6 +2,8 @@
 using DayBuddy.Models;
 using DayBuddy.Settings;
 using MongoDbGenericRepository.Attributes;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 
 namespace DayBuddy.Services
 {
@@ -113,13 +115,54 @@ namespace DayBuddy.Services
 
         public async Task<DayBuddyUser?> GetRndAvailableUserAsync(DayBuddyUser ignoreUser)
         {
-            var random = new Random();
-            var filter = Builders<DayBuddyUser>.Filter.Eq(u => u.IsAvailable, true) &
-                             Builders<DayBuddyUser>.Filter.Ne(u => u.Id, ignoreUser.Id);
-            var users = await usersCollection.Find(filter).ToListAsync();
-            if (users.Count == 0) return null;
+            var oneDayAgo = DateTime.UtcNow.AddDays(-1);
 
-            return users[random.Next(users.Count)];
+            var filter = Builders<DayBuddyUser>.Filter.Eq(u => u.IsAvailable, true) &
+                            Builders<DayBuddyUser>.Filter.Ne(u => u.Id, ignoreUser.Id) &
+                            Builders<DayBuddyUser>.Filter.Gte(u => u.LastTimeOnline, oneDayAgo);
+
+            var aggregation = usersCollection.Aggregate()
+                .Match(filter)
+                .Project(new BsonDocument
+                {
+            { "User", "$$ROOT" },
+            { "MatchScore", new BsonDocument("$add", new BsonArray
+                {
+                    new BsonDocument("$cond", new BsonArray
+                    {
+                        new BsonDocument("$and", new BsonArray
+                        {
+                            new BsonDocument("$gte", new BsonArray { "$Age", ignoreUser.AgeRange[0] }),
+                            new BsonDocument("$lte", new BsonArray { "$Age", ignoreUser.AgeRange[1] })
+                        }),
+                        1,
+                        0
+                    }),
+                    new BsonDocument("$size", new BsonDocument("$setIntersection", new BsonArray
+                    {
+                        "$Interests",
+                        new BsonArray(ignoreUser.Interests)
+                    })),
+                    new BsonDocument("$cond", new BsonArray
+                    {
+                        new BsonDocument("$eq", new BsonArray { "$Country", ignoreUser.Country }),
+                        1,
+                        0
+                    }),
+                    new BsonDocument("$cond", new BsonArray
+                    {
+                        new BsonDocument("$eq", new BsonArray { "$Sexuality", ignoreUser.Sexuality }),
+                        1,
+                        0
+                    })
+                })
+            }
+                })
+                .Sort(new BsonDocument("MatchScore", -1))
+                .Limit(1);
+
+            var result = await aggregation.FirstOrDefaultAsync();
+            return result != null ? BsonSerializer.Deserialize<DayBuddyUser>(result["User"].AsBsonDocument) : null;
         }
 
         public async Task<DayBuddyUser?> GetUserByChatLobbyIdAsync(string lobbyId)
