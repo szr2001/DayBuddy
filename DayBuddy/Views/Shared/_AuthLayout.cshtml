@@ -29,7 +29,7 @@
                     <a class="btn text-white green-outline-focus border-0 btn-outline-success background-grass-green  rounded-pill m-1 fw-bold" asp-area="" asp-controller="DayBuddy" asp-action="SearchBuddy">Find A Buddy!</a>
                     <a class="btn text-white green-outline-focus border-0 rounded-pill m-1 btn-info fw-bold" asp-area="" asp-controller="Payment" asp-action="Premium">Upgrade To Premium</a>
                     <a class="nav-link fw-bold text-black-50 hover-dark" asp-area="" asp-controller="Account" asp-action="Profile">Edit Profile</a>
-                    <a class="nav-link fw-bold text-black-50 hover-dark" asp-area="" asp-controller="Account" asp-action="Profile">Inventory</a>
+                    <a class="nav-link fw-bold text-black-50 disabled hover-dark" asp-area="" asp-controller="Account" asp-action="Profile">Inventory</a>
                     <a class="nav-link fw-bold text-black-50 hover-dark" asp-area="" asp-controller="Account" asp-action="LogOut">Log Out</a>
                 </ul>
                 @{
@@ -38,6 +38,7 @@
                     {
                         if (!userService.IsPremiumUser(user))
                         {
+                            //replace with renderPartial and make this as a partial view maybe
                             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1174266192650963"
                                     crossorigin="anonymous"></script>
                             <ins class="adsbygoogle"

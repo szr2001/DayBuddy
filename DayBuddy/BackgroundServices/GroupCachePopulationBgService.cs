@@ -8,10 +8,10 @@ namespace DayBuddy.BackgroundServices
     /// <summary>
     /// Populate the BuddyGroupCacheService for storing data from db in memory ram for fast access
     /// </summary>
-    public class GroupCachePopulationService : IHostedService
+    public class GroupCachePopulationBgService : IHostedService
     {
         private readonly IServiceScopeFactory scopeFactory;
-        public GroupCachePopulationService(IServiceScopeFactory scopeFactory)
+        public GroupCachePopulationBgService(IServiceScopeFactory scopeFactory)
         {
             this.scopeFactory = scopeFactory;
         }

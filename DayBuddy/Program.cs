@@ -43,9 +43,10 @@ namespace DayBuddy
             builder.Services.AddSingleton<UserProfileValidatorService>();
             builder.Services.AddSingleton<GmailSMTPEmailService>();
             //hosted service run as part of the starting/closing process before everything else runs.
-            builder.Services.AddHostedService<GroupCachePopulationService>();
-            builder.Services.AddHostedService<DbRolesPopulationService>();
-            builder.Services.AddHostedService<MessagesCacheFlushService>();
+            builder.Services.AddHostedService<GroupCachePopulationBgService>();
+            builder.Services.AddHostedService<DbRolesPopulationBgService>();
+            builder.Services.AddHostedService<MessagesCacheFlushBgService>();
+            builder.Services.AddHostedService<DeleteInactiveUsersBgService>();
 
             //More requirements for Authorize attribute
             //like [Authorize("EmailVerified")] to only allow access to user who have email verified

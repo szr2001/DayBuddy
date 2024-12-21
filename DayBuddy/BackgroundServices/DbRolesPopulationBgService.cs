@@ -7,12 +7,12 @@ namespace DayBuddy.BackgroundServices
     /// <summary>
     /// Adds the default roles in the MongoDB database if they are not already added.
     /// </summary>
-    public class DbRolesPopulationService : IHostedService
+    public class DbRolesPopulationBgService : IHostedService
     {
         private readonly IServiceProvider _services;
         private readonly IConfiguration _config;
 
-        public DbRolesPopulationService(IServiceProvider services, IConfiguration config)
+        public DbRolesPopulationBgService(IServiceProvider services, IConfiguration config)
         {
             _services = services;
             _config = config;

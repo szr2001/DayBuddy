@@ -5,11 +5,11 @@ using DayBuddy.Services.Caches;
 
 namespace DayBuddy.BackgroundServices
 {
-    public class MessagesCacheFlushService : IHostedService
+    public class MessagesCacheFlushBgService : IHostedService
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly MessagesCacheService messagesCacheService;
-        public MessagesCacheFlushService(MessagesCacheService messagesCacheService, IServiceScopeFactory scopeFactory)
+        public MessagesCacheFlushBgService(MessagesCacheService messagesCacheService, IServiceScopeFactory scopeFactory)
         {
             this.messagesCacheService = messagesCacheService;
             _scopeFactory = scopeFactory;
