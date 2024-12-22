@@ -10,9 +10,11 @@ namespace DayBuddy.Models
         public string? Content { get; set; }
         public Guid? SenderId { get; set; }
 
-        public Feedback() 
+        public Feedback(string? content, Guid? senderId)
         {
             Id = Guid.NewGuid();
+            Content = content;
+            SenderId = senderId;
         }
     }
 }

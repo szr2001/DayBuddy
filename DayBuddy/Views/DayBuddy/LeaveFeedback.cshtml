@@ -4,5 +4,41 @@
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
-<h1>LeaveFeedback</h1>
+<nav class="text-center">
+    <div class="d-flex justify-content-center">
+        <h2 class="fw-bold">Feedback</h2>
+    </div>
+</nav>
 
+<hr />
+
+<div class="text-center container-fluid p-md-5 h-100">
+    <div class="border row container align-content-center h-75 rounded-6 align-self-center">
+        @if (ViewBag.FeedbackRecieved != null && ViewBag.FeedbackRecieved == true)
+        {
+            <label class="fw-bold fs-3 text-warp">Feedback Recieved!</label>
+            <label class="text-warp">I'll see what can I do about it</label>
+            <div>
+                <img src="/Assets/Images/heart.png" class="p-1" width="65" height="65" />
+            </div>
+        }
+        else
+        {
+            <label class="fw-bold fs-3 text-warp">Have any feedback?</label>
+            <label class="text-warp">Did you find any bugs? Do you have a feature idea that might be nice to have? I'm all ears!</label>
+            <form asp-action="LeaveFeedback">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group m-2">
+                    <textarea name="content" rows="4" cols="50" autocomplete="off" class="green-outline-focus form-control" style="resize: none;"></textarea>
+                </div>
+                <button class="btn rounded-6 m-1 outline-none-focus fw-bold border-0 background-grass-green btn-success" type="submit">Send</button>
+            </form>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

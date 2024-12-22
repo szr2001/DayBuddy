@@ -16,6 +16,13 @@ namespace DayBuddy.Services
             feedbackCollection = database.GetCollection<Feedback>(collectionName);
         }
 
+        public async Task<int> GetUserFeedbackCount(DayBuddyUser user)
+        {
+            var filter = Builders<Feedback>.Filter.Eq(f => f.SenderId, user.Id);
+
+            return (int) await feedbackCollection.CountDocumentsAsync(filter);
+        } 
+
         public async Task InsertAsync(Feedback feedback)
         {
             await feedbackCollection.InsertOneAsync(feedback);

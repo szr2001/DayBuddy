@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using System.ComponentModel.DataAnnotations;
 
 namespace DayBuddy.Controllers
 {
@@ -19,20 +20,43 @@ namespace DayBuddy.Controllers
         private readonly ChatGroupsService chatGroupsService;
         private readonly MessagesService messagesService;
         private readonly UserService userService;
+        private readonly FeedbackService feedbackService;
         private readonly BuddyGroupCacheService buddyGroupCacheService;
 
         private readonly int messageHistoryLength = 30;
-        public DayBuddyController(UserManager<DayBuddyUser> userManager, ChatGroupsService chatLobbysService, UserService userService, BuddyGroupCacheService buddyGroupCacheService, MessagesService messagesService)
+        public DayBuddyController(UserManager<DayBuddyUser> userManager, ChatGroupsService chatLobbysService, UserService userService, BuddyGroupCacheService buddyGroupCacheService, MessagesService messagesService, FeedbackService feedbackService)
         {
             this.userManager = userManager;
             this.chatGroupsService = chatLobbysService;
             this.userService = userService;
             this.buddyGroupCacheService = buddyGroupCacheService;
             this.messagesService = messagesService;
+            this.feedbackService = feedbackService;
         }
 
-        public IActionResult LeaveFeedback()
+        public async Task<IActionResult> LeaveFeedback()
         {
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
+            ViewBag.FeedbackRecieved = await feedbackService.GetUserFeedbackCount(user) > 0;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LeaveFeedback([Required][MinLength(20,ErrorMessage ="Not enough details, try adding at least 20 characters")][MaxLength(300,ErrorMessage = "Try keeping it shorter, max 300 characters")]string content)
+        {
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
+            if(await feedbackService.GetUserFeedbackCount(user) > 0)
+            {
+                return RedirectToAction("Profile","Account");
+            }
+            if (ModelState.IsValid)
+            {
+                Feedback feedback = new(content, user.Id);
+
+                await feedbackService.InsertAsync(feedback);
+
+                ViewBag.FeedbackRecieved = true;
+            }
             return View();
         }
 

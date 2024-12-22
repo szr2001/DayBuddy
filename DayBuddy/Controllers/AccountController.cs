@@ -253,8 +253,6 @@ namespace DayBuddy.Controllers
 
             UserProfile profileData = userService.GetUserProfile(user);
 
-            Console.WriteLine(User.IsInRole("Admin"));
-
             if (profileData.Premium)
             {
                 ViewBag.PremiumDuration = userService.GetUserPremiumDurationLeft(user);
