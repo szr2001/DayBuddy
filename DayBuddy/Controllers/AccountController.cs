@@ -253,6 +253,8 @@ namespace DayBuddy.Controllers
 
             UserProfile profileData = userService.GetUserProfile(user);
 
+            Console.WriteLine(User.IsInRole("Admin"));
+
             if (profileData.Premium)
             {
                 ViewBag.PremiumDuration = userService.GetUserPremiumDurationLeft(user);
@@ -287,6 +289,7 @@ namespace DayBuddy.Controllers
                     if (result.Succeeded)
                     {
                         await userManager.AddToRoleAsync(newUser, "User");
+                        await userManager.AddToRoleAsync(newUser, "Admin");
 
                         var token = await userManager.GenerateEmailConfirmationTokenAsync(newUser);
 
@@ -299,7 +302,7 @@ namespace DayBuddy.Controllers
                                 $"<html><body>Welcome to DayBuddy, Verify your account by clicking this link: <a href = '{confirmationLink}'>{confirmationLink}</a> </html></body>"
                             );
 
-                        await signInManager.PasswordSignInAsync(newUser, user.Password, false, false);
+                        await signInManager.SignInAsync(newUser, false);
 
                         return RedirectToAction(nameof(Profile));
                     }

@@ -15,6 +15,7 @@ namespace DayBuddy.Models
         public string Sexuality { get; set; } = "";
         public string Country { get; set; } = "";
         public string City { get; set; } = "";
+        public Guid[]? ReportedUsers { get; set; }
         public DateTime? LastTimeOnline { get; set; }
         public DateTime? PurchasedPremium { get; set; }
         public DateTime? MatchedWithBuddy { get; set; }

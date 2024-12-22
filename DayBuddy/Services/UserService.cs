@@ -20,7 +20,7 @@ namespace DayBuddy.Services
             this.chatGroupsService = chatGroupsService;
             var database = mongoClient.GetDatabase(mongoDbConfig.Name);
             var collectionNameAttribute = Attribute.GetCustomAttribute(typeof(DayBuddyUser), typeof(CollectionNameAttribute)) as CollectionNameAttribute;
-            string collectionName = collectionNameAttribute?.Name ?? "Users";
+            string collectionName = collectionNameAttribute!.Name!;
 
             usersCollection = database.GetCollection<DayBuddyUser>(collectionName);
             //write the whole timespan inside the appsettings

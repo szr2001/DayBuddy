@@ -19,6 +19,12 @@ namespace DayBuddy.Factories
             var identity = await base.GenerateClaimsAsync(user);
             identity.AddClaim(new Claim("ID", user.Id.ToString()));
 
+            var roles = await UserManager.GetRolesAsync(user);
+            foreach (var role in roles)
+            {
+                identity.AddClaim(new Claim(ClaimTypes.Role, role));
+            }
+
             return identity;
         }
     }

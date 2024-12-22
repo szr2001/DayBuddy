@@ -9,7 +9,7 @@ namespace DayBuddy.Services
 {
     public class MessagesService
     {
-        private readonly IMongoCollection<BuddyMessage> _messagesCollection;
+        private readonly IMongoCollection<BuddyMessage> messagesCollection;
         private readonly MessagesCacheService messagesCacheService;
         private readonly UserManager<DayBuddyUser> userManager;
         private readonly int WriteToDbThershold = 5;
@@ -20,8 +20,8 @@ namespace DayBuddy.Services
 
             var database = mongoClient.GetDatabase(nongoConfig.Name);
             var collectionNameAttribute = Attribute.GetCustomAttribute(typeof(BuddyMessage), typeof(CollectionNameAttribute)) as CollectionNameAttribute;
-            string collectionName = collectionNameAttribute?.Name ?? "Messages";
-            _messagesCollection = database.GetCollection<BuddyMessage>(collectionName);
+            string collectionName = collectionNameAttribute!.Name!;
+            messagesCollection = database.GetCollection<BuddyMessage>(collectionName);
         }
 
         public async Task<List<GroupMessage>> GetGroupMessageInGroupAsync(Guid groupId, DayBuddyUser authUser, int offset, int amount)
@@ -64,7 +64,7 @@ namespace DayBuddy.Services
                 var filter = Builders<BuddyMessage>.Filter.Eq(m => m.ChatGroupId, groupId);
                 int remainingOffest = cacheSize > offset ? 0 : offset - cacheSize;
 
-                var restMessages = await _messagesCollection.Find(filter)
+                var restMessages = await messagesCollection.Find(filter)
                                 .Sort(Builders<BuddyMessage>.Sort.Descending(m => m.CreatedDate))
                                 .Skip(remainingOffest)
                                 .Limit(remainingAmount)
@@ -79,18 +79,18 @@ namespace DayBuddy.Services
         public async Task DeleteMesagesInGroupAsync(Guid groupID)
         {
             var filter = Builders<BuddyMessage>.Filter.Eq(m => m.ChatGroupId, groupID);
-            await _messagesCollection.DeleteManyAsync(filter);
+            await messagesCollection.DeleteManyAsync(filter);
         }
 
         public async Task InsertMessageAsync(BuddyMessage message)
         {
-            await _messagesCollection.InsertOneAsync(message);
+            await messagesCollection.InsertOneAsync(message);
         }
 
         public async Task InsertMessagesAsync(List<BuddyMessage> messages)
         {
             if(messages.Count == 0) return;
-            await _messagesCollection.InsertManyAsync(messages);
+            await messagesCollection.InsertManyAsync(messages);
         }
 
         public async Task CacheMessageAsync(BuddyMessage message)
@@ -106,7 +106,7 @@ namespace DayBuddy.Services
         private async Task InsertCacheMessagesAsync(List<BuddyMessage> messages)
         {
             if (messages.Count == 0) return;
-            await _messagesCollection.InsertManyAsync(messages);
+            await messagesCollection.InsertManyAsync(messages);
         }
     }
 }

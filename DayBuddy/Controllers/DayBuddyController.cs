@@ -31,6 +31,11 @@ namespace DayBuddy.Controllers
             this.messagesService = messagesService;
         }
 
+        public IActionResult LeaveFeedback()
+        {
+            return View();
+        }
+
         [HttpGet]
         public async Task<JsonResult> GetBuddyMessages(int offset)
         {

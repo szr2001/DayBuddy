@@ -24,6 +24,13 @@ label {
     font-family: Georgia
 }
 
+.btn-special{
+    background: #951dd4;
+}
+.btn-special:hover {
+    background: #821db6;
+}
+
 .green-outline-focus:focus {
     border-color: #8bc34a !important; /* Change border color */
     outline: none !important; /* Remove default outline */

@@ -23,7 +23,7 @@ namespace DayBuddy.Services
         {
             var database = mongoClient.GetDatabase(config.Name);
             var collectionNameAttribute = Attribute.GetCustomAttribute(typeof(BuddyChatGroup), typeof(CollectionNameAttribute)) as CollectionNameAttribute;
-            string collectionName = collectionNameAttribute?.Name ?? "ActiveChats";
+            string collectionName = collectionNameAttribute!.Name!;
             groupsCollection = database.GetCollection<BuddyChatGroup>(collectionName);
             this.buddyGroupCacheService = cacheService;
             this.userManager = userManager;

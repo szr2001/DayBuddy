@@ -5,5 +5,5 @@ $(document).ready(function () {
 })
 
 function EnableButton() {
-    $deleteBtn.attr("disabled", false);
+    $deleteBtn.removeClass("disabled");
 }
