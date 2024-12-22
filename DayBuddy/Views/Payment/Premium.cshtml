@@ -4,18 +4,18 @@
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
-<nav class="text-center">
+<div class="text-center">
     <div class="d-flex justify-content-center">
         <img src="/Assets/Images/hug.png" class="p-1" width="75" />
     </div>
-</nav>
+</div>
 
 
 @{
     if (ViewBag.IsPremium)
     {
-        <div class="text-center container-fluid p-md-5 h-100">
-            <div class="border row container align-content-center h-75 rounded-6 align-self-center">
+        <div class="text-center overflow-scroll container-fluid p-md-5 h-100">
+            <div class="border row container-fluid d-flex justify-content-center p-5 m-2 rounded-6">
                 <label class="fw-bold fs-3 text-warp">Thank you for purchasing Premium!</label>
                 <label class="p-1 text-warp">This will pay for the host and for adding new features.</label>
                 <div>
@@ -26,8 +26,8 @@
     }
     else
     {
-        <div class="text-center container-fluid p-md-5 h-100">
-            <div class="border row container align-content-center h-75 p-1 rounded-6 align-self-center">
+        <div class="text-center overflow-scroll container-fluid p-md-5 h-100">
+            <div class="border row container-fluid d-flex justify-content-center p-5 m-2 rounded-6">
                 <label class="fw-bold fs-2 text-warp">Purchase 30 days Premium?</label>
                 <label class="fs-4 text-warp">•	No cooldowns</label>
                 <label class="fs-4 text-warp">•	One time purchase</label>

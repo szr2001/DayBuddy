@@ -4,21 +4,21 @@
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
-<nav class="text-center">
+<div class="text-center">
     <div class="d-flex justify-content-center">
         <h2 class="fw-bold">Admin Pannel</h2>
     </div>
-</nav>
+</div>
 
 <hr />
 
-<div class="text-center container-fluid p-md-5 h-100">
-    <div class="border container-fluid d-flex justify-content-center p-5 rounded-6">
+<div class="text-center container-fluid overflow-scroll h-100">
+    <div class="border row container-fluid d-flex justify-content-center p-5 m-2 rounded-6">
         <div class="row">
             <div class="border row rounded-6 m-1 p-3 col">
                 <label class="text-warp fw-bold ">Feedback</label>
                 <label class="text-warp">Read Users Feedback</label>
-                <a class="btn btn-special text-white green-outline-focus border-0 rounded-pill m-1 fw-bold" asp-area="" asp-controller="Admin" asp-action="Feedback">Open</a>
+                <a class="btn btn-special text-white green-outline-focus border-0 rounded-pill m-1 fw-bold" asp-area="" asp-controller="Admin" asp-action="ReadFeedback">Open</a>
 
             </div>
             <div class="border text-black-50 row rounded-6 m-1 p-3 col">

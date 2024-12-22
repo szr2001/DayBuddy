@@ -10,5 +10,10 @@ namespace DayBuddy.Controllers
         {
             return View();
         }
+
+        public IActionResult ReadFeedback()
+        {
+            return View();
+        }
     }
 }
