@@ -3,43 +3,46 @@
 }
 
 <div class="hide-scrollbar">
-    <!-- Add lazy loading-->
-    <div class="position-relative img-fluid" >
+    <div class="position-relative">
         <img src="/Assets/Images/malefriends.jpg"
-             class="img-fluid w-100 h-100 object-fit-cover" alt="Background Image" />
+             class="img-fluid w-100 h-100 shadow object-fit-cover" alt="Background Image" />
 
-        <div style="top: 25%;" class="position-absolute start-50 translate-middle text-white text-center">
-            <label style="font-family:'Segoe UI'; font-size: clamp(2rem, 5vw, 8rem);"
-                   class="text-uppercase fw-bold text-grass-green">
+        <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+            <h1 class="text-uppercase fw-bold text-grass-green" style="font-family: 'Segoe UI'; font-size: clamp(2rem, 5vw, 4rem);">
                 Ready to find a buddy?
-            </label>
-        </div>
-
-        <div style="top: 80%;" class="position-absolute start-50 translate-middle text-white text-center">
-            <a class="btn text-white fs-2 border-0 btn-outline-success background-grass-green rounded-pill m-1 fw-bold"
-               asp-area="" asp-controller="Home" asp-action="GetStarted">Sign In</a>
-        </div>
-    </div>
-    <div class="background-grass-green container-fluid text-center">
-        <div class="d-flex flex-row align-items-center justify-content-center">
-            <div class="text-center row container-fluid me-4">
-                <label style="font-family:'Segoe UI'; font-size: clamp(2rem, 5vw, 8rem);"
-                       class="text-uppercase fw-bold text-dark">Ready to find a buddy?</label>
-                <label style="font-family:'Segoe UI'; font-size: clamp(1rem, 4vw, 7rem);"
-                       class="text-dark">Ready to find a buddy?</label>
-            </div>
-            <div class="container rounded-3 position-relative">
-                <img src="/Assets/Images/fists.jpg" class="img-fluid m-4 rounded-6" style="object-fit: cover; height: 80%; width: 80%;" />
-            </div>
+            </h1>
+            <a class="btn btn-success green-outline-focus rounded-pill px-4 py-2 fw-bold mt-3"
+               asp-area="" asp-controller="Home" asp-action="GetStarted">
+                Sign In
+            </a>
         </div>
     </div>
 
-    <footer class="text-center text-muted py-1">
-        <div class="container">
-            <label>&copy; 2024 - DayBuddy - </label>
-            <a class="p-1 text-grass-green" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-            <a class="p-1 text-grass-green" asp-area="" asp-controller="Home" asp-action="TermsAndConditions">Terms & Conditions</a>
-            <a class="p-1 text-grass-green" asp-area="" asp-controller="Home" asp-action="FAQ">FAQ</a>
+    <div class="container-fluid bg-light py-5">
+        <div class="row align-items-center text-center">
+            <div class="col-md-6">
+                <h2 class="text-uppercase fw-bold text-dark mb-3" style="font-family: 'Segoe UI'; font-size: clamp(2rem, 4vw, 3rem);">
+                    Get assigned a buddy
+                </h2>
+                <p class="text-muted" style="font-family: 'Segoe UI'; font-size: clamp(1rem, 3vw, 1.5rem);">
+                    No need to give or recieve likes, you will get matched with someone to talk to every 8 hours!
+                </p>
+            </div>
+            <div class="col-md-6">
+                <img src="/Assets/Images/fists.jpg"
+                     class="img-fluid rounded-3 shadow" style="object-fit: cover; height: 100%; width: 100%;" alt="Fists">
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white py-3">
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <p class="mb-0">&copy; 2024 - <span class="text-success">DayBuddy</span></p>
+            <div class="d-flex flex-row align-items-center">
+                <a class="text-success text-decoration-none mx-2" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                <a class="text-success text-decoration-none mx-2" asp-area="" asp-controller="Home" asp-action="TermsAndConditions">Terms & Conditions</a>
+                <a class="text-success text-decoration-none mx-2" asp-area="" asp-controller="Home" asp-action="FAQ">FAQ</a>
+            </div>
         </div>
     </footer>
 </div>

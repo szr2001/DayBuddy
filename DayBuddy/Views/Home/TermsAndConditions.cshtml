@@ -1,7 +1,39 @@
-﻿@{
-    ViewData["Title"] = "Terms & Conditions";
-}
+﻿
+<div class="hide-scrollbar d-flex flex-column min-vh-100">
+    <div class="container-fluid bg-light py-5 flex-grow-1">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-uppercase fw-bold text-dark mb-4" style="font-family: 'Segoe UI'; font-size: clamp(2rem, 4vw, 3rem);">
+                    Terms and Conditions
+                </h1>
+                <p class="text-muted" style="font-family: 'Segoe UI'; font-size: clamp(1rem, 3vw, 1.5rem);">
+                    By using DayBuddy, you agree to the following terms and conditions.
+                </p>
+                <h2 class="text-dark fw-bold mt-4">User Agreement</h2>
+                <ul class="text-muted">
+                    <li>You must be 18 years or older to use DayBuddy.</li>
+                    <li>You agree not to use the service for any unlawful activities.</li>
+                </ul>
+                <h2 class="text-dark fw-bold mt-4">Limitation of Liability</h2>
+                <p class="text-muted">
+                    DayBuddy is not responsible for any damages resulting from connections made through the platform.
+                </p>
+                <h2 class="text-dark fw-bold mt-4">Changes to Terms</h2>
+                <p class="text-muted">
+                    We may update these terms periodically. Continued use of the service constitutes acceptance of the updated terms.
+                </p>
+            </div>
+        </div>
+    </div>
 
-<div class="text-center">
-    <h1 class="display-4">Terms & Conditions</h1>
+    <footer class="bg-dark text-white py-3 mt-auto">
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <p class="mb-0">&copy; 2024 - <span class="text-success">DayBuddy</span></p>
+            <div class="d-flex flex-row align-items-center">
+                <a class="text-success text-decoration-none mx-2" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                <a class="text-success text-decoration-none mx-2" asp-area="" asp-controller="Home" asp-action="TermsAndConditions">Terms & Conditions</a>
+                <a class="text-success text-decoration-none mx-2" asp-area="" asp-controller="Home" asp-action="FAQ">FAQ</a>
+            </div>
+        </div>
+    </footer>
 </div>
