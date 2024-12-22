@@ -16,6 +16,15 @@ namespace DayBuddy.Services
             feedbackCollection = database.GetCollection<Feedback>(collectionName);
         }
 
+        public async Task<Feedback?> ExtractRandomMessageAsync()
+        {
+            var filter = Builders<Feedback>.Filter.Empty;
+
+            Feedback? foundFeedback = await feedbackCollection.FindOneAndDeleteAsync(filter);
+
+            return foundFeedback;
+        }
+
         public async Task<int> GetUserFeedbackCount(DayBuddyUser user)
         {
             var filter = Builders<Feedback>.Filter.Eq(f => f.SenderId, user.Id);

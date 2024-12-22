@@ -4,5 +4,31 @@
     Layout = "~/Views/Shared/_AuthLayout.cshtml";
 }
 
-<h1>ReadFeedback</h1>
 
+<nav class="text-center">
+    <div class="d-flex justify-content-center">
+        <h2 class="fw-bold">Read Feedback</h2>
+    </div>
+</nav>
+
+<hr />
+
+<div class="text-center container-fluid overflow-scroll h-100">
+    <div class="border row container-fluid d-flex justify-content-center p-5 m-2 rounded-6">
+        
+        @if (ViewBag.Feedback != null)
+        {
+            <label class="text-wrap fs-4 fw-bold">User says:</label>
+            <label class="text-wrap">
+                @ViewBag.Feedback
+            </label>
+            <a class="btn btn-special text-white green-outline-focus border-0 rounded-pill m-1 fw-bold" asp-area="" asp-controller="Admin" asp-action="ReadFeedback">Next</a>
+        }
+        else
+        {
+            <label class="text-wrap fs-4 fw-bold">All Read!</label>
+            <label class="text-wrap">No new feedback found</label>
+        }
+
+    </div>
+</div>

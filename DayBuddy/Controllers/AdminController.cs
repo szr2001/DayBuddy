@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DayBuddy.Models;
+using DayBuddy.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DayBuddy.Controllers
@@ -6,13 +8,26 @@ namespace DayBuddy.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
+        private readonly FeedbackService feedbackService;
+        public AdminController(FeedbackService feedbackService)
+        {
+            this.feedbackService = feedbackService;
+        }
+
         public IActionResult AdminPannel()
         {
             return View();
         }
 
-        public IActionResult ReadFeedback()
+        public async Task<IActionResult> ReadFeedback()
         {
+            Feedback? feedback = await feedbackService.ExtractRandomMessageAsync();
+
+            if(feedback != null)
+            {
+                ViewBag.Feedback = feedback.Content;
+            }
+
             return View();
         }
     }
