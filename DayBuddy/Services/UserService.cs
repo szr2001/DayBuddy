@@ -34,27 +34,27 @@ namespace DayBuddy.Services
 
         public bool IsPremiumUser(DayBuddyUser user)
         {
-            if(user.PurchasedPremium == null) return false;
+            if(user.PurchasedPremium == DateTime.MinValue) return false;
 
-            TimeSpan time = (TimeSpan)(DateTime.UtcNow - user.PurchasedPremium);
+            TimeSpan time = DateTime.UtcNow - user.PurchasedPremium;
 
             return time < PremiumDuration;
         }
 
         public bool IsUserOnBuddySearchCooldown(DayBuddyUser user)
         {
-            if(user.MatchedWithBuddy == null) return false;
+            if(user.MatchedWithBuddy == DateTime.MinValue) return false;
 
-            TimeSpan time = (TimeSpan)(DateTime.UtcNow - user.MatchedWithBuddy);
+            TimeSpan time = DateTime.UtcNow - user.MatchedWithBuddy;
 
             return time < FindBuddyCooldown;
         }
 
         public TimeSpan GetUserPremiumDurationLeft(DayBuddyUser user)
         {
-            if (user.PurchasedPremium == null) return TimeSpan.Zero;
+            if (user.PurchasedPremium == DateTime.MinValue) return TimeSpan.Zero;
 
-            TimeSpan time = (TimeSpan)(DateTime.UtcNow - user.PurchasedPremium);
+            TimeSpan time = DateTime.UtcNow - user.PurchasedPremium;
 
             TimeSpan cooldownLeft = PremiumDuration - time;
 
@@ -63,9 +63,9 @@ namespace DayBuddy.Services
 
         public TimeSpan GetUserBuddySearchCooldown(DayBuddyUser user)
         {
-            if(user.MatchedWithBuddy == null) return TimeSpan.Zero;
+            if(user.MatchedWithBuddy == DateTime.MinValue) return TimeSpan.Zero;
 
-            TimeSpan time = (TimeSpan)(DateTime.UtcNow - user.MatchedWithBuddy);
+            TimeSpan time = DateTime.UtcNow - user.MatchedWithBuddy;
 
             TimeSpan cooldownLeft = FindBuddyCooldown - time;
 
@@ -83,11 +83,6 @@ namespace DayBuddy.Services
 
         //    return users[random.Next(users.Count)];
         //}
-
-        public async Task<DayBuddyUser?> GetBuddyMatchForProfileAsync(UserProfile match)
-        {
-            return null;
-        }
 
         public UserProfile GetUserProfile(DayBuddyUser user)
         {
@@ -113,7 +108,7 @@ namespace DayBuddy.Services
         //    return users;
         //}
 
-        public async Task<DayBuddyUser?> GetRndAvailableUserAsync(DayBuddyUser selfUser)
+        public async Task<DayBuddyUser?> GetBuddyMatchForProfileAsync(DayBuddyUser selfUser)
         {
             var oneDayAgo = DateTime.UtcNow.AddDays(-1);
 

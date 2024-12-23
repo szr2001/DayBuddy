@@ -131,7 +131,7 @@ namespace DayBuddy.Controllers
             }
             if (available)
             {
-                DayBuddyUser? buddyUser = await userService.GetRndAvailableUserAsync(user);
+                DayBuddyUser? buddyUser = await userService.GetBuddyMatchForProfileAsync(user);
                 if (buddyUser != null && buddyUser.Id != user.Id)
                 {
                     await chatGroupsService.AddBuddyGroup(user, buddyUser);

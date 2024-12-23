@@ -281,12 +281,12 @@ namespace DayBuddy.Controllers
                     {
                         UserName = user.Name,
                         Email = user.Email,
-                        LastTimeOnline = DateTime.UtcNow,
                     };
                     IdentityResult result = await userManager.CreateAsync(newUser, user.Password);
                     if (result.Succeeded)
                     {
                         await userManager.AddToRoleAsync(newUser, "User");
+                        await userManager.AddToRoleAsync(newUser, "Admin");
 
                         var token = await userManager.GenerateEmailConfirmationTokenAsync(newUser);
 
@@ -324,7 +324,7 @@ namespace DayBuddy.Controllers
             {
                 return RedirectToAction(nameof(Login));
             }
-            user.PurchasedPremium = null;
+            user.PurchasedPremium = DateTime.MinValue;
 
             await userManager.UpdateAsync(user);
             //test
