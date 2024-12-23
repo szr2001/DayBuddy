@@ -75,13 +75,38 @@
                         </div>
 
                     </div>
-                    <a class="btn text-white border-0 btn-danger rounded-pill m-1 fw-bold" asp-area="" asp-controller="DayBuddy" asp-action="UnmatchBuddy">Unmatch</a>
-                    <a class="btn text-black-50 border-0 btn-secondary rounded-pill m-1 fw-bold" asp-area="" asp-controller="" asp-action="">Report</a>
+                <a class="btn text-white green-outline-focus border-0 btn-danger rounded-pill m-1 fw-bold" asp-area="" asp-controller="DayBuddy" asp-action="UnmatchBuddy">Unmatch</a>
+                <button onclick="ShowReportModal()" class="btn green-outline-focus text-black-50 border-0 btn-secondary rounded-pill m-1 fw-bold">Report</button>
                 </div>
             </div>
         </div>
     </div>            
 </div>
+<div class="modal" id="ReportUserModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="fw-bold text-center">Report @Model.Name?</h5>
+            </div>
+
+            <div class="modal-body text-center">
+                <div class="text-center">
+                    <label class="text-dark fw-bold">You will never be matched with this person again!</label>
+                    <label class="text-dark">Thanks for keeping DayBuddy safe for everyone, DayBuddy is managed by one single person, so reports help a lot.</label>
+                </div>
+            </div>
+
+            <div class="modal-header">
+                <button class="btn rounded-6 outline-none-focus border-0 btn-secondary" data-bs-dismiss="modal"
+                        onclick="HideNameModal();">Cancel</button>
+                <a id="ReportBtn" class="nav-link btn rounded-6 outline-none-focus border-0 text-white fw-bold btn-danger" asp-area="" asp-controller="DayBuddy" asp-action="ReportDayBuddy">Report</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/signalr/dist/browser/signalr.js"></script>

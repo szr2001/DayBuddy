@@ -287,7 +287,6 @@ namespace DayBuddy.Controllers
                     if (result.Succeeded)
                     {
                         await userManager.AddToRoleAsync(newUser, "User");
-                        await userManager.AddToRoleAsync(newUser, "Admin");
 
                         var token = await userManager.GenerateEmailConfirmationTokenAsync(newUser);
 

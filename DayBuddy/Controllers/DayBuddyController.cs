@@ -34,6 +34,13 @@ namespace DayBuddy.Controllers
             this.feedbackService = feedbackService;
         }
 
+        public async Task<IActionResult> ReportDayBuddy()
+        {
+            DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
+
+            return View();
+        }
+
         public async Task<IActionResult> LeaveFeedback()
         {
             DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;

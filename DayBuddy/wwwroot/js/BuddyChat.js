@@ -111,3 +111,16 @@ function SubmitText(event) {
     message.val("");
     event.preventDefault();
 }
+
+function HideNameModal() {
+    $("#ReportUserModal").modal("hide");
+}
+function ShowReportModal() {
+    $("#ReportBtn").addClass("disabled");
+
+    setTimeout(function () {
+        $("#ReportBtn").removeClass("disabled");
+    }, 2000);
+
+    $("#ReportUserModal").modal("show");
+}
