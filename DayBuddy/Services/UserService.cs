@@ -94,9 +94,13 @@ namespace DayBuddy.Services
         {
             var oneDayAgo = DateTime.UtcNow.AddDays(-1);
 
-            var filter = Builders<DayBuddyUser>.Filter.Eq(u => u.IsAvailable, true) &
-                            Builders<DayBuddyUser>.Filter.Ne(u => u.Id, selfUser.Id) &
-                            Builders<DayBuddyUser>.Filter.Gte(u => u.LastTimeOnline, oneDayAgo);
+            var filter = Builders<DayBuddyUser>.Filter.And(
+                Builders<DayBuddyUser>.Filter.Eq(u => u.IsAvailable, true),
+                Builders<DayBuddyUser>.Filter.Ne(u => u.Id, selfUser.Id),
+                Builders<DayBuddyUser>.Filter.Not(Builders<DayBuddyUser>.Filter.Where(u => u.ReportedUsers.Contains(selfUser.Id))),
+                Builders<DayBuddyUser>.Filter.Not(Builders<DayBuddyUser>.Filter.Where(u => selfUser.ReportedUsers.Contains(u.Id))),
+                Builders<DayBuddyUser>.Filter.Gte(u => u.LastTimeOnline, oneDayAgo)
+            );
 
             var aggregation = usersCollection.Aggregate()
                 .Match(filter)

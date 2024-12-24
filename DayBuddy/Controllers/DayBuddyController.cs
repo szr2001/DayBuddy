@@ -43,7 +43,7 @@ namespace DayBuddy.Controllers
         [HttpPost]
         public async Task<JsonResult> ReportDayBuddy(string reason)
         {
-            if (reason.Length > 20)
+            if (reason != null && reason.Length > 20)
             {
                 return Json(new {success = false, errors = new[]{"The reason must be 20 characters or less"} });
             }
