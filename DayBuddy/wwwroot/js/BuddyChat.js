@@ -115,7 +115,28 @@ function SubmitText(event) {
 }
 
 function SendReport() {
-
+    if (reportReasonLength <= reportReasonMax) {
+        var formData = new Object();
+        formData.reason = $("#ReportReasonInput").val();
+        $.ajax({
+            url: '/DayBuddy/ReportDayBuddy',
+            data: formData,
+            type: 'post',
+            success: function (response) {
+                if (!response.success) {
+                    $("#ReportLabel").removeClass("text-info");
+                    $("#ReportLabel").addClass("text-danger");
+                    $("#ReportLabel").text(response.errors.join(", "));
+                }
+                else {
+                    window.location.reload(true);
+                }
+            },
+            error: function () {
+                $("#ReportLabel").text("An error occurred while reporting the user.");
+            }
+        });
+    }
 }
 
 function RecordReportInputChars() {
@@ -138,7 +159,9 @@ function RecordReportInputChars() {
         $("#ReportLabel").text(reportReasonLength +"/"+ reportReasonMax);
     });
 }
-
+function HideNameModal() {
+    $("#ReportUserModal").modal("hide");
+}
 function ShowReportModal() {
     reportReasonLength = 0;
 

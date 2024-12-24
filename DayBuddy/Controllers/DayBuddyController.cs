@@ -45,7 +45,7 @@ namespace DayBuddy.Controllers
         {
             if (reason.Length > 20)
             {
-                return Json(new {success = false, errors = new[]{"The reason must be less than 20 characters"} });
+                return Json(new {success = false, errors = new[]{"The reason must be 20 characters or less"} });
             }
 
             DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
@@ -73,9 +73,11 @@ namespace DayBuddy.Controllers
 
             user.ReportedUsers.Add(reportedUser.Id);
 
-            await userManager.UpdateAsync(reportedUser);
+            await userManager.UpdateAsync(user);
 
             await userReportService.InsertReport(userReport);
+
+            await chatGroupsService.RemoveBuddyGroup(user.BuddyChatGroupID);
             return Json(new { success = true, errors = Array.Empty<string>()});
         }
 
@@ -199,7 +201,6 @@ namespace DayBuddy.Controllers
 
             if (user.BuddyChatGroupID != Guid.Empty)
             {
-                string GroupId = user.BuddyChatGroupID.ToString();
                 await chatGroupsService.RemoveBuddyGroup(user.BuddyChatGroupID);
             }
 
