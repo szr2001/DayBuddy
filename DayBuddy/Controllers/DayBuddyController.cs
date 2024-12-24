@@ -6,7 +6,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.DotNet.MSIdentity.Shared;
+using Stripe.Reporting;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace DayBuddy.Controllers
 {
@@ -19,12 +23,13 @@ namespace DayBuddy.Controllers
         private readonly UserManager<DayBuddyUser> userManager;
         private readonly ChatGroupsService chatGroupsService;
         private readonly MessagesService messagesService;
+        private readonly UserReportService userReportService;
         private readonly UserService userService;
         private readonly FeedbackService feedbackService;
         private readonly BuddyGroupCacheService buddyGroupCacheService;
 
         private readonly int messageHistoryLength = 30;
-        public DayBuddyController(UserManager<DayBuddyUser> userManager, ChatGroupsService chatLobbysService, UserService userService, BuddyGroupCacheService buddyGroupCacheService, MessagesService messagesService, FeedbackService feedbackService)
+        public DayBuddyController(UserManager<DayBuddyUser> userManager, ChatGroupsService chatLobbysService, UserService userService, BuddyGroupCacheService buddyGroupCacheService, MessagesService messagesService, FeedbackService feedbackService, UserReportService userReportService)
         {
             this.userManager = userManager;
             this.chatGroupsService = chatLobbysService;
@@ -32,13 +37,46 @@ namespace DayBuddy.Controllers
             this.buddyGroupCacheService = buddyGroupCacheService;
             this.messagesService = messagesService;
             this.feedbackService = feedbackService;
+            this.userReportService = userReportService;
         }
 
-        public async Task<IActionResult> ReportDayBuddy()
+        [HttpPost]
+        public async Task<JsonResult> ReportDayBuddy(string reason)
         {
+            if (reason.Length > 20)
+            {
+                return Json(new {success = false, errors = new[]{"The reason must be less than 20 characters"} });
+            }
+
             DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
 
-            return View();
+            if (user.BuddyChatGroupID == Guid.Empty) 
+            {
+                return Json(new { success = false, errors = new[] { "User is not in a chat group" } });
+            }
+
+            string[] groupUsers = buddyGroupCacheService.GetUsersInGroup(user.BuddyChatGroupID.ToString());
+
+            string? buddyId = groupUsers.Where(id => id != user.Id.ToString()).FirstOrDefault();
+            if (string.IsNullOrEmpty(buddyId))
+            {
+                return Json(new { success = false, errors = new[] { "buddy id does not exist" } });
+            }
+
+            DayBuddyUser? reportedUser = await userManager.FindByIdAsync(buddyId);
+            if(reportedUser == null)
+            {
+                return Json(new { success = false, errors = new[] { "user does not exist" } });
+            }
+
+            UserReport userReport = new(reason, user.Id, reportedUser.Id);
+
+            user.ReportedUsers.Add(reportedUser.Id);
+
+            await userManager.UpdateAsync(reportedUser);
+
+            await userReportService.InsertReport(userReport);
+            return Json(new { success = true, errors = Array.Empty<string>()});
         }
 
         public async Task<IActionResult> LeaveFeedback()
@@ -172,16 +210,12 @@ namespace DayBuddy.Controllers
         {
             DayBuddyUser user = (DayBuddyUser)HttpContext.Items[User]!;
 
-            string? groupId = buddyGroupCacheService.GetUserGroup(user.Id.ToString());
-
-            if(string.IsNullOrEmpty(groupId))
+            if(user.BuddyChatGroupID == Guid.Empty)
             {
-                //there has been an error so delete the group
-                Console.WriteLine($"Group ID not found with user {user.UserName}");
                 return RedirectToAction(nameof(SearchBuddy));
             }
 
-            string[] groupUsers = buddyGroupCacheService.GetUsersInGroup(groupId);
+            string[] groupUsers = buddyGroupCacheService.GetUsersInGroup(user.BuddyChatGroupID.ToString());
             string? buddyId = groupUsers.Where(id => id != user.Id.ToString()).FirstOrDefault();
             if (string.IsNullOrEmpty(buddyId))
             {

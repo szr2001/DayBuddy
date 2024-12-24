@@ -2,7 +2,8 @@
 const $MessagesList = $("#messagesList");
 const $BuddyChatTimer = $("#buddyChatTimer");
 var connection = new signalR.HubConnectionBuilder().withUrl("/BuddyHub").build();
-
+var reportReasonMax = 20;
+var reportReasonLength = 0;
 // Disable the send button until connection is established.
 $("#sendButton").prop("disabled", true);
 $("#messageInput").prop("disabled", true);
@@ -85,6 +86,7 @@ $("#messagesList").on("scroll", function () {
 
 $(document).ready(function ()
 {
+    RecordReportInputChars();
     loadMessages();
     startTimer();
 });
@@ -112,12 +114,40 @@ function SubmitText(event) {
     event.preventDefault();
 }
 
-function HideNameModal() {
-    $("#ReportUserModal").modal("hide");
-}
-function ShowReportModal() {
-    $("#ReportBtn").addClass("disabled");
+function SendReport() {
 
+}
+
+function RecordReportInputChars() {
+    $("#ReportReasonInput").on("keyup", function () {
+        reportReasonLength = $(this).val().length;
+        if (reportReasonLength > reportReasonMax) {
+            $("#ReportLabel").addClass("text-danger");
+            $("#ReportLabel").removeClass("text-info");
+
+            $("#ReportReasonInput").removeClass("green-outline-focus");
+            $("#ReportReasonInput").addClass("is-invalid");
+        }
+        else {
+            $("#ReportLabel").removeClass("text-danger");
+            $("#ReportLabel").addClass("text-info");
+
+            $("#ReportReasonInput").addClass("green-outline-focus");
+            $("#ReportReasonInput").removeClass("is-invalid");
+        }
+        $("#ReportLabel").text(reportReasonLength +"/"+ reportReasonMax);
+    });
+}
+
+function ShowReportModal() {
+    reportReasonLength = 0;
+
+    $("#ReportLabel").removeClass("text-danger");
+    $("#ReportLabel").addClass("text-info");
+    $("#ReportLabel").text(reportReasonLength + "/" + reportReasonMax);
+    $("#ReportReasonInput").val("");
+
+    $("#ReportBtn").addClass("disabled");
     setTimeout(function () {
         $("#ReportBtn").removeClass("disabled");
     }, 2000);

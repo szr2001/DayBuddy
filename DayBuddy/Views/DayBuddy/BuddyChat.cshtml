@@ -97,16 +97,22 @@
                 </div>
             </div>
 
-            <div class="modal-header">
-                <button class="btn rounded-6 outline-none-focus border-0 btn-secondary" data-bs-dismiss="modal"
-                        onclick="HideNameModal();">Cancel</button>
-                <a id="ReportBtn" class="nav-link btn rounded-6 outline-none-focus border-0 text-white fw-bold btn-danger" asp-area="" asp-controller="DayBuddy" asp-action="ReportDayBuddy">Report</a>
+            <div class="modal-header row">
+                <div class="text-center">
+                    <label id="ReportLabel" class="text-info"></label>
+                    <div class="form-group m-2 text-center">
+                        <label class="control-label">Reason (Optional)</label>
+                        <input id="ReportReasonInput" autocomplete="off" type="text" class="green-outline-focus form-control" />
+                    </div>
+                    <div class="d-flex justify-content-between m-2">
+                        <button class="btn rounded-6 outline-none-focus border-0 btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button onclick="SendReport()" id="ReportBtn" class="btn rounded-6 outline-none-focus border-0 text-white fw-bold btn-danger">Report</button>
+                    </div>
+                </div>
             </div>
-
         </div>
     </div>
 </div>
-
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/signalr/dist/browser/signalr.js"></script>

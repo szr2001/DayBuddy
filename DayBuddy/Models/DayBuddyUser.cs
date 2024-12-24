@@ -11,11 +11,10 @@ namespace DayBuddy.Models
         public string[] Interests { get; set; } = [];
         public string Gender { get; set; } = "";
         public float Score { get; set; } = 8;
-        public int Reports { get; set; }
         public string Sexuality { get; set; } = "";
         public string Country { get; set; } = "";
         public string City { get; set; } = "";
-        public Guid[] ReportedUsers { get; set; } = [];
+        public List<Guid> ReportedUsers { get; set; } = [];
         public DateTime LastTimeOnline { get; set; } = DateTime.UtcNow;
         public DateTime PurchasedPremium { get; set; } = DateTime.MinValue;
         public DateTime MatchedWithBuddy { get; set; } = DateTime.MinValue;

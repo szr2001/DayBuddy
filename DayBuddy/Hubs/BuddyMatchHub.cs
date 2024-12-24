@@ -50,7 +50,7 @@ namespace DayBuddy.Hubs
             string? localUserId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (localUserId == null) return;
 
-            string? groupId = groupsCacheService.GetUserGroup(localUserId);
+            string? groupId = groupsCacheService.GetUserGroupId(localUserId);
             if(groupId == null) return;
 
             BuddyMessage newMessage = new(message, Guid.Parse(localUserId),Guid.Parse(groupId));

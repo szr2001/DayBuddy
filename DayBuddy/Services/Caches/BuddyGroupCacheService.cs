@@ -73,7 +73,7 @@ namespace DayBuddy.Services.Caches
 
         public bool IsUserInGroup(string userId) => users.ContainsKey(userId);
 
-        public string? GetUserGroup(string userId)
+        public string? GetUserGroupId(string userId)
         {
             if (users.TryGetValue(userId, out var groupId))
             {

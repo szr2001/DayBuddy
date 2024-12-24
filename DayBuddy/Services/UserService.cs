@@ -4,6 +4,7 @@ using DayBuddy.Settings;
 using MongoDbGenericRepository.Attributes;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
+using Microsoft.AspNetCore.Identity;
 
 namespace DayBuddy.Services
 {
@@ -72,18 +73,6 @@ namespace DayBuddy.Services
             return cooldownLeft < TimeSpan.Zero ? TimeSpan.Zero : cooldownLeft;
         }
 
-        //public async Task<DayBuddyUser?> GetRandomUserByAgeAsync(int minAge, int maxAge)
-        //{
-        //    var random = new Random();
-        //    var filter = Builders<DayBuddyUser>.Filter.Gte(u => u.Age, minAge) &
-        //                 Builders<DayBuddyUser>.Filter.Lte(u => u.Age, maxAge);
-
-        //    var users = await usersCollection.Find(filter).ToListAsync();
-        //    if (users.Count == 0) return null;
-
-        //    return users[random.Next(users.Count)];
-        //}
-
         public UserProfile GetUserProfile(DayBuddyUser user)
         {
             UserProfile prfile = new()
@@ -100,13 +89,6 @@ namespace DayBuddy.Services
             };
             return prfile;
         }
-
-        //public async Task<List<DayBuddyUser>> GetUsersByInterestsAsync(string interest)
-        //{
-        //    var filter = Builders<DayBuddyUser>.Filter.AnyEq(u => u.Interests, interest);
-        //    var users = await usersCollection.Find(filter).ToListAsync();
-        //    return users;
-        //}
 
         public async Task<DayBuddyUser?> GetBuddyMatchForProfileAsync(DayBuddyUser selfUser)
         {
