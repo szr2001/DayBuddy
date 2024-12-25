@@ -11,14 +11,12 @@ namespace DayBuddy.Services
     public class UserService
     {
         private readonly IMongoCollection<DayBuddyUser> usersCollection;
-        private readonly ChatGroupsService chatGroupsService;
         private readonly IConfiguration config;
         private readonly TimeSpan FindBuddyCooldown;
         private readonly TimeSpan PremiumDuration;
-        public UserService(IMongoClient mongoClient, MongoDbConfig mongoDbConfig, IConfiguration config, ChatGroupsService chatGroupsService)
+        public UserService(IMongoClient mongoClient, MongoDbConfig mongoDbConfig, IConfiguration config)
         {
             this.config = config;
-            this.chatGroupsService = chatGroupsService;
             var database = mongoClient.GetDatabase(mongoDbConfig.Name);
             var collectionNameAttribute = Attribute.GetCustomAttribute(typeof(DayBuddyUser), typeof(CollectionNameAttribute)) as CollectionNameAttribute;
             string collectionName = collectionNameAttribute!.Name!;

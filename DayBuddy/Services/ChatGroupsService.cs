@@ -19,7 +19,8 @@ namespace DayBuddy.Services
         private readonly UserManager<DayBuddyUser> userManager;
         private readonly MessagesService messagesService;
         private readonly MessagesCacheService messagesCacheService;
-        public ChatGroupsService(IMongoClient mongoClient, MongoDbConfig config, BuddyGroupCacheService cacheService, UserManager<DayBuddyUser> userManager, MessagesService messagesService, IHubContext<BuddyMatchHub> buddyMathHubContext, MessagesCacheService messagesCacheService)
+        private readonly UserService userService;
+        public ChatGroupsService(IMongoClient mongoClient, MongoDbConfig config, BuddyGroupCacheService cacheService, UserManager<DayBuddyUser> userManager, MessagesService messagesService, IHubContext<BuddyMatchHub> buddyMathHubContext, MessagesCacheService messagesCacheService, UserService userService)
         {
             var database = mongoClient.GetDatabase(config.Name);
             var collectionNameAttribute = Attribute.GetCustomAttribute(typeof(BuddyChatGroup), typeof(CollectionNameAttribute)) as CollectionNameAttribute;
@@ -30,6 +31,7 @@ namespace DayBuddy.Services
             this.messagesService = messagesService;
             this.buddyMathHubContext = buddyMathHubContext;
             this.messagesCacheService = messagesCacheService;
+            this.userService = userService;
         }
 
         public async Task AddBuddyGroup(DayBuddyUser user1, DayBuddyUser user2)
@@ -38,13 +40,20 @@ namespace DayBuddy.Services
             
             await groupsCollection.InsertOneAsync(chatLobby);
 
-            user1.MatchedWithBuddy = DateTime.UtcNow;
             user1.BuddyChatGroupID = chatLobby.Id;
             user1.IsAvailable = false;
 
-            user2.MatchedWithBuddy = DateTime.UtcNow;
             user2.BuddyChatGroupID = chatLobby.Id;
             user2.IsAvailable = false;
+
+            //if one of them is a premium user, don't set the matchedWithBuddy value
+            //so both of them will not have cooldown if one of them unmatches
+            //so premium users can't just match with everyone and unmatch instantly to give the other user a cooldown
+            if(!userService.IsPremiumUser(user1) && !userService.IsPremiumUser(user2))
+            {
+                user2.MatchedWithBuddy = DateTime.UtcNow;
+                user1.MatchedWithBuddy = DateTime.UtcNow;
+            }
 
             await userManager.UpdateAsync(user1);
             await userManager.UpdateAsync(user2);
