@@ -76,6 +76,12 @@ namespace DayBuddy.Services
             return messages.OrderBy(m => m.CreatedDate).ToList();
         }
 
+        public async Task<int>GetMessagesCount()
+        {
+            var filter = Builders<BuddyMessage>.Filter.Empty;
+            return (int)await messagesCollection.CountDocumentsAsync(filter);
+        }
+
         public async Task DeleteMesagesInGroupAsync(Guid groupID)
         {
             var filter = Builders<BuddyMessage>.Filter.Eq(m => m.ChatGroupId, groupID);

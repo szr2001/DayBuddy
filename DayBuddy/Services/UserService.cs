@@ -31,6 +31,26 @@ namespace DayBuddy.Services
             FindBuddyCooldown = new(hoursCooldown, 0, 0);
         }
 
+        public async Task<int> GetUsersCount()
+        {
+            var filter = Builders<DayBuddyUser>.Filter.Empty;
+            return (int)await usersCollection.CountDocumentsAsync(filter);
+        }
+
+        public async Task<int> GetActiveUsersCount()
+        {
+            var oneDayAgo = DateTime.UtcNow.AddDays(-1);
+            var filter = Builders<DayBuddyUser>.Filter.Gte(u => u.LastTimeOnline, oneDayAgo);
+            return (int)await usersCollection.CountDocumentsAsync(filter);
+        }
+
+        public async Task<int> GetPremiumUsersCount()//needs testing
+        {
+            var premiumPurchaseDate = DateTime.UtcNow.AddDays(-PremiumDuration.Days);
+            var filter = Builders<DayBuddyUser>.Filter.Gte(u => u.PurchasedPremium, premiumPurchaseDate);
+            return (int)await usersCollection.CountDocumentsAsync(filter);
+        }
+
         public bool IsPremiumUser(DayBuddyUser user)
         {
             if(user.PurchasedPremium == DateTime.MinValue) return false;

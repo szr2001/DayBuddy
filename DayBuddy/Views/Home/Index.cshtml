@@ -1,4 +1,6 @@
-﻿@{
+﻿
+@inject DayBuddy.Services.Caches.StatisticsCache statistics;
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -31,6 +33,84 @@
             <div class="col-md-6">
                 <img src="/Assets/Images/fists.jpg"
                      class="img-fluid rounded-3 shadow" style="object-fit: cover; height: 100%; width: 100%;" alt="Fists">
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid bg-light py-5">
+        <div class="row align-items-center m-2 p-1 border rounded-6 shadow text-center">
+            <label class="fw-bold fs-3 text-warp" style="font-family: 'Segoe UI';">Full Transparency!</label>
+            <div class="p-2">
+                <div class="row row-cols-auto justify-content-center">
+                    <div class="border rounded-6 m-1 p-1">
+                        <div class="row">
+                            <label class="fw-bold text-warp" style="font-family: 'Segoe UI';">Total Users</label>
+                            <label class="text-warp" style="font-family: 'Segoe UI';">@statistics.TotalUsers</label>
+                        </div>
+                    </div>
+                    <div class="border rounded-6 m-1 p-1">
+                        <div class="row">
+                            <label class="fw-bold text-warp" style="font-family: 'Segoe UI';">Active Users</label>
+                            <label class="text-warp" style="font-family: 'Segoe UI';">@statistics.ActiveUsers</label>
+                        </div>
+                    </div>
+                    <div class="border rounded-6 m-1 p-1">
+                        <div class="row">
+                            <label class="fw-bold text-warp" style="font-family: 'Segoe UI';">Premium Users</label>
+                            <label class="text-warp" style="font-family: 'Segoe UI';">@statistics.PremiumUsers</label>
+                        </div>
+                    </div>
+                    <div class="border rounded-6 m-1 p-1">
+                        <div class="row">
+                            <label class="fw-bold text-warp" style="font-family: 'Segoe UI';">Total Messages Sent   </label>
+                            <label class="text-warp" style="font-family: 'Segoe UI';">@statistics.TotalMessagesSent</label>
+                        </div>
+                    </div>
+                    <div class="border rounded-6 m-1 p-1">
+                        <div class="row">
+                            <label class="fw-bold text-warp" style="font-family: 'Segoe UI';">Total Reports</label>
+                            <label class="text-warp" style="font-family: 'Segoe UI';">@statistics.TotalReports</label>
+                        </div>
+                    </div>
+                    <div class="border rounded-6 m-1 p-1">
+                        <div class="row">
+                            <label class="fw-bold text-warp" style="font-family: 'Segoe UI';">Total Bans</label>
+                            <label class="text-warp" style="font-family: 'Segoe UI';">@statistics.TotalBans</label>
+                        </div>
+                    </div>
+                    <div class="border rounded-6 m-1 p-1">
+                        <div class="row">
+                            <label class="fw-bold text-warp" style="font-family: 'Segoe UI';">Total Revenue</label>
+                            <label class="text-warp" style="font-family: 'Segoe UI';">€@statistics.TotalRevenue</label>
+                        </div>
+                    </div>
+                    <div class="border rounded-6 m-1 p-1">
+                        <div class="row">
+                            <label class="fw-bold text-warp" style="font-family: 'Segoe UI';">Total Expenses</label>
+                            <label class="text-warp" style="font-family: 'Segoe UI';">€@statistics.TotalExpenses</label>
+                        </div>
+                    </div>
+                    <div class="border rounded-6 m-1 p-1">
+                        <div class="row">
+                            <label class="fw-bold text-warp" style="font-family: 'Segoe UI';">Expected Expenses</label>
+                            <label class="text-warp" style="font-family: 'Segoe UI';">€@statistics.ExpectedExpenses</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="border rounded-6 col m-2 p-1">
+                        <div class="row">
+                            <label class="fw-bold text-warp" style="font-family: 'Segoe UI';">DayBudduy Future</label>
+                            <label class="text-warp" style="font-family: 'Segoe UI';">@statistics.DayBudduyFuture</label>
+                        </div>
+                    </div>
+                    <div class="border rounded-6 col m-2 p-1">
+                    <div class="row">
+                        <label class="fw-bold text-warp" style="font-family: 'Segoe UI';">Profits</label>
+                            <label class="text-warp" style="font-family: 'Segoe UI';">€@statistics.Profits</label>
+                    </div>
+                </div>
+                </div>
             </div>
         </div>
     </div>

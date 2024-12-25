@@ -39,6 +39,7 @@ namespace DayBuddy
             //It must be applied like the [Authorize] attribute
             builder.Services.AddScoped<EnsureDayBuddyUserNotNullFilter>();
 
+            builder.Services.AddSingleton<StatisticsCache>();
             builder.Services.AddSingleton<BuddyGroupCacheService>();
             builder.Services.AddSingleton<MessagesCacheService>();
             builder.Services.AddSingleton<ProfanityFilterService>();
@@ -49,6 +50,7 @@ namespace DayBuddy
             builder.Services.AddHostedService<DbRolesPopulationBgService>();
             builder.Services.AddHostedService<MessagesCacheFlushBgService>();
             builder.Services.AddHostedService<DeleteInactiveUsersBgService>();
+            builder.Services.AddHostedService<StatisticsCachePopulationBgService>();
 
             //More requirements for Authorize attribute
             //like [Authorize("EmailVerified")] to only allow access to user who have email verified

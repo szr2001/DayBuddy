@@ -18,6 +18,12 @@ namespace DayBuddy.Services
             reportsCollection = database.GetCollection<UserReport>(collectionName);
         }
 
+        public async Task<int>GetReportsCount()
+        {
+            var filter = Builders<UserReport>.Filter.Empty;
+            return (int)await reportsCollection.CountDocumentsAsync(filter);
+        }
+
         public async Task InsertReport(UserReport report)
         {
             await reportsCollection.InsertOneAsync(report);
