@@ -1,4 +1,4 @@
-﻿
+﻿using DayBuddy.Services;
 using DayBuddy.Services.Caches;
 
 namespace DayBuddy.BackgroundServices
@@ -13,9 +13,18 @@ namespace DayBuddy.BackgroundServices
             this.scopeFactory = scopeFactory;
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
-            return Task.CompletedTask;
+            using (var scope = scopeFactory.CreateScope())
+            {
+                UserService userService = scope.ServiceProvider.GetRequiredService<UserService>();
+                UserReportService userReportService = scope.ServiceProvider.GetRequiredService<UserReportService>();
+
+                statisticsCache.TotalUsers = await userService.GetUsersCount();
+                statisticsCache.ActiveUsers = await userService.GetActiveUsersCount();
+                statisticsCache.PremiumUsers = await userService.GetPremiumUsersCount();
+                statisticsCache.TotalReports = await userReportService.GetReportsCount();
+            }
         }
 
         public Task StopAsync(CancellationToken cancellationToken)

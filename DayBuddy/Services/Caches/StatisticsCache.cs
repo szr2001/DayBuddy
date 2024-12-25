@@ -5,7 +5,6 @@
         public int TotalUsers { get; set; }
         public int ActiveUsers { get; set; }
         public int PremiumUsers { get; set; }
-        public int TotalMessagesSent { get; set; }
         public int TotalReports { get; set; }
         public int TotalBans { get; set; }
         public int TotalRevenue { get; set; }
