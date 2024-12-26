@@ -31,6 +31,7 @@ namespace DayBuddy
             builder.Services.AddScoped<ChatGroupsService>();
             builder.Services.AddScoped<UserReportService>();
             builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<StatsService>();
             builder.Services.AddScoped<FeedbackService>();
             builder.Services.AddScoped<BannedUsersService>();
 

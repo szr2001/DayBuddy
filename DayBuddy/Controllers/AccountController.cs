@@ -1,6 +1,7 @@
 ﻿using DayBuddy.Filters;
 using DayBuddy.Models;
 using DayBuddy.Services;
+using DayBuddy.Services.Caches;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,13 +18,15 @@ namespace DayBuddy.Controllers
         private readonly ChatGroupsService chatGroupsService;
         private readonly UserService userService;
         private readonly GmailSMTPEmailService gmailService;
-        public AccountController(UserManager<DayBuddyUser> userManager, SignInManager<DayBuddyUser> signInManager, UserService userService, GmailSMTPEmailService gmailService, ChatGroupsService chatGroupsService)
+        private readonly StatisticsCache statisticsCache;
+        public AccountController(UserManager<DayBuddyUser> userManager, SignInManager<DayBuddyUser> signInManager, UserService userService, GmailSMTPEmailService gmailService, ChatGroupsService chatGroupsService, StatisticsCache statisticsCache)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.userService = userService;
             this.gmailService = gmailService;
             this.chatGroupsService = chatGroupsService;
+            this.statisticsCache = statisticsCache;
         }
 
         public IActionResult Login()
@@ -300,7 +303,8 @@ namespace DayBuddy.Controllers
                             );
 
                         await signInManager.SignInAsync(newUser, false);
-
+                        statisticsCache.ActiveUsers++;
+                        statisticsCache.TotalUsers++;
                         return RedirectToAction(nameof(Profile));
                     }
                     else

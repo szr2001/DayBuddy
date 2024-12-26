@@ -1,4 +1,5 @@
 ﻿using DayBuddy.Models;
+using DayBuddy.Services.Caches;
 using DayBuddy.Settings;
 using Microsoft.AspNetCore.Identity;
 using MongoDB.Driver;
@@ -9,13 +10,15 @@ namespace DayBuddy.Services
     public class UserReportService
     {
         private readonly IMongoCollection<UserReport> reportsCollection;
-        public UserReportService(IMongoClient mongoClient, MongoDbConfig mongoDbConfig)
+        private readonly StatisticsCache statisticsCache;
+        public UserReportService(IMongoClient mongoClient, MongoDbConfig mongoDbConfig, StatisticsCache statisticsCache)
         {
             var database = mongoClient.GetDatabase(mongoDbConfig.Name);
             var collectionNameAttribute = Attribute.GetCustomAttribute(typeof(UserReport), typeof(CollectionNameAttribute)) as CollectionNameAttribute;
             string collectionName = collectionNameAttribute!.Name!;
 
             reportsCollection = database.GetCollection<UserReport>(collectionName);
+            this.statisticsCache = statisticsCache;
         }
 
         public async Task<int>GetReportsCount()
@@ -26,6 +29,7 @@ namespace DayBuddy.Services
 
         public async Task InsertReport(UserReport report)
         {
+            statisticsCache.TotalReports++;
             await reportsCollection.InsertOneAsync(report);
         }
 
@@ -33,7 +37,9 @@ namespace DayBuddy.Services
         {
             var filter = Builders<UserReport>.Filter.Eq(u => u.ReportedUserId, user.Id);
 
-            await reportsCollection.DeleteManyAsync(filter);
+            var result = await reportsCollection.DeleteManyAsync(filter);
+
+            statisticsCache.TotalReports -= (int)result.DeletedCount;
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using DayBuddy.Services;
+﻿using DayBuddy.Models;
+using DayBuddy.Services;
 using DayBuddy.Services.Caches;
+using NuGet.Protocol;
 
 namespace DayBuddy.BackgroundServices
 {
@@ -19,17 +21,35 @@ namespace DayBuddy.BackgroundServices
             {
                 UserService userService = scope.ServiceProvider.GetRequiredService<UserService>();
                 UserReportService userReportService = scope.ServiceProvider.GetRequiredService<UserReportService>();
+                StatsService statsService = scope.ServiceProvider.GetRequiredService<StatsService>();
+
+                DayBuddyStats stats = await statsService.RetrieveStatsAsync();
 
                 statisticsCache.TotalUsers = await userService.GetUsersCount();
                 statisticsCache.ActiveUsers = await userService.GetActiveUsersCount();
                 statisticsCache.PremiumUsers = await userService.GetPremiumUsersCount();
                 statisticsCache.TotalReports = await userReportService.GetReportsCount();
+                statisticsCache.ExpectedExpenses = stats.ExpectedExpenses;
+                statisticsCache.TotalExpenses = stats.TotalExpenses;
+                statisticsCache.TotalRevenue = stats.TotalRevenue;
             }
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
-            return Task.CompletedTask;
+            using (var scope = scopeFactory.CreateScope())
+            {
+                StatsService statsService = scope.ServiceProvider.GetRequiredService<StatsService>();
+
+                DayBuddyStats stats = new() 
+                {
+                    ExpectedExpenses = statisticsCache.ExpectedExpenses,
+                    TotalExpenses = statisticsCache.TotalExpenses,
+                    TotalRevenue = statisticsCache.TotalRevenue,
+                    LastTimeUpdated = DateTime.UtcNow,
+                };
+                await statsService.UpdateStatsAsync(stats);
+            }
         }
     }
 }

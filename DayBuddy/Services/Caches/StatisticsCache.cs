@@ -1,4 +1,6 @@
-﻿namespace DayBuddy.Services.Caches
+﻿using System.Runtime.InteropServices;
+
+namespace DayBuddy.Services.Caches
 {
     public class StatisticsCache
     {
@@ -7,10 +9,10 @@
         public int PremiumUsers { get; set; }
         public int TotalReports { get; set; }
         public int TotalBans { get; set; }
-        public int TotalRevenue { get; set; }
-        public int TotalExpenses { get; set; }
-        public int ExpectedExpenses { get; set; }
-        public int Profits 
+        public float TotalRevenue { get; set; }
+        public float TotalExpenses { get; set; }
+        public float ExpectedExpenses { get; set; }
+        public float Profits 
         {
             get 
             {

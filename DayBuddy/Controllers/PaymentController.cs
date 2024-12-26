@@ -1,6 +1,7 @@
 ﻿using DayBuddy.Filters;
 using DayBuddy.Models;
 using DayBuddy.Services;
+using DayBuddy.Services.Caches;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +19,12 @@ namespace DayBuddy.Controllers
     {
         private readonly UserManager<DayBuddyUser> userManager;
         private readonly UserService userService;
-        public PaymentController(UserManager<DayBuddyUser> userManager, UserService userService)
+        private readonly StatisticsCache statisticsCache;
+        public PaymentController(UserManager<DayBuddyUser> userManager, UserService userService, StatisticsCache statisticsCache)
         {
             this.userManager = userManager;
             this.userService = userService;
+            this.statisticsCache = statisticsCache;
         }
 
         public IActionResult Premium()
@@ -47,7 +50,8 @@ namespace DayBuddy.Controllers
                     if (!userService.IsPremiumUser(user))
                     {
                         user.PurchasedPremium = DateTime.UtcNow;
-
+                        statisticsCache.PremiumUsers++;
+                        statisticsCache.TotalRevenue = +8;
                         await userManager.UpdateAsync(user);
                     }
                     return RedirectToAction("Profile","Account");
