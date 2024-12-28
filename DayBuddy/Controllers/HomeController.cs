@@ -1,4 +1,7 @@
 using DayBuddy.Models;
+using DayBuddy.Services;
+using DayBuddy.Services.Caches;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Diagnostics;
@@ -8,11 +11,14 @@ namespace DayBuddy.Controllers
     [EnableRateLimiting("GeneralPolicy")]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly ILogger<HomeController> logger;
+        private readonly UserManager<DayBuddyUser> userManager;
+        private readonly StatisticsCache statisticsCache;
+        public HomeController(ILogger<HomeController> logger, UserManager<DayBuddyUser> userManager, StatisticsCache statisticsCache)
         {
-            _logger = logger;
+            this.logger = logger;
+            this.userManager = userManager;
+            this.statisticsCache = statisticsCache;
         }
 
         public IActionResult Index()
@@ -20,11 +26,22 @@ namespace DayBuddy.Controllers
             return View();
         }
 
-        public IActionResult GetStarted()
+        public async Task<IActionResult> GetStarted()
         {
             if (User.Identity != null && User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Profile","Account");
+                DayBuddyUser? user = await userManager.GetUserAsync(User);
+                if(user != null)
+                {
+                    DateTime time = DateTime.UtcNow.AddDays(-1);
+                    if(user.LastTimeOnline < time)
+                    {
+                        statisticsCache.ActiveUsers++;
+                    }
+                    user.LastTimeOnline = DateTime.UtcNow;
+                    await userManager.UpdateAsync(user);
+                    return RedirectToAction("Profile","Account");
+                }
             }
             return View();
         }
