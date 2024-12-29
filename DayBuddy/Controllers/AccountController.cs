@@ -243,6 +243,9 @@ namespace DayBuddy.Controllers
 
             await signInManager.SignOutAsync();
 
+            statisticsCache.ActiveUsers--;
+            statisticsCache.TotalUsers--;
+
             await userManager.DeleteAsync(user);
 
             return RedirectToAction("Index","Home");
@@ -289,7 +292,6 @@ namespace DayBuddy.Controllers
                     if (result.Succeeded)
                     {
                         await userManager.AddToRoleAsync(newUser, "User");
-                        await userManager.AddToRoleAsync(newUser, "Admin");
 
                         var token = await userManager.GenerateEmailConfirmationTokenAsync(newUser);
 
