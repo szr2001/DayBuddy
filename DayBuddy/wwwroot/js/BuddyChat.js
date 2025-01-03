@@ -1,6 +1,8 @@
 ﻿const loggedInUserId = $("#loggedInUserId").val();
 const $MessagesList = $("#messagesList");
 const $BuddyChatTimer = $("#buddyChatTimer");
+const $BuddyProfile = $("#BuddyProfile")
+const $UserChat = $("#UserChat")
 var connection = new signalR.HubConnectionBuilder().withUrl("/BuddyHub").build();
 var reportReasonMax = 20;
 var reportReasonLength = 0;
@@ -23,7 +25,18 @@ connection.on("ReceiveMessage", function (user, message) {
 });
 
 function cooldownEndCallback() {
+    $BuddyChatTimer.addClass("text-grass-green");
+    $BuddyChatTimer.removeClass("text-black-50");
+}
 
+function toggleBuddyProfile() {
+    console.log("RAWR");
+    if ($BuddyProfile.hasClass("d-none")) {
+        $BuddyProfile.removeClass("d-none");
+    }
+    else {
+        $BuddyProfile.addClass("d-none");
+    }
 }
 
 function startTimer() {

@@ -300,7 +300,7 @@ namespace DayBuddy.Controllers
                         bool emailSent = await gmailService.TrySendEmailAsync
                             (
                                 user.Email!,
-                                "DayBuddy Reset Password",
+                                "DayBuddy Verify Email",
                                 $"<html><body>Welcome to DayBuddy, Verify your account by clicking this link: <a href = '{confirmationLink}'>{confirmationLink}</a> </html></body>"
                             );
 
