@@ -22,6 +22,8 @@ namespace DayBuddy.BackgroundServices
             {
                 ChatGroupsService chatGroupsService = scope.ServiceProvider.GetRequiredService<ChatGroupsService>();
                 BuddyGroupCacheService buddyGroupCacheService = scope.ServiceProvider.GetRequiredService<BuddyGroupCacheService>();
+                MessagesCacheService messagesCacheService = scope.ServiceProvider.GetRequiredService<MessagesCacheService>();
+                MessagesService messagesService = scope.ServiceProvider.GetRequiredService<MessagesService>();
 
                 List<BuddyChatGroup> groups = await chatGroupsService.GetActiveGroupsAsync();
 
@@ -30,6 +32,8 @@ namespace DayBuddy.BackgroundServices
                     foreach (var user in group.Users)
                     {
                         buddyGroupCacheService.AddUser(user.ToString(), group.Id.ToString());
+                        int groupMessagesCount = await messagesService.GetGroupMessagesCountAsync(group.Id);
+                        messagesCacheService.SetGroupMessageCount(group.Id, groupMessagesCount);
                     }
                 }
             }

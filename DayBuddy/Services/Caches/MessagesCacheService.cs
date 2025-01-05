@@ -1,33 +1,46 @@
 ﻿using DayBuddy.Models;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace DayBuddy.Services.Caches
 {
     public class MessagesCacheService
     {
         //use a dictionary of groupID and a list of messages
-        private Dictionary<Guid,List<BuddyMessage>> localCache = new();
+        private Dictionary<Guid, GroupMessageCache> localCache = new();
 
         public void InsertMessage(Guid groupId, BuddyMessage message)
         {
+            CreateGroupCache(groupId);
+
+            localCache[groupId].CacheMessages.Add(message);
+        }
+
+        public void CreateGroupCache(Guid groupId)
+        {
             if (!localCache.ContainsKey(groupId))
             {
-                localCache.Add(groupId, new List<BuddyMessage>());
+                localCache.Add(groupId, new GroupMessageCache());
             }
+        }
 
-            localCache[groupId].Add(message);
+        public void SetGroupMessageCount(Guid groupId, int count)
+        {
+            CreateGroupCache(groupId);
+
+            localCache[groupId].DbTotalMessages = count;
         }
 
         public List<BuddyMessage> GetAllCache()
         {
-            return localCache.Values.SelectMany(list => list).ToList();
+            return localCache.Values.SelectMany(GroupMessage => GroupMessage.CacheMessages).ToList();
         }
 
         public List<BuddyMessage> GetGroupCache(Guid groupId)
         {
             if (!localCache.ContainsKey(groupId)) return [];
 
-            return localCache[groupId];
+            return localCache[groupId].CacheMessages;
         }
 
         public void RemoveCache(Guid groupId)
@@ -37,11 +50,11 @@ namespace DayBuddy.Services.Caches
             localCache.Remove(groupId);
         }
 
-        public void ClearCache(Guid groupId)
+        public void MarkCacheAsInsertedIntoDb(Guid groupId)
         {
             if (!localCache.ContainsKey(groupId)) return;
-
-            localCache[groupId].Clear();
+            localCache[groupId].DbTotalMessages += localCache[groupId].CacheMessages.Count;
+            localCache[groupId].CacheMessages.Clear();
         }
 
         public void ClearAll()
@@ -49,11 +62,29 @@ namespace DayBuddy.Services.Caches
             localCache.Clear();
         }
 
-        public int GetCacheSize(Guid groupId)
+        public int GetGroupDbMessageCount(Guid groupId)
         {
             if (!localCache.ContainsKey(groupId)) return 0;
 
-            return localCache[groupId].Count;
+            return localCache[groupId].DbTotalMessages;
+        }
+
+        public int GetGroupCacheSize(Guid groupId)
+        {
+            if (!localCache.ContainsKey(groupId)) return 0;
+
+            return localCache[groupId].CacheMessages.Count;
+        }
+    }
+
+    public class GroupMessageCache
+    {
+        public List<BuddyMessage> CacheMessages;
+        public int DbTotalMessages;
+
+        public GroupMessageCache()
+        {
+            CacheMessages = new();
         }
     }
 }

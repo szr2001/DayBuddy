@@ -29,6 +29,7 @@ namespace DayBuddy.Services
         {
             var filter = Builders<DayBuddyStats>.Filter.Empty;
 
+            //replaces the id too, bad
             await statsCollection.ReplaceOneAsync
                 (
                     filter,

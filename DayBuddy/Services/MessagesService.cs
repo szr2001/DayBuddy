@@ -12,16 +12,28 @@ namespace DayBuddy.Services
         private readonly IMongoCollection<BuddyMessage> messagesCollection;
         private readonly MessagesCacheService messagesCacheService;
         private readonly UserManager<DayBuddyUser> userManager;
-        private readonly int WriteToDbThershold = 5;
-        public MessagesService(IMongoClient mongoClient, MongoDbConfig nongoConfig, MessagesCacheService messagesCacheService, UserManager<DayBuddyUser> userManager)
+        private readonly IConfiguration config;
+        private readonly int CacheMessagesWriteToDbThershold;
+        private readonly int MaxMessagesInGroup;
+        public MessagesService(IMongoClient mongoClient, MongoDbConfig nongoConfig, MessagesCacheService messagesCacheService, UserManager<DayBuddyUser> userManager, IConfiguration config)
         {
             this.messagesCacheService = messagesCacheService;
             this.userManager = userManager;
+            this.config = config;
+
+            CacheMessagesWriteToDbThershold = config.GetSection("CacheMessagesWriteToDbThershold").Get<int>();
+            MaxMessagesInGroup = config.GetSection("MaxMessagesInGroup").Get<int>();
 
             var database = mongoClient.GetDatabase(nongoConfig.Name);
             var collectionNameAttribute = Attribute.GetCustomAttribute(typeof(BuddyMessage), typeof(CollectionNameAttribute)) as CollectionNameAttribute;
             string collectionName = collectionNameAttribute!.Name!;
             messagesCollection = database.GetCollection<BuddyMessage>(collectionName);
+        }
+
+        public async Task<int> GetGroupMessagesCountAsync(Guid groupId)
+        {
+            var filter = Builders<BuddyMessage>.Filter.Eq(m => m.ChatGroupId, groupId);
+            return (int)await messagesCollection.CountDocumentsAsync(filter);
         }
 
         public async Task<List<GroupMessage>> GetGroupMessageInGroupAsync(Guid groupId, DayBuddyUser authUser, int offset, int amount)
@@ -46,7 +58,7 @@ namespace DayBuddy.Services
         public async Task<List<BuddyMessage>> GetBuddyMessageInGroupAsync(Guid groupId, int offset, int amount)
         {
             List<BuddyMessage> messages = new();
-            int cacheSize = messagesCacheService.GetCacheSize(groupId);
+            int cacheSize = messagesCacheService.GetGroupCacheSize(groupId);
 
             if (cacheSize > 0 && cacheSize > offset)
             {
@@ -96,10 +108,43 @@ namespace DayBuddy.Services
         public async Task CacheMessageAsync(BuddyMessage message)
         {
             messagesCacheService.InsertMessage(message.ChatGroupId, message);
-            if(messagesCacheService.GetCacheSize(message.ChatGroupId) >= WriteToDbThershold)
+            if(messagesCacheService.GetGroupCacheSize(message.ChatGroupId) >= CacheMessagesWriteToDbThershold)
             {
                 await InsertCacheMessagesAsync(messagesCacheService.GetGroupCache(message.ChatGroupId));
-                messagesCacheService.ClearCache(message.ChatGroupId);
+                messagesCacheService.MarkCacheAsInsertedIntoDb(message.ChatGroupId);
+                await DeleteHalfOfMessagesInGroup(message.ChatGroupId);
+            }
+            Console.WriteLine($"Total Group Messages {messagesCacheService.GetGroupDbMessageCount(message.ChatGroupId)}");
+            Console.WriteLine($"Total Group Cache Messages {messagesCacheService.GetGroupCacheSize(message.ChatGroupId)}");
+        }
+
+        private async Task DeleteHalfOfMessagesInGroup(Guid groupId)
+        {
+            int groupMessagesCount = messagesCacheService.GetGroupDbMessageCount(groupId);
+
+            if (groupMessagesCount > MaxMessagesInGroup)
+            {
+                Console.WriteLine("Messages Threshold meet");
+                int groupRemoveMessagesCount = (int)(groupMessagesCount * 0.6);
+
+                //filter based on groupID and sort based on creation date
+                var filter = Builders<BuddyMessage>.Filter.Eq(mess => mess.ChatGroupId, groupId);
+                var sort = Builders<BuddyMessage>.Sort.Ascending(msg => msg.CreatedDate);
+
+                //find the messages that fit the query and limit to the removeMesscount
+                var messagesToDelete = await messagesCollection
+                    .Find(filter)
+                    .Sort(sort)
+                    .Limit(groupRemoveMessagesCount)
+                    .Project(msg => msg.Id)
+                    .ToListAsync();
+
+                //create a filter to check if the message Id is inside the list of messages id to delete
+                var deleteFilter = Builders<BuddyMessage>.Filter.In(msg => msg.Id, messagesToDelete);
+                var result = await messagesCollection.DeleteManyAsync(deleteFilter);
+                Console.WriteLine($"Deleted: {result.DeletedCount}");
+                messagesCacheService.SetGroupMessageCount(groupId, groupRemoveMessagesCount);
+
             }
         }
 
