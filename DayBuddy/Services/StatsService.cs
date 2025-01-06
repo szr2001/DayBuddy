@@ -22,7 +22,14 @@ namespace DayBuddy.Services
         {
             var filter = Builders<DayBuddyStats>.Filter.Empty;
 
-           return await statsCollection.Find(filter).FirstOrDefaultAsync();
+            DayBuddyStats stats = await statsCollection.Find(filter).FirstOrDefaultAsync();
+
+            if(stats == null)
+            {
+                stats = new();
+            }
+
+            return stats;
         }
 
         public async Task UpdateStatsAsync(DayBuddyStats newStats)

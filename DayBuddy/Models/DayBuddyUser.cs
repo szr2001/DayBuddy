@@ -16,7 +16,7 @@ namespace DayBuddy.Models
         public string City { get; set; } = "";
         public List<Guid> ReportedUsers { get; set; } = [];
         public DateTime LastTimeOnline { get; set; } = DateTime.UtcNow;
-        public DateTime PurchasedPremium { get; set; } = DateTime.MinValue;
+        public DateTime PremiumExpiryDate { get; set; } = DateTime.MinValue;
         public DateTime MatchedWithBuddy { get; set; } = DateTime.MinValue;
         public bool IsAvailable { get; set; }
         public Guid BuddyChatGroupID{ get; set; } = Guid.Empty;

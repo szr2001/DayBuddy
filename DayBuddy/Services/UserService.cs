@@ -13,7 +13,6 @@ namespace DayBuddy.Services
         private readonly IMongoCollection<DayBuddyUser> usersCollection;
         private readonly IConfiguration config;
         private readonly TimeSpan FindBuddyCooldown;
-        private readonly TimeSpan PremiumDuration;
         public UserService(IMongoClient mongoClient, MongoDbConfig mongoDbConfig, IConfiguration config)
         {
             this.config = config;
@@ -23,9 +22,6 @@ namespace DayBuddy.Services
 
             usersCollection = database.GetCollection<DayBuddyUser>(collectionName);
             //write the whole timespan inside the appsettings
-
-            int premiumDays = config.GetValue<int>("PremiumDurationDays");
-            PremiumDuration = FindBuddyCooldown = new(premiumDays, 0, 0, 0);
 
             int hoursCooldown = config.GetValue<int>("FindBuddyCooldownHours");
             FindBuddyCooldown = new(hoursCooldown, 0, 0);
@@ -44,20 +40,17 @@ namespace DayBuddy.Services
             return (int)await usersCollection.CountDocumentsAsync(filter);
         }
 
-        public async Task<int> GetPremiumUsersCount()//needs testing
+        public async Task<int> GetPremiumUsersCount()
         {
-            var premiumPurchaseDate = DateTime.UtcNow.AddDays(-PremiumDuration.Days);
-            var filter = Builders<DayBuddyUser>.Filter.Gte(u => u.PurchasedPremium, premiumPurchaseDate);
+            var filter = Builders<DayBuddyUser>.Filter.Gte(u => u.PremiumExpiryDate, DateTime.UtcNow);
             return (int)await usersCollection.CountDocumentsAsync(filter);
         }
 
         public bool IsPremiumUser(DayBuddyUser user)
         {
-            if(user.PurchasedPremium == DateTime.MinValue) return false;
+            if(user.PremiumExpiryDate == DateTime.MinValue) return false;
 
-            TimeSpan time = DateTime.UtcNow - user.PurchasedPremium;
-
-            return time < PremiumDuration;
+            return user.PremiumExpiryDate > DateTime.UtcNow;
         }
 
         public bool IsUserOnBuddySearchCooldown(DayBuddyUser user)
@@ -71,13 +64,11 @@ namespace DayBuddy.Services
 
         public TimeSpan GetUserPremiumDurationLeft(DayBuddyUser user)
         {
-            if (user.PurchasedPremium == DateTime.MinValue) return TimeSpan.Zero;
+            if (user.PremiumExpiryDate == DateTime.MinValue) return TimeSpan.Zero;
 
-            TimeSpan time = DateTime.UtcNow - user.PurchasedPremium;
+            TimeSpan time =  user.PremiumExpiryDate - DateTime.UtcNow;
 
-            TimeSpan cooldownLeft = PremiumDuration - time;
-
-            return cooldownLeft < TimeSpan.Zero ? TimeSpan.Zero : cooldownLeft;
+            return time < TimeSpan.Zero ? TimeSpan.Zero : time;
         }
 
         public TimeSpan GetUserBuddySearchCooldown(DayBuddyUser user)

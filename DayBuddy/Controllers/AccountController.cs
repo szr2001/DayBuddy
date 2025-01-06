@@ -330,7 +330,7 @@ namespace DayBuddy.Controllers
             {
                 return RedirectToAction(nameof(Login));
             }
-            user.PurchasedPremium = DateTime.MinValue;
+            user.PremiumExpiryDate = DateTime.MinValue;
 
             await userManager.UpdateAsync(user);
             //test

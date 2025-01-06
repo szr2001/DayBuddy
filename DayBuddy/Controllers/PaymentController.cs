@@ -49,9 +49,9 @@ namespace DayBuddy.Controllers
                 {
                     if (!userService.IsPremiumUser(user))
                     {
-                        user.PurchasedPremium = DateTime.UtcNow;
+                        user.PremiumExpiryDate = DateTime.UtcNow.AddDays(30);
                         statisticsCache.PremiumUsers++;
-                        statisticsCache.TotalRevenue = +8;
+                        statisticsCache.TotalRevenue += 8;
                         await userManager.UpdateAsync(user);
                     }
                     return RedirectToAction("Profile","Account");
