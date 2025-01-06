@@ -221,7 +221,7 @@ function ReadProfileOptions() {
             Genders.forEach(function (item) {
                 var genderBtn = $("<button></button>")
                     .text(item)
-                    .addClass("p-1 m-1 background-grass-green zoom-in-hover fw-bold text-white text-truncate rounded-3 border")
+                    .addClass("p-1 m-1 background-grass-green zoom-in-hover fw-bold text-white text-truncate rounded-6 border-0")
                     .on("click", function () {
                         EditGender(item);
                     });
