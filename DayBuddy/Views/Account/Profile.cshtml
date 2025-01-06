@@ -91,23 +91,17 @@
      <div class="modal-dialog">
          <div class="modal-content">
 
-            <div class="modal-header">
-                <h5 class="fw-bold">Edit Name</h5>
-            </div>
-
             <div class="modal-body text-center">
                 <div class="text-center">
                     <div class="form-group m-2">
-                        <label class="control-label">New Name</label>
-                        <input name="newName" id="NewNameInput" type="text" class="green-outline-focus form-control" />
+                        <label class="control-label fs-4">Select your name</label>
+                        <input name="newName" id="NewNameInput" autocomplete="off" type="text" class="green-outline-focus form-control" />
                         <label id="NewNameErrorLabel" class="text-danger"></label>
                     </div>
                 </div>
             </div>
 
-            <div class="modal-header">
-                <button class="btn rounded-6 outline-none-focus border-0 btn-secondary" data-bs-dismiss="modal"
-                onclick="HideNameModal();">Close</button>
+            <div class="modal-header justify-content-center">
                 <button class="btn rounded-6 outline-none-focus border-0 text-white background-grass-green btn-outline-success"
                         onclick="EditName();">Save</button>
             </div>
@@ -119,24 +113,17 @@
 <div class="modal" id="ChangeAgeModal">
     <div class="modal-dialog">
         <div class="modal-content">
-
-            <div class="modal-header">
-                <h5 class="fw-bold">Edit Age</h5>
-            </div>
-
             <div class="modal-body text-center">
                 <div class="text-center">
                     <div class="form-group m-2">
-                        <label class="control-label">New Age</label>
+                        <label class="control-label fs-4">Select your age</label>
                         <input name="newAge" id="NewAgeInput" type="number" class="green-outline-focus form-control" />
                         <label id="NewAgeErrorLabel" class="text-danger"></label>
                     </div>
                 </div>
             </div>
 
-            <div class="modal-header">
-                <button class="btn rounded-6 outline-none-focus border-0 btn-secondary" data-bs-dismiss="modal"
-                        onclick="HideAgeModal();">Close</button>
+            <div class="modal-header justify-content-center">
                 <button class="btn rounded-6 outline-none-focus border-0 text-white background-grass-green btn-outline-success"
                         onclick="EditAge();">Save</button>
             </div>
@@ -145,9 +132,8 @@
     </div>
 </div>
 
-<div class="modal overflow-hidden" id="ChangeGenderModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-md">
-        <!-- Limit modal size with 'modal-md' -->
+<div class="modal" id="ChangeGenderModal">
+    <div class="modal-dialog">
         <div class="modal-content">
 
             <div class="modal-body text-center">
@@ -166,28 +152,20 @@
     </div>
 </div>
 
-
 <div class="modal" id="ChangeSexualityModal">
     <div class="modal-dialog">
         <div class="modal-content">
 
-            <div class="modal-header">
-                <h5 class="fw-bold">Edit Sexuality</h5>
-            </div>
-
             <div class="modal-body text-center">
                 <div class="text-center">
-                    <div class="form-group m-2">
-                        <label class="control-label">Select Sexuality</label>
-                        <div class="d-flex justify-content-center flex-wrap" id="SexualityList">
+                    <div class="form-group">
+                        <label class="control-label fs-4">Select your sexuality</label>
+                        <div class="d-flex overflow-auto justify-content-center m-2 p-2 row flex-wrap border-0"
+                             id="SexualityList"
+                             style="max-height: 280px;">
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="modal-header justify-content-center">
-                <button class="btn rounded-6 outline-none-focus border-0 btn-secondary" data-bs-dismiss="modal"
-                        onclick="HideSexualityModal();">Close</button>
             </div>
 
         </div>
@@ -197,15 +175,10 @@
 <div class="modal" id="ChangeLocationModal">
     <div class="modal-dialog">
         <div class="modal-content">
-
-            <div class="modal-header">
-                <h5 class="fw-bold">Edit Location</h5>
-            </div>
-
             <div class="modal-body text-center">
                 <div class="text-center">
                     <div class="form-group m-2">
-                        <label class="control-label">Select Location</label>
+                        <label class="control-label fs-4">Select your location</label>
                         <div class="d-flex justify-content-center">
                             <div class="rounded-3 p-2 background-grass-green">
                                 <label class="control-label fw-bold">Country</label>
@@ -220,8 +193,6 @@
             </div>
 
             <div class="modal-header justify-content-center">
-                <button class="btn m-1 rounded-6 outline-none-focus border-0 btn-secondary" data-bs-dismiss="modal"
-                        onclick="HideLocationModal();">Close</button>
                 <button class="btn m-1 rounded-6 outline-none-focus text-white border-0 btn-success background-grass-green"
                         onclick="EditLocation();">Save</button>
             </div>
@@ -233,15 +204,10 @@
 <div class="modal" id="ChangeInterestsModal">
     <div class="modal-dialog">
         <div class="modal-content">
-
-            <div class="modal-header">
-                <h5 class="fw-bold">Edit Interests</h5>
-            </div>
-
             <div class="modal-body text-center">
                 <div class="text-center">
                     <div class="form-group m-2">
-                        <label class="control-label">Select Interests</label>
+                        <label class="control-label">Select your interests</label>
                         <label id="InterestCount" class="control-label">(0/5)</label>
                         <!-- Set a max-height and make it scrollable -->
                         <div class="d-flex border rounded-3 justify-content-center flex-wrap" id="InterestsList" style="max-height: 300px; overflow-y: auto; scrollbar-width: thin;">
@@ -253,11 +219,8 @@
             </div>
 
             <div class="modal-header justify-content-center">
-                <button class="btn rounded-6 m-1 outline-none-focus border-0 btn-secondary" data-bs-dismiss="modal"
-                        onclick="HideInterestsModal();">Close</button>
                 <button class="btn rounded-6 m-1 outline-none-focus border-0 background-grass-green btn-success"
                         onclick="EditInterests();">Save</button>
-
             </div>
 
         </div>
