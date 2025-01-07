@@ -328,9 +328,6 @@ function EditName() {
         }
     });
 }
-function HideNameModal() {
-    $('#ChangeNameModal').modal('hide');
-}
 
 //Age
 jQuery(`#BtnAge`).click(function () {
@@ -369,9 +366,6 @@ function EditAge() {
         }
     });
 }
-function HideAgeModal() {
-    $('#ChangeAgeModal').modal('hide');
-}
 
 //gender
 jQuery(`#BtnGender`).click(function () {
@@ -405,9 +399,6 @@ function EditGender(newGender) {
         }
     });
 }
-function HideGenderModal() {
-    $('#ChangeGenderModal').modal('hide');
-}
 
 //sexuality
 jQuery(`#BtnSexuality`).click(function () {
@@ -440,9 +431,6 @@ function EditSexuality(newSexuality) {
             $("#NewSexualityErrorLabel").text("An error occurred while changing the name.");
         }
     });
-}
-function HideSexualityModal() {
-    $('#ChangeSexualityModal').modal('hide');
 }
 
 //interests
@@ -488,9 +476,6 @@ function EditInterests() {
         }
     });
 }
-function HideInterestsModal() {
-    $('#ChangeInterestsModal').modal('hide');
-}
 
 //location
 jQuery(`#BtnLocation`).click(function () {
@@ -523,7 +508,4 @@ function EditLocation() {
             $("#NewLocationErrorLabel").text("An error occurred while changing the name.");
         }
     });
-}
-function HideSexualityModal() {
-    $('#ChangeLocationModal').modal('hide');
 }

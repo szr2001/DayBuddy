@@ -20,19 +20,17 @@
         {
             <label class="text-wrap fs-4 fw-bold">User says:</label>
             <label class="text-wrap">
-                "@ViewBag.Feedback.Content "
+                "@ViewBag.Feedback "
             </label>
             <div class="col p-1 m-1">
-                <button class="btn m-1 green-outline-focus fw-bold rounded-pill btn-secondary"
-                        onclick="EditName();">
+                <button id="GiftPremiumBtn" class="btn m-1 outline-none-focus fw-bold rounded-pill btn-secondary">
                     Gift Premium
                 </button>
-                <button class="btn m-1 green-outline-focus fw-bold rounded-pill btn-secondary"
-                        onclick="EditName();">
+                <button id="SendEmailBtn" class="btn m-1 outline-none-focus fw-bold rounded-pill btn-secondary">
                     Send Email
                 </button>
             </div>
-            <a class="btn btn-special text-white green-outline-focus border-0 rounded-pill m-1 fw-bold" asp-area="" asp-controller="Admin" asp-action="ReadFeedback">Next</a>
+            <a class="btn btn-special text-white outline-none-focus border-0 rounded-pill m-1 fw-bold" asp-area="" asp-controller="Admin" asp-action="ReadFeedback">Next</a>
         }
         else
         {
@@ -42,3 +40,67 @@
 
     </div>
 </div>
+<div class="modal" id="SendEmailModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="text-center">
+                    <div class="form-group m-2">
+                        <label class="control-label fs-4">Select your age</label>
+                        <input name="newAge" id="NewAgeInput" type="number" class="green-outline-focus form-control" />
+                        <label id="NewAgeErrorLabel" class="text-danger"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-header justify-content-center">
+                <button class="btn fw-bold rounded-6 outline-none-focus border-0 text-white background-grass-green btn-outline-success"
+                        onclick="SendEmail();">
+                    Send
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal" id="GivePremiumModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-body text-center">
+                <div class="text-center">
+                    <div class="form-group row">
+                        <label class="control-label fs-4">Gift Premium</label>
+                        <label id="GivePremiumErrorLabel" class="text-danger"></label>
+                        <div class="d-flex justify-content-center m-2 p-2 col flex-wrap border-0">
+                            <button class="p-1 m-1 background-grass-green zoom-in-hover fw-bold text-white text-truncate rounded-3 border"
+                                    onclick="GiftPremium('1')">
+                                1 Day
+                            </button>
+                            <button class="p-1 m-1 background-grass-green zoom-in-hover fw-bold text-white text-truncate rounded-3 border"
+                                    onclick="GiftPremium('2')">
+                                2 Days
+                            </button>
+                            <button class="p-1 m-1 background-grass-green zoom-in-hover fw-bold text-white text-truncate rounded-3 border"
+                                    onclick="GiftPremium('3')">
+                                3 Days
+                            </button>
+                            <button class="p-1 m-1 background-grass-green zoom-in-hover fw-bold text-white text-truncate rounded-3 border"
+                                    onclick="GiftPremium('4')">
+                                4 Days
+                            </button>
+                            <button class="p-1 m-1 background-grass-green zoom-in-hover fw-bold text-white text-truncate rounded-3 border"
+                                    onclick="GiftPremium('5')">
+                                5 Days
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/ReadFeedback.js"></script>
