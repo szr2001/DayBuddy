@@ -64,6 +64,7 @@ namespace DayBuddy.Controllers
 
             await userManager.UpdateAsync(user);
 
+            TempData["FeedbackUserId"] = senderId;
             return Json(new { success = true, errors = Array.Empty<string>() });
         }
 
@@ -80,7 +81,7 @@ namespace DayBuddy.Controllers
             if (string.IsNullOrEmpty(content))
             {
                 TempData["FeedbackUserId"] = senderId;
-                return Json(new { success = false, errors = new[] { "Email content can't be null" } });
+                return Json(new { success = false, errors = new[] { "Email content can't be empty" } });
             }
 
             DayBuddyUser? user = await userManager.FindByIdAsync(senderId.ToString()!);
@@ -99,6 +100,7 @@ namespace DayBuddy.Controllers
 
             if(emailSent)
             {
+                TempData["FeedbackUserId"] = senderId;
                 return Json(new { success = true, errors = Array.Empty<string>() });
             }
             else

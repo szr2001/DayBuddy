@@ -43,18 +43,20 @@
 <div class="modal" id="SendEmailModal">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-body text-center">
+            <div class="modal-body">
                 <div class="text-center">
-                    <div class="form-group m-2">
-                        <label class="control-label fs-4">Select your age</label>
-                        <input name="newAge" id="NewAgeInput" type="number" class="green-outline-focus form-control" />
-                        <label id="NewAgeErrorLabel" class="text-danger"></label>
+                    <div class="row">
+                        <label class="control-label fs-4">Email Content</label>
+                        <label id="SendEmailErrorLabel" class="text-danger"></label>
+                        <div class="m-1">
+                            <textarea id="SendEmailContent" rows="4" cols="50" autocomplete="off" class="green-outline-focus" style="resize: none;"></textarea>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="modal-header justify-content-center">
-                <button class="btn fw-bold rounded-6 outline-none-focus border-0 text-white background-grass-green btn-outline-success"
+                <button id="SendEmailModalBtn" class="btn fw-bold rounded-6 outline-none-focus border-0 text-white background-grass-green btn-outline-success"
                         onclick="SendEmail();">
                     Send
                 </button>
