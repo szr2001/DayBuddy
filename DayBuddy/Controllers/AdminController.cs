@@ -79,6 +79,7 @@ namespace DayBuddy.Controllers
 
             if (string.IsNullOrEmpty(content))
             {
+                TempData["FeedbackUserId"] = senderId;
                 return Json(new { success = false, errors = new[] { "Email content can't be null" } });
             }
 
