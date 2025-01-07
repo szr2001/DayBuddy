@@ -25,7 +25,7 @@ namespace DayBuddy.Controllers
 
             if(feedback != null)
             {
-                ViewBag.Feedback = feedback.Content;
+                ViewBag.Feedback = feedback;
             }
 
             return View();

@@ -14,14 +14,24 @@
 <hr />
 
 <div class="text-center container-fluid overflow-scroll hide-scrollbar h-100">
-    <div class="border row container-fluid d-flex justify-content-center p-5 m-2 rounded-6">
+    <div class="border row container-fluid text-center justify-content-between p-5 m-2 rounded-6">
         
         @if (ViewBag.Feedback != null)
         {
             <label class="text-wrap fs-4 fw-bold">User says:</label>
             <label class="text-wrap">
-                @ViewBag.Feedback
+                "@ViewBag.Feedback.Content "
             </label>
+            <div class="col p-1 m-1">
+                <button class="btn m-1 green-outline-focus fw-bold rounded-pill btn-secondary"
+                        onclick="EditName();">
+                    Gift Premium
+                </button>
+                <button class="btn m-1 green-outline-focus fw-bold rounded-pill btn-secondary"
+                        onclick="EditName();">
+                    Send Email
+                </button>
+            </div>
             <a class="btn btn-special text-white green-outline-focus border-0 rounded-pill m-1 fw-bold" asp-area="" asp-controller="Admin" asp-action="ReadFeedback">Next</a>
         }
         else
