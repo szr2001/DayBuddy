@@ -124,7 +124,7 @@ namespace DayBuddy
             //Initialize the Identity authentication system using the DayBuddy roles
             //then add the mongodb settings from reading the appsetings.json
             builder.Services.AddIdentity<DayBuddyUser, DayBuddyRole>()
-                .AddMongoDbStores<DayBuddyUser, DayBuddyRole, Guid>(mongoDBSettings.ConnectionString, mongoDBSettings.Name)
+                .AddMongoDbStores<DayBuddyUser, DayBuddyRole, Guid>(mongoDBSettings.Host, mongoDBSettings.Name)
                 .AddDefaultTokenProviders();
 
             //factory method do add custom data in the claims cookie to limit the calls to the db, not secure
@@ -132,7 +132,7 @@ namespace DayBuddy
 
             builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
             {
-                return new MongoClient(mongoDBSettings.ConnectionString);
+                return new MongoClient(mongoDBSettings.Host);
             });
 
             builder.Services.Configure<IdentityOptions>(options =>
