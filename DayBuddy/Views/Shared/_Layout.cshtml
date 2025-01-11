@@ -14,7 +14,7 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
             <div class="container-fluid">
                 <div class="d-flex align-items-center">
-                    <img src="/Assets/Images/hug.png" width="45" />
+                    <img src="/Assets/Images/hug.webp" width="45" />
                     <a class="text-grass-green navbar-brand fs-2 ms-2"
                        style="font-family: 'Lapsus Pro', sans-serif;"
                        asp-area="" asp-controller="Home" asp-action="Index">
@@ -42,10 +42,19 @@
         <main role="main">
             @RenderBody()
         </main>
+        <footer class="bg-dark text-white py-3 mt-auto">
+            <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <p class="mb-0">&copy; 2024 - <span class="text-success">DayBuddy</span></p>
+                <div class="d-flex flex-row align-items-center">
+                    <a class="text-success text-decoration-none mx-2" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    <a class="text-success text-decoration-none mx-2" asp-area="" asp-controller="Home" asp-action="TermsAndConditions">Terms & Conditions</a>
+                </div>
+            </div>
+        </footer>
     </div>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)

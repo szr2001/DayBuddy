@@ -3,9 +3,9 @@
 }
 
 <div class="hide-scrollbar d-flex flex-column min-vh-100">
-    <div class="position-relative">
-        <img src="/Assets/Images/loverhands2.jpg"
-             class="img-fluid w-100 h-100 shadow object-fit-cover" alt="About Us Background" />
+    <div class="position-relative" style="background-image: url('/Assets/Images/loverhands2-min.webp');">
+        <img src="/Assets/Images/loverhands2.webp" loading="lazy"
+             class="img-fluid w-100 h-100 shadow object-fit-cover"/>
 
         <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
             <h1 class="text-uppercase fw-bold" style="font-family: 'Segoe UI'; font-size: clamp(2rem, 5vw, 4rem);">
@@ -29,15 +29,4 @@
             </div>
         </div>
     </div>
-
-    <footer class="bg-dark text-white py-3 mt-auto">
-        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
-            <p class="mb-0">&copy; 2024 - <span class="text-success">DayBuddy</span></p>
-            <div class="d-flex flex-row align-items-center">
-                <a class="text-success text-decoration-none mx-2" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                <a class="text-success text-decoration-none mx-2" asp-area="" asp-controller="Home" asp-action="TermsAndConditions">Terms & Conditions</a>
-                <a class="text-success text-decoration-none mx-2" asp-area="" asp-controller="Home" asp-action="FAQ">FAQ</a>
-            </div>
-        </div>
-    </footer>
 </div>

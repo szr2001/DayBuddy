@@ -14,6 +14,7 @@ using DayBuddy.Filters;
 using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.Http;
 using DayBuddy.Factories;
+using Microsoft.AspNetCore.Mvc;
 
 namespace DayBuddy
 {
@@ -23,7 +24,10 @@ namespace DayBuddy
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add(new RequireHttpsAttribute());
+            });
             builder.Services.AddSignalR();
 
             //Classes that interact with the MongoDB are set as scoped
@@ -140,8 +144,14 @@ namespace DayBuddy
                 options.User.RequireUniqueEmail = true;
             });
 
-            var app = builder.Build();
+            builder.Services.AddHsts(options =>
+            {
+                options.Preload = true;
+                options.IncludeSubDomains = true;
+                options.MaxAge = TimeSpan.FromDays(60);
+            });
 
+            var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

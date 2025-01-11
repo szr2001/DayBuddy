@@ -5,8 +5,8 @@
 }
 
 <div class="hide-scrollbar">
-    <div class="position-relative">
-        <img src="/Assets/Images/malefriends.jpg"
+    <div class="position-relative" style="background-image: url('/Assets/Images/malefriends-min.webp');">
+        <img src="/Assets/Images/malefriends.webp" loading="lazy"
              class="img-fluid w-100 h-100 shadow object-fit-cover" alt="Background Image" />
 
         <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
@@ -30,9 +30,9 @@
                     No need to give or recieve likes, you will get matched with someone to talk to every 8 hours!
                 </p>
             </div>
-            <div class="col-md-6">
-                <img src="/Assets/Images/fists.jpg"
-                     class="img-fluid rounded-3 shadow" style="object-fit: cover; height: 100%; width: 100%;" alt="Fists">
+            <div class="col-md-6 p-0 m-0" style="background-image: url('/Assets/Images/fists-min.webp');">
+                <img src="/Assets/Images/fists.webp" loading="lazy"
+                     class="img-fluid rounded-3 shadow" style="object-fit: cover; height: 100%; width: 100%;">
             </div>
         </div>
     </div>
@@ -108,14 +108,4 @@
             </div>
         </div>
     </div>
-
-    <footer class="bg-dark text-white py-3">
-        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
-            <p class="mb-0">&copy; 2024 - <span class="text-success">DayBuddy</span></p>
-            <div class="d-flex flex-row align-items-center">
-                <a class="text-success text-decoration-none mx-2" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                <a class="text-success text-decoration-none mx-2" asp-area="" asp-controller="Home" asp-action="TermsAndConditions">Terms & Conditions</a>
-            </div>
-        </div>
-    </footer>
 </div>
