@@ -14,9 +14,9 @@ connection.on("ReceiveMessage", function (user, message) {
     var div = $("<div></div>").addClass("p-2 rounded-6 text-white");
     
     if (user === loggedInUserId) {
-        div.addClass("background-grass-green align-self-start");
+        div.addClass("background-grass-green align-self-end");
     } else {
-        div.addClass("bg-secondary align-self-end");
+        div.addClass("bg-secondary align-self-start");
     }
 
     div.text(message);
