@@ -48,41 +48,38 @@
         </div>
 
         <div class="border-end d-flex d-md-none flex-column">
-            <div class="m-3 mb-4">
-                <a class="text-center navbar-brand"
-                   asp-area="" asp-controller="Home" asp-action="Index">
-                <img src="/Assets/Images/hug.webp" class="" width="30" />
-               </a>
-            </div>
-            <hr class="w-75 container" />
-            <a class="border m-1 zoom-in-hover rounded-circle" 
-                asp-area="" asp-controller="DayBuddy" asp-action="SearchBuddy">
+            <a class="m-1 text-center navbar-brand"
+                asp-area="" asp-controller="Home" asp-action="Index">
+            <img src="/Assets/Images/hug.webp" class="" width="40" />
+            </a>
+
+            <a class="border green-outline-hover p-2 m-1 zoom-in-hover rounded-circle d-flex justify-content-center"
+               asp-area="" asp-controller="DayBuddy" asp-action="SearchBuddy">
                 <img src="~/Assets/Images/magnifying-glass.webp" width="25px" height="25px" />
             </a>
-            <a class="border m-1 zoom-in-hover rounded-circle"
+            <a class="border green-outline-hover p-2 m-1 zoom-in-hover rounded-circle d-flex justify-content-center"
                asp-area="" asp-controller="Payment" asp-action="Premium">
                 <img src="~/Assets/Images/ticket.webp" width="30px" height="30px" />
             </a>
             @if (User?.IsInRole("Admin") ?? false)
             {
-                <a class="border m-1 zoom-in-hover rounded-circle"
+                <a class="border green-outline-hover p-2 m-1 zoom-in-hover rounded-circle d-flex justify-content-center"
                    asp-area="" asp-controller="Admin" asp-action="AdminPannel">
                     <img src="~/Assets/Images/organigram.webp" width="30px" height="30px" />
                 </a>
             }
-            <a class="border m-1 zoom-in-hover rounded-circle"
+            <a class="border green-outline-hover p-2 m-1 zoom-in-hover rounded-circle d-flex justify-content-center"
                asp-area="" asp-controller="Account" asp-action="Profile">
                 <img src="~/Assets/Images/cog.webp" width="30px" height="30px" />
             </a>
-            <a class="border m-1 zoom-in-hover rounded-circle"
-               asp-area="" asp-controller="Account" asp-action="SearchBuddy">
+            <div class="border p-2 m-1 rounded-circle d-flex justify-content-center">
                 <img src="~/Assets/Images/knapsack.webp" width="30px" height="30px" />
-            </a>
-            <a class="border m-1 zoom-in-hover rounded-circle"
+            </div>
+            <a class="border green-outline-hover p-2 m-1 zoom-in-hover rounded-circle d-flex justify-content-center"
                asp-area="" asp-controller="DayBuddy" asp-action="LeaveFeedback">
                 <img src="~/Assets/Images/envelope.webp" width="30px" height="30px" />
             </a>
-            <a class="border m-1 zoom-in-hover rounded-circle"
+            <a class="border green-outline-hover p-2 m-1 zoom-in-hover rounded-circle d-flex justify-content-center"
                asp-area="" asp-controller="Account" asp-action="LogOut">
                 <img src="~/Assets/Images/exit-door.webp" width="30px" height="30px" />
             </a>

@@ -32,13 +32,19 @@ label {
 }
 
 .green-outline-focus:focus {
-    border-color: #8bc34a !important; /* Change border color */
-    outline: none !important; /* Remove default outline */
+    border-color: #8bc34a !important;
+    outline: none !important;
+    box-shadow: 0 0 0 0.2rem rgba(139, 195, 74, 0.25) !important
+}
+
+.green-outline-hover:hover {
+    border-color: #8bc34a !important;
+    outline: none !important;
     box-shadow: 0 0 0 0.2rem rgba(139, 195, 74, 0.25) !important
 }
 
 .outline-none-focus:focus {
-    outline: none !important; /* Remove default outline */
+    outline: none !important;
     box-shadow: 0 0 0 0rem rgba(0, 0, 0, 0) !important
 }
 
