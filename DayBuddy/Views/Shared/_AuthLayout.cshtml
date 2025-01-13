@@ -13,8 +13,8 @@
     <link rel="stylesheet" href="~/DayBuddy.styles.css" asp-append-version="true" />
 </head>
 <body class="d-flex modal vh-100">
-    <div class="container-fluid d-flex" style="padding-left: 0rem !important;">
-        <div class="sidebar py-4 border-end d-flex flex-column">
+    <div class="p-0 m-0">
+        <div class="sidebar py-4 border-end d-none d-md-flex flex-column">
             <div class="container">
                 <div class="d-flex justify-content-center">
                     <img src="/Assets/Images/hug.webp" class="" width="30" />
@@ -24,46 +24,71 @@
                         DayBuddy
                     </a>
                 </div>
-                <hr class="w-75 container"/>
+                <hr class="w-75 container" />
                 <ul class="nav text-center m-1 flex-column">
-                    <a class="btn text-white green-outline-focus border-0 btn-outline-success background-grass-green  rounded-pill m-1 fw-bold" asp-area="" asp-controller="DayBuddy" asp-action="SearchBuddy">Find A Buddy!</a>
-                    <a class="btn text-white green-outline-focus border-0 rounded-pill m-1 btn-info fw-bold" asp-area="" asp-controller="Payment" asp-action="Premium">Upgrade To Premium</a>
+                    <a class="btn text-white green-outline-focus border-0 btn-outline-success background-grass-green rounded-pill m-1 fw-bold"
+                       asp-area="" asp-controller="DayBuddy" asp-action="SearchBuddy">Find A Buddy!</a>
+                    <a class="btn text-white green-outline-focus border-0 rounded-pill m-1 btn-info fw-bold"
+                       asp-area="" asp-controller="Payment" asp-action="Premium">Upgrade To Premium</a>
                     @if (User?.IsInRole("Admin") ?? false)
                     {
-                        <a class="btn btn-special text-white green-outline-focus border-0 rounded-pill m-1 fw-bold" asp-area="" asp-controller="Admin" asp-action="AdminPannel">Admin</a>
+                        <a class="btn btn-special text-white green-outline-focus border-0 rounded-pill m-1 fw-bold"
+                           asp-area="" asp-controller="Admin" asp-action="AdminPannel">Admin</a>
                     }
-                    <a class="nav-link fw-bold text-black-50 hover-dark" asp-area="" asp-controller="Account" asp-action="Profile">Edit Profile</a>
-                    <a class="nav-link fw-bold text-black-50 disabled hover-dark" asp-area="" asp-controller="Account" asp-action="Profile">Inventory</a>
-                    <a class="nav-link fw-bold text-black-50 hover-dark" asp-area="" asp-controller="DayBuddy" asp-action="LeaveFeedback">Feedback</a>
-                    <a class="nav-link fw-bold text-black-50 hover-dark" asp-area="" asp-controller="Account" asp-action="LogOut">Log Out</a>
+                    <a class="nav-link fw-bold text-black-50 hover-dark"
+                       asp-area="" asp-controller="Account" asp-action="Profile">Edit Profile</a>
+                    <a class="nav-link fw-bold text-black-50 disabled hover-dark"
+                       asp-area="" asp-controller="Account" asp-action="Profile">Inventory</a>
+                    <a class="nav-link fw-bold text-black-50 hover-dark"
+                       asp-area="" asp-controller="DayBuddy" asp-action="LeaveFeedback">Feedback</a>
+                    <a class="nav-link fw-bold text-black-50 hover-dark"
+                       asp-area="" asp-controller="Account" asp-action="LogOut">Log Out</a>
                 </ul>
-                @{
-                    DayBuddyUser? user = await userManager.GetUserAsync(User);
-                    if (user != null)
-                    {
-                        if (!userService.IsPremiumUser(user))
-                        {
-                            //replace with renderPartial and make this as a partial view maybe
-                            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1174266192650963"
-                                    crossorigin="anonymous"></script>
-                            <ins class="adsbygoogle"
-                                 style="display:block"
-                                 data-ad-client="ca-pub-3940256099942544"
-                                 data-ad-slot="1005530332"
-                                 data-ad-format="auto"
-                                 data-full-width-responsive="true"></ins>
-                            <script>
-                                (adsbygoogle = window.adsbygoogle || []).push({});
-                            </script>
-                        }
-                        else
-                        {
-                            <div class="bg-danger container-fluid"></div>
-                        }
-                    }
-                }
             </div>
         </div>
+
+        <button class="btn btn-special d-md-none rounded-6 text-white fw-bold" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
+            Menu
+        </button>
+
+        <div class="offcanvas offcanvas-start d-md-none" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
+            <div class="offcanvas-header">
+                <h5 id="mobileSidebarLabel">Menu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <div class="container text-center">
+                    <img src="/Assets/Images/hug.webp" class="mb-2" width="30" />
+                    <a class="text-grass-green navbar-brand pb-0"
+                       style="font-family: Lapsus Pro; font-size:18px"
+                       asp-area="" asp-controller="Home" asp-action="Index">
+                        DayBuddy
+                    </a>
+                    <hr />
+                    <ul class="nav flex-column">
+                        <a class="btn text-white green-outline-focus border-0 btn-outline-success background-grass-green rounded-pill m-1 fw-bold"
+                           asp-area="" asp-controller="DayBuddy" asp-action="SearchBuddy">Find A Buddy!</a>
+                        <a class="btn text-white green-outline-focus border-0 rounded-pill m-1 btn-info fw-bold"
+                           asp-area="" asp-controller="Payment" asp-action="Premium">Upgrade To Premium</a>
+                        @if (User?.IsInRole("Admin") ?? false)
+                        {
+                            <a class="btn btn-special text-white green-outline-focus border-0 rounded-pill m-1 fw-bold"
+                               asp-area="" asp-controller="Admin" asp-action="AdminPannel">Admin</a>
+                        }
+                        <a class="nav-link fw-bold text-black-50 hover-dark"
+                           asp-area="" asp-controller="Account" asp-action="Profile">Edit Profile</a>
+                        <a class="nav-link fw-bold text-black-50 disabled hover-dark"
+                           asp-area="" asp-controller="Account" asp-action="Profile">Inventory</a>
+                        <a class="nav-link fw-bold text-black-50 hover-dark"
+                           asp-area="" asp-controller="DayBuddy" asp-action="LeaveFeedback">Feedback</a>
+                        <a class="nav-link fw-bold text-black-50 hover-dark"
+                           asp-area="" asp-controller="Account" asp-action="LogOut">Log Out</a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
         <div class="container-fluid p-3">
             <main role="main" class="h-100 pb-3">

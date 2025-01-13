@@ -26,7 +26,7 @@ namespace DayBuddy
 
             builder.Services.AddControllersWithViews(options =>
             {
-                options.Filters.Add(new RequireHttpsAttribute());
+                //options.Filters.Add(new RequireHttpsAttribute());
             });
             builder.Services.AddSignalR();
 
@@ -144,12 +144,12 @@ namespace DayBuddy
                 options.User.RequireUniqueEmail = true;
             });
 
-            builder.Services.AddHsts(options =>
-            {
-                options.Preload = true;
-                options.IncludeSubDomains = true;
-                options.MaxAge = TimeSpan.FromDays(60);
-            });
+            //builder.Services.AddHsts(options =>
+            //{
+            //    options.Preload = true;
+            //    options.IncludeSubDomains = true;
+            //    options.MaxAge = TimeSpan.FromDays(60);
+            //});
 
             var app = builder.Build();
 
