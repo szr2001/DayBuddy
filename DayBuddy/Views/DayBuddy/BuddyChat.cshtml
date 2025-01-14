@@ -7,7 +7,7 @@
 
 <input type="hidden" id="loggedInUserId" value="@ViewBag.UserId" />
 <div class="d-flex h-100">
-    <div class="container-fluid d-flex" id="UserChat" style="padding-left: 0rem !important;">
+    <div class="container-fluid h-100 d-flex" id="UserChat" style="padding-left: 0rem !important;">
         <div class="container-fluid d-flex flex-column">
             <div class="top-0 d-flex justify-content-between m-2 border-bottom text-center">
                 <button onclick="toggleBuddyProfile()" class="m-1 btn outline-none-focus p-0 border-0 d-inline-flex align-items-center">
@@ -30,7 +30,7 @@
             </div>
 
             <div class="row flex-grow-1 overflow-hidden">
-                <div class="d-flex flex-column overflow-auto hide-scrollbar"
+                <div class="d-flex flex-column overflow-y-auto hide-scrollbar"
                      id="messagesList" style="gap: 10px; max-height: 100%;">
 
                 </div>
@@ -47,7 +47,7 @@
             </form>
         </div>
     </div>
-    <div class="border-start d-none d-lg-flex overflow-auto hide-scrollbar flex-column" id="BuddyProfile">
+    <div class="border-start h-100 d-none d-lg-flex overflow-y-auto hide-scrollbar flex-column" id="BuddyProfile">
         <div class="container m-1 text-center">
                 <div>
                     <div class="row m-1">

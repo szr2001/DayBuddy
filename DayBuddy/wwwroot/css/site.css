@@ -20,6 +20,42 @@ html {
     color: #8bc34a
 }
 
+::-webkit-scrollbar {
+    width: 4px; /* Set a small width for the scrollbar */
+    height: 4px; /* Set a small height for horizontal scrollbar */
+}
+
+/* Styling the scrollbar track */
+::-webkit-scrollbar-track {
+    background: transparent; /* Remove the track background */
+}
+
+/* Styling the scrollbar thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3); /* A subtle color for the thumb */
+    border-radius: 10px; /* Rounded edges for the thumb */
+}
+
+/* Optional: Add hover effect to thumb */
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.5); /* Darker color when hovered */
+}
+
+/* Optional: Remove the scrollbar buttons */
+::-webkit-scrollbar-button {
+    display: none; /* Hide the scrollbar buttons (up/down, left/right) */
+}
+
+.overflow-x-auto {
+    overflow-x: auto !important;
+    overflow-y: hidden;
+}
+
+.overflow-y-auto {
+    overflow-y: auto !important;
+    overflow-x: hidden;
+}
+
 label {
     font-family: Georgia
 }
@@ -49,8 +85,8 @@ label {
 }
 
 .zoom-in-hover:hover {
-    transform: scale(1.02); /* Slight zoom effect */
-    transition: transform 0.1s ease-in-out; /* Smooth transition */
+    transform: scale(1.02);
+    transition: transform 0.1s ease-in-out;
 }
 
 .hover-dark:hover{
@@ -58,8 +94,7 @@ label {
 }
 
 .hide-scrollbar {
-    overflow: auto;
-    -ms-overflow-style: none;
+    -ms-overflow-style: none !important;
     scrollbar-width: none !important;
 }
 
