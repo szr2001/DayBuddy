@@ -29,16 +29,6 @@ function cooldownEndCallback() {
     $BuddyChatTimer.removeClass("text-black-50");
 }
 
-function toggleBuddyProfile() {
-    console.log("RAWR");
-    if ($BuddyProfile.hasClass("d-none")) {
-        $BuddyProfile.removeClass("d-none");
-    }
-    else {
-        $BuddyProfile.addClass("d-none");
-    }
-}
-
 function startTimer() {
     //the & here is a naming convention to show that this is a jquery object
     var $cooldownIndicator = $("#buddyChatTimer");

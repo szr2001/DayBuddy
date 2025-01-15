@@ -10,7 +10,14 @@
     <div class="container-fluid h-100 d-flex" id="UserChat" style="padding-left: 0rem !important;">
         <div class="container-fluid d-flex flex-column">
             <div class="top-0 d-flex justify-content-between m-2 border-bottom text-center">
-                <button onclick="toggleBuddyProfile()" class="m-1 btn outline-none-focus p-0 border-0 d-inline-flex align-items-center">
+                <button class="m-1 d-flex d-lg-none btn outline-none-focus p-0 border-0 d-inline-flex align-items-center"
+                        type="button" data-bs-toggle="offcanvas" data-bs-target="#profileSidebar" aria-controls="profileSidebar">
+                    <div class="rounded-circle background-grass-green d-flex justify-content-center align-items-center" style="width: 35px; height: 35px;">
+                        <img src="/Assets/Images/person.webp" style="width: 25px;" />
+                    </div>
+                    <label class=" btn text-dark fw-bold text-truncate m-1 fs-4">@Model.Name</label>
+                </button>
+                <button class="m-1 d-none d-lg-flex btn outline-none-focus p-0 border-0 d-inline-flex align-items-center">
                     <div class="rounded-circle background-grass-green d-flex justify-content-center align-items-center" style="width: 35px; height: 35px;">
                         <img src="/Assets/Images/person.webp" style="width: 25px;" />
                     </div>
@@ -47,9 +54,45 @@
             </form>
         </div>
     </div>
-    <div class="border-start h-100 d-none d-lg-flex overflow-y-auto hide-scrollbar flex-column" id="BuddyProfile">
+    <div class="border-start h-100 d-none d-lg-flex overflow-y-auto flex-column">
         <div class="container m-1 text-center">
-                <div>
+            <div>
+                <div class="row m-1">
+                    <label class="fw-bold text-dark">Age: </label>
+                    <label class="text-light rounded-6 background-grass-green">@Model.Age</label>
+                </div>
+                <div class="row m-1">
+                    <label class="fw-bold text-dark">Gender: </label>
+                    <label class="text-light rounded-6 background-grass-green">@Model.Gender</label>
+                </div>
+                <div class="row m-1">
+                    <label class="fw-bold text-dark">Sexuality: </label>
+                    <label class="text-light rounded-6 background-grass-green">@Model.Sexuality</label>
+                </div>
+                <div class="row m-1">
+                    <label class="fw-bold text-dark">Country: </label>
+                    <label class="text-light rounded-6 background-grass-green">@Model.Country</label>
+                </div>
+                <div class="row m-1">
+                    <label class="fw-bold text-dark">Interests: </label>
+                    <div class="border rounded-6 border-1 flex-wrap p-1">
+                        @foreach (string interest in Model.Interests)
+                        {
+                            <label class="text-dark p-1 m-1 fw-bold rounded-3 background-grass-green" style="font-size:10px;">@interest</label>
+                        }
+                    </div>
+                </div>
+                <a class="btn text-white green-outline-focus border-0 btn-danger rounded-pill m-1 fw-bold" asp-area="" asp-controller="DayBuddy" asp-action="UnmatchBuddy">Unmatch</a>
+                <button onclick="ShowReportModal()" class="btn green-outline-focus text-black-50 border-0 btn-secondary rounded-pill m-1 fw-bold">Report</button>
+            </div>
+        </div>
+    </div>
+    <div class="offcanvas offcanvas-end d-lg-none" tabindex="-1" id="profileSidebar" style="width:200px;">
+        <div class="offcanvas-body">
+            <div class="overflow-y-auto flex-column">
+                <div class="container m-1 text-center">
+                    <label class=" btn text-dark fw-bold text-truncate m-1 fs-5">@Model.Name</label>
+                    <hr class="m-0 p-0"/>
                     <div class="row m-1">
                         <label class="fw-bold text-dark">Age: </label>
                         <label class="text-light rounded-6 background-grass-green">@Model.Age</label>
@@ -82,7 +125,7 @@
         </div>
     </div>
 </div>
-<div class="modal" id="ReportUserModal">
+<div class="modal" tabindex="-2" id="ReportUserModal">
     <div class="modal-dialog">
         <div class="modal-content">
 
