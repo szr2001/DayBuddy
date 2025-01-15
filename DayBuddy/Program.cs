@@ -12,9 +12,7 @@ using DayBuddy.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using DayBuddy.Filters;
 using System.Threading.RateLimiting;
-using Microsoft.AspNetCore.Http;
 using DayBuddy.Factories;
-using Microsoft.AspNetCore.Mvc;
 
 namespace DayBuddy
 {

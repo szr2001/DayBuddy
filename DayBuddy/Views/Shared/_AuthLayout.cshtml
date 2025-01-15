@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/DayBuddy.styles.css" asp-append-version="true" />
 </head>
-<body class="d-flex m-0 p-0 overflow-hidden vh-100">
+<body class="d-flex m-0 p-0 overflow-y-auto vh-100">
     <div class="p-0 m-0 overflow-y-auto">
         <div class="border-end d-none d-md-flex flex-column">
             <div class="container">
@@ -24,7 +24,7 @@
                         DayBuddy
                     </a>
                 </div>
-                <hr class="w-75 container" />
+                <hr/>
                 <ul class="nav text-center m-1 flex-column">
                     <a class="btn text-white green-outline-focus border-0 btn-outline-success background-grass-green rounded-pill m-1 fw-bold"
                        asp-area="" asp-controller="DayBuddy" asp-action="SearchBuddy">Find A Buddy!</a>
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div class="border-end d-flex d-md-none flex-column">
+        <div class="border-end d-flex d-md-none flex-column" style="min-width:50px;">
             <a class="m-1 text-center navbar-brand"
                 asp-area="" asp-controller="Home" asp-action="Index">
             <img src="/Assets/Images/hug.webp" class="" width="40" />

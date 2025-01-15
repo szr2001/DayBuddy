@@ -57,9 +57,9 @@ function loadMessages() {
                 result.messagesFound.forEach(function (mess) {
                     var $div = $("<div></div>").addClass("p-2 rounded-6 text-white");
                     if (mess.senderId === loggedInUserId) {
-                        $div.addClass("background-grass-green align-self-start");
+                        $div.addClass("background-grass-green align-self-end");
                     } else {
-                        $div.addClass("bg-secondary align-self-end");
+                        $div.addClass("bg-secondary align-self-start");
                     }
 
                     $div.text(mess.message);
