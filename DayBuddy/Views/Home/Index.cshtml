@@ -1,5 +1,4 @@
-﻿
-@inject DayBuddy.Services.Caches.StatisticsCache statistics;
+﻿@inject DayBuddy.Services.Caches.StatisticsCache statistics;
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -7,6 +6,7 @@
 <div class="hide-scrollbar">
     <div class="position-relative" style="background-image: url('/Assets/Images/malefriends-min.webp');">
         <img src="/Assets/Images/malefriends.webp" loading="lazy"
+             width="1920" height="1080"
              class="img-fluid w-100 h-100 shadow object-fit-cover" alt="Background Image" />
 
         <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
@@ -27,11 +27,12 @@
                     Get assigned a buddy
                 </h2>
                 <p class="text-muted" style="font-family: 'Segoe UI'; font-size: clamp(1rem, 3vw, 1.5rem);">
-                    No need to give or recieve likes, you will get matched with someone to talk to every 8 hours!
+                    No need to give or receive likes, you will get matched with someone to talk to every 8 hours!
                 </p>
             </div>
             <div class="col-md-6 p-0 m-0" style="background-image: url('/Assets/Images/fists-min.webp');">
                 <img src="/Assets/Images/fists.webp" loading="lazy"
+                     width="420" height="640"
                      class="img-fluid rounded-3 shadow" style="object-fit: cover; height: 100%; width: 100%;">
             </div>
         </div>
@@ -99,11 +100,11 @@
                         </div>
                     </div>
                     <div class="border rounded-6 col m-2 p-1">
-                    <div class="row">
-                        <label class="fw-bold text-warp" style="font-family: 'Segoe UI';">Profits</label>
+                        <div class="row">
+                            <label class="fw-bold text-warp" style="font-family: 'Segoe UI';">Profits</label>
                             <label class="text-warp" style="font-family: 'Segoe UI';">€@statistics.Profits</label>
+                        </div>
                     </div>
-                </div>
                 </div>
             </div>
         </div>
