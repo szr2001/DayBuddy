@@ -13,7 +13,8 @@ DayBuddy is a full-stack dating platform designed to provide a unique, interest-
 - **Matching System**:
   - Get matched every 8 hours with a random person who shares similar interests.
   - Option to report or block users.
-  - Unmatching requires waiting for the next 8-hour cycle (except for premium users).
+  - 8 Hours cooldown for matching, except for premium users.
+  - Unlimited talking once matched, messages get automatically deleted after unmatching.
   - No "likes" feature—users are automatically matched based on shared interests.
 - **Premium Accounts**:
   - No cooldown period for matching.
@@ -53,9 +54,9 @@ DayBuddy is a full-stack dating platform designed to provide a unique, interest-
 ### User Workflow
 1. Sign up and verify your email.
 2. Complete your profile by adding details such as age, interests, and gender.
-3. Wait for the 8-hour match cycle (or upgrade to premium for instant matching).
-4. Chat with your match through the real-time messaging system.
-5. Optionally block or report users if necessary.
+3. Start matching, once 8 hours you have access to be matched with a user based on a similarity score.
+5. Chat with your match through the real-time messaging system.
+6. Optionally block or report users if necessary.
 
 ### Admin Workflow
 1. Use MongoDb Compas to edit the user and add the Admin Role
