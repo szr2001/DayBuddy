@@ -19,6 +19,6 @@ namespace DayBuddy.Services.Caches
                 return TotalRevenue - TotalExpenses;
             }
         }
-        public string DayBudduyFuture { get; set; } = "Uncertain";
+        public string DayBuddyFuture { get; set; } = "Uncertain";
     }
 }

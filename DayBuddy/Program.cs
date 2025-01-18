@@ -22,10 +22,7 @@ namespace DayBuddy
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllersWithViews(options =>
-            {
-                //options.Filters.Add(new RequireHttpsAttribute());
-            });
+            builder.Services.AddControllersWithViews();
             builder.Services.AddSignalR();
 
             //Classes that interact with the MongoDB are set as scoped
@@ -142,11 +139,13 @@ namespace DayBuddy
                 options.User.RequireUniqueEmail = true;
             });
 
-            //builder.Services.AddHsts(options =>
+            //builder.WebHost.ConfigureKestrel(options =>
             //{
-            //    options.Preload = true;
-            //    options.IncludeSubDomains = true;
-            //    options.MaxAge = TimeSpan.FromDays(60);
+            //    options.ListenLocalhost(5000); // HTTP
+            //    options.ListenLocalhost(5001, listenOptions =>
+            //    {
+            //        listenOptions.UseHttps();
+            //    });
             //});
 
             var app = builder.Build();
