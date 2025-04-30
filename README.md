@@ -1,6 +1,8 @@
 # DayBuddy
 
 DayBuddy is a full-stack dating platform designed to provide a unique, interest-based matching experience for users. The platform is built using modern web technologies and offers real-time messaging, notifications, and a range of features for both users and administrators.
+Youtube video explaining it:
+https://youtu.be/BqROgbhmb_o
 
 ![DayBuddy Overview](DayBuddy/wwwroot/Assets/DayBuddyOverview.gif)
 
